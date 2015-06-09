@@ -20,7 +20,13 @@
     "replication",
     "database"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "pouchdb-replication-stream": "1.2.4",
+    "rtc-quickconnect": "4.3.1",
+    "rtc-data-stream": "1.0.2",
+    "freeice": "2.0.0",
+    "promise": "7.0.1"
+  },
   "devDependencies": {
     "jshint-stylish": "^1.0.1"
   },
