@@ -2,7 +2,7 @@
   "name": "pouch-replicate-webrtc",
   "version": "0.0.1",
   "description": "Replicate a PouchDB over a WebRTC DataChannel.",
-  "homepage": "https://github.com/scottmtp",
+  "homepage": "https://github.com/scottmtp/pouch-replicate-webrtc",
   "author": {
     "name": "Scott Dietrich",
     "email": "scott@minutestopost.com",
@@ -21,16 +21,24 @@
     "database"
   ],
   "dependencies": {
-    "pouchdb-replication-stream": "1.2.4",
-    "rtc-quickconnect": "4.3.1",
-    "rtc-data-stream": "1.0.2",
     "freeice": "2.0.0",
-    "promise": "7.0.1"
+    "memdown": "^1.0.0",
+    "pouchdb": "^3.6.0",
+    "pouchdb-replication-stream": "1.2.4",
+    "promise": "^7.0.1",
+    "rtc-dcstream": "^2.0.0",
+    "rtc-quickconnect": "4.3.1",
   },
   "devDependencies": {
-    "jshint-stylish": "^1.0.1"
+    "jshint-stylish": "^1.0.1",
+    "istanbul": "^0.2.7",
+    "chai": "^3.0.0",
+    "chai-as-promised": "~5.1.0",
+    "mocha": "^2.2.5",
+    "rtc-plugin-node": "2.2.0",
+    "wrtc": "0.0.56"
   },
   "scripts": {
-    "test": "mocha --reporter nyan"
+    "test": "mocha --reporter spec"
   }
 }

@@ -13,9 +13,14 @@ $ npm install --save pouch-replicate-webrtc
 ## Usage
 
 ```js
-var pouchReplicateWebrtc = require('pouch-replicate-webrtc');
+var PouchDB = require('pouchdb');
+var PouchReplicator = require('pouch-replicate-webrtc');
 
-pouchReplicateWebrtc('Rainbow');
+var pouchDb = new PouchDB('myDb');
+var replicator = new PouchReplicator('https://switchboard.rtc.io/', {room: 'pouch-replicate-test'}, pouchDb);
+replicator.join();
+replicator.replicate();
+
 ```
 
 
