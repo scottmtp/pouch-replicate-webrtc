@@ -6,11 +6,12 @@ var createDataStream = require('rtc-dcstream');
 var Promise = require('promise');
 var PouchDB = require('pouchdb');
 
-module.exports = function(signalUrl, rtcOptions, pouchDb) {
-  var _quickconnect, _signalUrl, _options, _pouchDb;
+module.exports = function(signalUrl, rtcOptions, pouchDb, replicationOptions) {
+  var _quickconnect, _signalUrl, _rtcOptions, _pouchDb, _replicationOptions;
   _signalUrl = signalUrl;
-  _options = rtcOptions;
+  _rtcOptions = rtcOptions;
   _pouchDb = pouchDb;
+  _replicationOptions = replicationOptions;
 
   var _streams = [];
   var _peers = [];
@@ -19,8 +20,16 @@ module.exports = function(signalUrl, rtcOptions, pouchDb) {
   PouchDB.adapter('writableStream', replicationStream.adapters.writableStream);
 
   function addPeer(id, dc) {
+    var stream = createDataStream(dc);
     _peers.push(id);
-    _streams.push(createDataStream(dc));
+    _streams.push(stream);
+
+    stream.on('end', function() {
+      _pouchDb.load(stream, _replicationOptions)
+      .catch(function(error) {
+        console.log(error.stack);
+      });
+    });
   }
 
   function removePeer(id) {
@@ -41,7 +50,7 @@ module.exports = function(signalUrl, rtcOptions, pouchDb) {
 
       var room = 'pouch';
       var p = new Promise(function(resolve, reject) {
-        _quickconnect = quickconnect(_signalUrl, _options);
+        _quickconnect = quickconnect(_signalUrl, rtcOptions);
         _quickconnect.createDataChannel(room)
           .on('channel:opened:' + room, function(id, dc) {
             addPeer(id, dc);
@@ -66,7 +75,6 @@ module.exports = function(signalUrl, rtcOptions, pouchDb) {
       var replicationPromises = [];
       _streams.forEach(function(s) {
         replicationPromises.push(_pouchDb.dump(s));
-        replicationPromises.push(_pouchDb.load(s));
       });
 
       var p = new Promise(function(resolve, reject) {
@@ -85,6 +93,10 @@ module.exports = function(signalUrl, rtcOptions, pouchDb) {
 
     getPeers: function() {
       return _peers;
+    },
+
+    on: function(callback) {
+      _quickconnect.on(callback);
     }
   }
 };

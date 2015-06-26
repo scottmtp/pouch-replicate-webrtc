@@ -30,10 +30,11 @@
     "rtc-quickconnect": "4.3.1"
   },
   "devDependencies": {
-    "jshint-stylish": "^1.0.1",
-    "istanbul": "^0.2.7",
     "chai": "^3.0.0",
     "chai-as-promised": "~5.1.0",
+    "cuid": "1.2.5",
+    "istanbul": "^0.2.7",
+    "jshint-stylish": "^1.0.1",
     "mocha": "^2.2.5",
     "rtc-plugin-node": "2.2.0",
     "wrtc": "0.0.56"
