@@ -23,14 +23,6 @@ describe('pouch-replicate-webrtc node module', function () {
   var doc5 = {_id: 'tables', name: 'tables'};
   var doc6 = {_id: 'chairs', name: 'chairs'};
 
-  function nMembersPresent(replicator, valueOfN) {
-    var p = new Promise(function(resolve, reject) {
-
-    });
-
-    return p;
-  }
-
   before(function(done) {
     pouch1 = new PouchDB('pouch1', {db: require('memdown')});
     pouch2 = new PouchDB('pouch2', {db: require('memdown')});
