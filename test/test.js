@@ -70,9 +70,12 @@ describe('pouch-replicate-webrtc node module', function () {
   });
 
   afterEach(function() {
-    replicator1.close();
-    replicator2.close();
-    replicator3.close();
+    // TODO: closing the connections appears to cause node to segfault in wrtc
+    // if we close the connections after each test
+
+    // replicator1.close();
+    // replicator2.close();
+    // replicator3.close();
   });
 
   it('should find correct number of peers', function() {
@@ -91,21 +94,25 @@ describe('pouch-replicate-webrtc node module', function () {
     });
   });
 
-  // TODO: this test fails because the readable stream given to
-  // pouchdb-replication-stream.load() appears to never end
   it('should emit when done loading', function(done) {
+    var executed = false;
     replicator2.on('load', function() {
-      done();
+      if (!executed) {
+        done();
+        executed = true;
+      }
     });
 
-    Promise.all([replicator2.replicate(), replicator1.replicate(), replicator3.replicate(), pauseFunction()])
+    Promise.all([replicator2.replicate(), replicator1.replicate(), replicator3.replicate()])
+    .then(pauseFunction)
     .catch(function(error) {
       console.log(error.stack);
     });
   });
 
   it('should replicate', function (done) {
-    Promise.all([replicator2.replicate(), replicator1.replicate(), replicator3.replicate(), pauseFunction()])
+    Promise.all([replicator2.replicate(), replicator1.replicate(), replicator3.replicate()])
+    .then(pauseFunction)
     .then(function() {
       return pouch1.allDocs({
         include_docs: true,
@@ -141,12 +148,17 @@ describe('pouch-replicate-webrtc node module', function () {
   });
 
   it('should replicate multiple times on the same stream', function (done) {
-    Promise.all([replicator2.replicate(), replicator1.replicate(), replicator3.replicate(), pauseFunction()])
+    Promise.resolve(replicator1.replicate())
+    .then(replicator2.replicate())
+    .then(replicator3.replicate())
+    .then(pauseFunction)
     .then(function() {
-      pouch1.put({_id: 'a', name: 'a'});
+      return pouch1.put({_id: 'a', name: 'a'});
     })
-    // TODO: trying to replicate a second time causes a segfault
-    // .then(Promise.all(replicator1.replicate(), pauseFunction()))
+    .then(function(result) {
+      return replicator1.replicate();
+    })
+    .then(pauseFunction)
     .then(function() {
       return pouch2.allDocs({
         include_docs: true,

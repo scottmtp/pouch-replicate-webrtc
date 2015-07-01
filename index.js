@@ -1,8 +1,10 @@
 'use strict';
 
+var stream = require('stream');
 var replicationStream = require('pouchdb-replication-stream');
 var quickconnect = require('rtc-quickconnect')
 var RtcDataStream = require('rtcstream');
+var concat = require('concat-stream');
 var Promise = require('promise');
 var PouchDB = require('pouchdb');
 var util = require('util');
@@ -32,12 +34,21 @@ PouchReplicator.prototype.addPeer = function(id, dc) {
   this.peers.push(id);
   this.streams.push(stream);
 
-  stream.on('readable', this.receiveData.bind(this, stream));
+  stream.on('data', this.receiveData.bind(this));
 }
 
-PouchReplicator.prototype.receiveData = function(s) {
+PouchReplicator.prototype._createStream = function(chunk) {
+  var s = new stream.Readable();
+  s._read = function() {};
+  s.push(chunk);
+  s.push(null);
+
+  return s;
+}
+PouchReplicator.prototype.receiveData = function(chunk) {
   var self = this;
 
+  var s = self._createStream(chunk);
   self.pouchDb.load(s, this.replicationOptions)
   .then(function(res) {
     self.emit('load');
@@ -85,17 +96,18 @@ PouchReplicator.prototype.replicate = function() {
   var self = this;
   var replicationPromises = [];
 
-  self.streams.forEach(function(s) {
-    var promise = self.pouchDb.dump(s);
-    replicationPromises.push(promise);
+  var database = '';
+  var concatStream = concat({encoding: 'string'}, function (line) {
+    database += line;
   });
 
-  var p = new Promise(function(resolve, reject) {
-    Promise.all(replicationPromises)
-    .then(function () {
-      resolve();
+  var p = self.pouchDb.dump(concatStream)
+  .then(function() {
+    self.streams.forEach(function(s) {
+      s.write(database);
     });
-  })
+
+  });
 
   return p;
 };

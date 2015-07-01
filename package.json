@@ -21,14 +21,15 @@
     "database"
   ],
   "dependencies": {
+    "concat-stream": "^1.5.0",
     "debug": "^2.2.0",
     "freeice": "2.0.0",
     "memdown": "^1.0.0",
     "pouchdb": "^3.6.0",
     "pouchdb-replication-stream": "1.2.4",
     "promise": "^7.0.1",
-    "rtcstream": "scottmtp/rtcstream",
     "rtc-quickconnect": "4.3.1",
+    "rtcstream": "scottmtp/rtcstream",
     "typedarray-to-buffer": "^3.0.3"
   },
   "devDependencies": {
