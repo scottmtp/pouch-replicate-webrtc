@@ -8,7 +8,10 @@
     "email": "scott@minutestopost.com",
     "url": "https://github.com/scottmtp"
   },
-  "repository": "scottmtp/pouch-replicate-webrtc",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/scottmtp/pouch-replicate-webrtc.git"
+  },
   "license": "MIT",
   "files": [
     "index.js"
