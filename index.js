@@ -14,6 +14,8 @@ var PouchReplicator = function(name, signalUrl, rtcOptions, pouchDb, replication
   // PouchReplicator
   this.pouchDb = pouchDb;
   this.replicationOptions = replicationOptions;
+  this.marker = '__end__';
+  this.replData = [];
   
   PouchDB.plugin(replicationStream.plugin);
   PouchDB.adapter('writableStream', replicationStream.adapters.writableStream);
@@ -23,23 +25,37 @@ util.inherits(PouchReplicator, ReplicatorCommon);
 
 module.exports = PouchReplicator;
 
-PouchReplicator.prototype._createStream = function(chunk) {
+PouchReplicator.prototype._createStream = function(data) {
   var s = new stream.Readable();
   s._read = function() {};
-  s.push(chunk);
+  s.push(data);
   s.push(null);
 
   return s;
 };
 
-PouchReplicator.prototype.receiveData = function(chunk) {
+PouchReplicator.prototype._getAndClearData = function() {
   var self = this;
-
-  var s = self._createStream(chunk);
+  
+  var data = self.replData.join('');
+  self.replData = [];
+  
+  var s = self._createStream(data);
   self.pouchDb.load(s, this.replicationOptions)
   .then(function(res) {
     self.emit('endload');
   });
+};
+
+PouchReplicator.prototype.receiveData = function(chunk) {
+  var self = this;
+
+  // note double-equals to coerce arraybuffer to string
+  if (chunk == self.marker) {
+    self._getAndClearData();
+  } else {
+    self.replData.push(chunk);
+  }
 };
 
 /**
@@ -58,7 +74,9 @@ PouchReplicator.prototype.replicate = function() {
   .then(function() {
     self.streams.forEach(function(s) {
       s.write(database);
+      s.write(self.marker);
     });
+    
 
   });
 
