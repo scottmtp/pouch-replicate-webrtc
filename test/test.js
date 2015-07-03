@@ -91,7 +91,7 @@ describe('pouch-replicate-webrtc node module', function () {
 
   it('should emit when done loading', function(done) {
     var executed = false;
-    replicator2.on('endload', function() {
+    replicator2.on('endreplicate', function() {
       if (!executed) {
         done();
         executed = true;

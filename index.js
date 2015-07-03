@@ -43,7 +43,7 @@ PouchReplicator.prototype._getAndClearData = function() {
   var s = self._createStream(data);
   self.pouchDb.load(s, this.replicationOptions)
   .then(function(res) {
-    self.emit('endload');
+    self.emit('endreplicate');
   });
 };
 
