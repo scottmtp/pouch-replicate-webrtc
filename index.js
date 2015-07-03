@@ -2,40 +2,26 @@
 
 var stream = require('stream');
 var replicationStream = require('pouchdb-replication-stream');
-var quickconnect = require('rtc-quickconnect')
-var RtcDataStream = require('rtcstream');
 var concat = require('concat-stream');
 var Promise = require('promise');
 var PouchDB = require('pouchdb');
 var util = require('util');
-var EventEmitter = require('events').EventEmitter;
+var ReplicatorCommon = require('replicate-common');
 
 var PouchReplicator = function(name, signalUrl, rtcOptions, pouchDb, replicationOptions) {
-  this.name = name;
-  this.signalUrl = signalUrl;
-  this.rtcOptions = rtcOptions;
+  ReplicatorCommon.call(this, name, signalUrl, rtcOptions);
+  
+  // PouchReplicator
   this.pouchDb = pouchDb;
   this.replicationOptions = replicationOptions;
-
-  this.streams = [];
-  this.peers = [];
-
-  EventEmitter.call(this);
+  
   PouchDB.plugin(replicationStream.plugin);
   PouchDB.adapter('writableStream', replicationStream.adapters.writableStream);
 };
 
-util.inherits(PouchReplicator, EventEmitter);
+util.inherits(PouchReplicator, ReplicatorCommon);
 
-PouchReplicator.prototype.addPeer = function(id, dc) {
-  var self = this;
-
-  var stream = new RtcDataStream(this.name + ':' + id, dc);
-  this.peers.push(id);
-  this.streams.push(stream);
-
-  stream.on('data', this.receiveData.bind(this));
-}
+module.exports = PouchReplicator;
 
 PouchReplicator.prototype._createStream = function(chunk) {
   var s = new stream.Readable();
@@ -44,48 +30,16 @@ PouchReplicator.prototype._createStream = function(chunk) {
   s.push(null);
 
   return s;
-}
+};
+
 PouchReplicator.prototype.receiveData = function(chunk) {
   var self = this;
 
   var s = self._createStream(chunk);
   self.pouchDb.load(s, this.replicationOptions)
   .then(function(res) {
-    self.emit('load');
+    self.emit('endload');
   });
-};
-
-PouchReplicator.prototype.removePeer = function(id) {
-  var idx = this.peers.indexOf(id);
-  if (idx >= 0) {
-    this.peers.splice(idx, 1);
-    this.streams.splice(idx, 1);
-  }
-};
-
-/**
- * Join webrtc datachannel
- @ @return  {Promise}
- */
-PouchReplicator.prototype.join = function(minPeers) {
-  minPeers = typeof minPeers !== 'undefined' ? minPeers : 0;
-  var self = this;
-
-  var p = new Promise(function(resolve, reject) {
-    self.signaller = quickconnect(self.signalUrl, self.rtcOptions);
-    self.signaller.createDataChannel(self.rtcOptions.room)
-      .on('channel:opened:' + self.rtcOptions.room, function(id, dc) {
-        self.addPeer(id, dc);
-        if (self.peers.length >= minPeers) {
-          resolve();
-        }
-      })
-      .on('channel:closed:' + self.rtcOptions.room, function(id, dc) {
-        self.removePeer(id);
-      });
-  });
-
-  return p;
 };
 
 /**
@@ -94,7 +48,6 @@ PouchReplicator.prototype.join = function(minPeers) {
  */
 PouchReplicator.prototype.replicate = function() {
   var self = this;
-  var replicationPromises = [];
 
   var database = '';
   var concatStream = concat({encoding: 'string'}, function (line) {
@@ -111,13 +64,3 @@ PouchReplicator.prototype.replicate = function() {
 
   return p;
 };
-
-PouchReplicator.prototype.close = function() {
-  this.signaller.close();
-};
-
-PouchReplicator.prototype.getPeers = function() {
-  return this.peers;
-};
-
-module.exports = PouchReplicator;

@@ -8,8 +8,8 @@ var Promise = require('promise');
 var PouchDB = require('pouchdb');
 var PouchReplicator = require('../');
 
-var SegfaultHandler = require('segfault-handler');
-SegfaultHandler.registerHandler();
+// var SegfaultHandler = require('segfault-handler');
+// SegfaultHandler.registerHandler();
 
 describe('pouch-replicate-webrtc node module', function () {
 
@@ -78,11 +78,6 @@ describe('pouch-replicate-webrtc node module', function () {
     // replicator3.close();
   });
 
-  it('should find correct number of peers', function() {
-    var peers = replicator1.getPeers();
-    assert.equal(peers.length, 2);
-  });
-
   it('should find setup documents', function(done) {
     pouch1.allDocs({
       include_docs: true,
@@ -96,7 +91,7 @@ describe('pouch-replicate-webrtc node module', function () {
 
   it('should emit when done loading', function(done) {
     var executed = false;
-    replicator2.on('load', function() {
+    replicator2.on('endload', function() {
       if (!executed) {
         done();
         executed = true;
