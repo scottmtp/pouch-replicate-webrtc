@@ -2,8 +2,6 @@
 
 Replicate a PouchDB over a WebRTC DataChannel.
 
-NOTE: This is experimental, please don't use pouch-replicate-webrtc for anything important yet!
-
 ## Install
 
 ```
