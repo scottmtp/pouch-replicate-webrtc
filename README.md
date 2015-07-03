@@ -22,7 +22,13 @@ var PouchDB = require('pouchdb');
 var PouchReplicator = require('pouch-replicate-webrtc');
 
 var pouchDb = new PouchDB('myDb');
-var replicator = new PouchReplicator('https://switchboard.rtc.io/', {room: 'pouch-replicate-test'}, pouchDb);
+var replicator = new PouchReplicator('replicator', 'https://switchboard.rtc.io/'
+  , {room: 'pouch-replicate-test'}, pouchDb, {batch_size: 50});
+
+replicator.on('endreplicate', function() {
+  console.log('received data from replication');
+});
+
 replicator.join()
   .then(function() {
     replicator.replicate();
