@@ -1,6 +1,6 @@
 {
   "name": "pouch-replicate-webrtc",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Replicate a PouchDB over a WebRTC DataChannel.",
   "homepage": "https://github.com/scottmtp/pouch-replicate-webrtc",
   "author": {
