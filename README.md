@@ -2,6 +2,14 @@
 
 Replicate a PouchDB over a WebRTC DataChannel.
 
+## About
+
+By using a WebRTC DataChannel, we can share data between browsers without storing 
+the data on a centralized server.
+
+Uses [pouchdb-replication-stream](https://github.com/nolanlawson/pouchdb-replication-stream)
+for replicating PouchDB data.
+
 ## Install
 
 ```
@@ -23,7 +31,7 @@ var pouchDb = new PouchDB('myDb');
 var replicator = new PouchReplicator('replicator', 'https://switchboard.rtc.io/'
   , {room: 'pouch-replicate-test'}, pouchDb, {batch_size: 50});
 
-replicator.on('endreplicate', function() {
+replicator.on('endpeerreplicate', function() {
   console.log('received data from replication');
 });
 

@@ -21,6 +21,7 @@
     "pouchdb",
     "webrtc",
     "replication",
+    "sync",
     "database",
     "privacy",
     "nobackend"
