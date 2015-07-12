@@ -47,6 +47,7 @@
     "wrtc": "0.0.56"
   },
   "scripts": {
-    "test": "mocha --reporter spec"
+    "test": "mocha --reporter spec",
+    "coverage": "istanbul cover _mocha -- test/ -R spec"
   }
 }
