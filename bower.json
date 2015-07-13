@@ -1,0 +1,24 @@
+{
+    "authors": [
+        "Scott Dietrich <scott@minutestopost.com>"
+    ],
+    "description": "Replicate a PouchDB over a WebRTC DataChannel.",
+    "keywords": [
+      "pouch-replicate-webrtc",
+      "pouchdb",
+      "webrtc",
+      "replication",
+      "sync",
+      "database",
+      "privacy",
+      "nobackend"
+    ],
+    "license": "MIT",
+    "main": "dist/pouch-replicate-webrtc.js",
+    "name": "pouch-replicate-webrtc",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/scottmtp/pouch-replicate-webrtc.git"
+    },
+    "version": "0.0.6"
+}
