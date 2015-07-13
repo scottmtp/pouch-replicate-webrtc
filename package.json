@@ -50,6 +50,7 @@
     "wrtc": "0.0.56"
   },
   "scripts": {
+    "browserify": "browserify -r pouchdb -r ./index.js:pouch-replicate-webrtc > dist/pouch-replicate-webrtc.js; uglify -s dist/pouch-replicate-webrtc.js -o dist/pouch-replicate-webrtc.min.js",
     "test": "mocha --reporter spec",
     "coverage": "istanbul cover _mocha -- test/ -R spec"
   }
