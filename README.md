@@ -1,6 +1,6 @@
 #  pouch-replicate-webrtc
 
-Replicate a PouchDB over a WebRTC DataChannel.
+Replicate a PouchDB over a WebRTC DataChannel, for NodeJS and the Browser.
 
 ## About
 
@@ -12,6 +12,10 @@ for replicating PouchDB data.
 
 ## Install
 
+This library can be used both on Serverside and on Clientside.
+
+### On Serverside, using NodeJS
+
 ```
 $ npm install --save pouch-replicate-webrtc
 ```
@@ -20,6 +24,14 @@ Currently tests require an rtc-switchboard running locally on port 3000.
 
 https://github.com/rtc-io/rtc-switchboard
 
+### On Clientside
+
+You can import the pouch-replicate-webrtc.min.js from the dist folder.
+
+Alternatively, you can user Bower to install it:
+```
+$ bower install --save pouch-replicate-webrtc
+```
 
 ## Usage
 
@@ -42,6 +54,16 @@ replicator.join()
 
 ```
 
+## Build
+
+### Clientside
+
+To build the Clientside version, you will need to run:
+
+```
+npm install
+npm run browserify
+```
 
 ## License
 
