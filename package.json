@@ -31,7 +31,7 @@
     "pouchdb": "^3.6.0",
     "pouchdb-replication-stream": "1.2.4",
     "promise": "^7.0.1",
-    "replicate-common": "0.0.3",
+    "replicate-common": "0.0.5",
     "typedarray-to-buffer": "^3.0.3"
   },
   "devDependencies": {
@@ -45,9 +45,7 @@
     "istanbul": "^0.2.7",
     "jshint-stylish": "^1.0.1",
     "memdown": "^1.0.0",
-    "mocha": "^2.2.5",
-    "rtc-plugin-node": "2.2.0",
-    "wrtc": "0.0.56"
+    "mocha": "^2.2.5"
   },
   "scripts": {
     "browserify": "browserify -r pouchdb -r ./index.js:pouch-replicate-webrtc > dist/pouch-replicate-webrtc.js; uglify -s dist/pouch-replicate-webrtc.js -o dist/pouch-replicate-webrtc.min.js",

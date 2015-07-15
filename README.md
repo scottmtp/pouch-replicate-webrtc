@@ -4,7 +4,7 @@ Replicate a PouchDB over a WebRTC DataChannel, for NodeJS and the Browser.
 
 ## About
 
-By using a WebRTC DataChannel, we can share data between browsers without storing 
+By using a WebRTC DataChannel, we can share data between browsers without storing
 the data on a centralized server.
 
 Uses [pouchdb-replication-stream](https://github.com/nolanlawson/pouchdb-replication-stream)
@@ -20,10 +20,6 @@ This library can be used both on Serverside and on Clientside.
 $ npm install --save pouch-replicate-webrtc
 ```
 
-Currently tests require an rtc-switchboard running locally on port 3000.
-
-https://github.com/rtc-io/rtc-switchboard
-
 ### On Clientside
 
 You can import the pouch-replicate-webrtc.min.js from the dist folder.
@@ -35,20 +31,24 @@ $ bower install --save pouch-replicate-webrtc
 
 ## Usage
 
+Example using [rtc-quickconnect](https://github.com/rtc-io/rtc-quickconnect):
+
 ```
 var PouchDB = require('pouchdb');
 var PouchReplicator = require('pouch-replicate-webrtc');
+var quickconnect = require('rtc-quickconnect');
 
 var pouchDb = new PouchDB('myDb');
-var replicator = new PouchReplicator('replicator', 'https://switchboard.rtc.io/'
-  , {room: 'pouch-replicate-test'}, pouchDb, {batch_size: 50});
+var replicator = new PouchReplicator('replicator', pouchDb, {batch_size: 50});
 
 replicator.on('endpeerreplicate', function() {
   console.log('received data from replication');
 });
 
-replicator.join()
-  .then(function() {
+quickconnect('https://switchboard.rtc.io/', { room: 'qc-simple-demo' })
+  .createDataChannel('replication')
+  .on('channel:opened:replication', function(id, dc) {
+    replicator.addPeer(id, dc);
     replicator.replicate();
   });
 

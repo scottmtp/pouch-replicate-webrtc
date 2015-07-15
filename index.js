@@ -8,15 +8,15 @@ var PouchDB = require('pouchdb');
 var util = require('util');
 var ReplicatorCommon = require('replicate-common');
 
-var PouchReplicator = function(name, signalUrl, rtcOptions, pouchDb, replicationOptions) {
-  ReplicatorCommon.call(this, name, signalUrl, rtcOptions);
-  
+var PouchReplicator = function(name, pouchDb, replicationOptions) {
+  ReplicatorCommon.call(this, name);
+
   // PouchReplicator
   this.pouchDb = pouchDb;
   this.replicationOptions = replicationOptions;
   this.marker = '__end__';
   this.replData = [];
-  
+
   PouchDB.plugin(replicationStream.plugin);
   PouchDB.adapter('writableStream', replicationStream.adapters.writableStream);
 };
@@ -36,10 +36,10 @@ PouchReplicator.prototype._createStream = function(data) {
 
 PouchReplicator.prototype._getAndClearData = function() {
   var self = this;
-  
+
   var data = self.replData.join('');
   self.replData = [];
-  
+
   var s = self._createStream(data);
   self.pouchDb.load(s, this.replicationOptions)
   .then(function(res) {
@@ -76,8 +76,6 @@ PouchReplicator.prototype.replicate = function() {
       s.write(database);
       s.write(self.marker);
     });
-    
-
   });
 
   return p;
