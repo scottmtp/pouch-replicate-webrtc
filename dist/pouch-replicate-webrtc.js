@@ -1,24 +1,4 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-'use strict';
-
-module.exports = argsArray;
-
-function argsArray(fun) {
-  return function () {
-    var len = arguments.length;
-    if (len) {
-      var args = [];
-      var i = -1;
-      while (++i < len) {
-        args[i] = arguments[i];
-      }
-      return fun.call(this, args);
-    } else {
-      return fun.call(this, []);
-    }
-  };
-}
-},{}],2:[function(require,module,exports){
 (function (Buffer){
 var Writable = require('readable-stream').Writable
 var inherits = require('inherits')
@@ -158,7 +138,32 @@ function u8Concat (parts) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":232,"inherits":18,"readable-stream":13,"typedarray":14}],3:[function(require,module,exports){
+},{"buffer":194,"inherits":2,"readable-stream":13,"typedarray":14}],2:[function(require,module,exports){
+if (typeof Object.create === 'function') {
+  // implementation from standard node.js 'util' module
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    ctor.prototype = Object.create(superCtor.prototype, {
+      constructor: {
+        value: ctor,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    });
+  };
+} else {
+  // old school shim for old browsers
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    var TempCtor = function () {}
+    TempCtor.prototype = superCtor.prototype
+    ctor.prototype = new TempCtor()
+    ctor.prototype.constructor = ctor
+  }
+}
+
+},{}],3:[function(require,module,exports){
 // a duplex stream is just a stream that is both readable and writable.
 // Since JS doesn't have multiple prototypal inheritance, this class
 // prototypally inherits from Readable, and then parasitically from
@@ -242,7 +247,7 @@ function forEach (xs, f) {
   }
 }
 
-},{"./_stream_readable":5,"./_stream_writable":7,"core-util-is":8,"inherits":18,"process-nextick-args":10}],4:[function(require,module,exports){
+},{"./_stream_readable":5,"./_stream_writable":7,"core-util-is":8,"inherits":2,"process-nextick-args":10}],4:[function(require,module,exports){
 // a passthrough stream.
 // basically just the most minimal sort of Transform stream.
 // Every written chunk gets output as-is.
@@ -271,7 +276,7 @@ PassThrough.prototype._transform = function(chunk, encoding, cb) {
   cb(null, chunk);
 };
 
-},{"./_stream_transform":6,"core-util-is":8,"inherits":18}],5:[function(require,module,exports){
+},{"./_stream_transform":6,"core-util-is":8,"inherits":2}],5:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -1231,7 +1236,7 @@ function indexOf (xs, x) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":3,"_process":241,"buffer":232,"core-util-is":8,"events":237,"inherits":18,"isarray":9,"process-nextick-args":10,"string_decoder/":11,"util":231}],6:[function(require,module,exports){
+},{"./_stream_duplex":3,"_process":203,"buffer":194,"core-util-is":8,"events":199,"inherits":2,"isarray":9,"process-nextick-args":10,"string_decoder/":11,"util":193}],6:[function(require,module,exports){
 // a transform stream is a readable/writable stream where you do
 // something with the data.  Sometimes it's called a "filter",
 // but that's not a great name for it, since that implies a thing where
@@ -1430,7 +1435,7 @@ function done(stream, er) {
   return stream.push(null);
 }
 
-},{"./_stream_duplex":3,"core-util-is":8,"inherits":18}],7:[function(require,module,exports){
+},{"./_stream_duplex":3,"core-util-is":8,"inherits":2}],7:[function(require,module,exports){
 // A bit simpler than readable streams.
 // Implement an async ._write(chunk, cb), and it'll handle all
 // the drain event emission and buffering.
@@ -1949,7 +1954,7 @@ function endWritable(stream, state, cb) {
   state.ended = true;
 }
 
-},{"./_stream_duplex":3,"buffer":232,"core-util-is":8,"events":237,"inherits":18,"process-nextick-args":10,"util-deprecate":12}],8:[function(require,module,exports){
+},{"./_stream_duplex":3,"buffer":194,"core-util-is":8,"events":199,"inherits":2,"process-nextick-args":10,"util-deprecate":12}],8:[function(require,module,exports){
 (function (Buffer){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -2059,7 +2064,7 @@ function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
 }).call(this,require("buffer").Buffer)
-},{"buffer":232}],9:[function(require,module,exports){
+},{"buffer":194}],9:[function(require,module,exports){
 module.exports = Array.isArray || function (arr) {
   return Object.prototype.toString.call(arr) == '[object Array]';
 };
@@ -2081,7 +2086,7 @@ function nextTick(fn) {
 }
 
 }).call(this,require('_process'))
-},{"_process":241}],11:[function(require,module,exports){
+},{"_process":203}],11:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -2304,7 +2309,7 @@ function base64DetectIncompleteChar(buffer) {
   this.charLength = this.charReceived ? 3 : 0;
 }
 
-},{"buffer":232}],12:[function(require,module,exports){
+},{"buffer":194}],12:[function(require,module,exports){
 (function (global){
 
 /**
@@ -3017,512 +3022,246 @@ function packF32(v) { return packIEEE754(v, 8, 23); }
 }());
 
 },{}],15:[function(require,module,exports){
-/**
- * cuid.js
- * Collision-resistant UID generator for browsers and node.
- * Sequential for fast db lookups and recency sorting.
- * Safe for element IDs and server-side lookups.
- *
- * Extracted from CLCTR
- * 
- * Copyright (c) Eric Elliott 2012
- * MIT License
- */
+'use strict';
 
-/*global window, navigator, document, require, process, module */
-(function (app) {
-  'use strict';
-  var namespace = 'cuid',
-    c = 0,
-    blockSize = 4,
-    base = 36,
-    discreteValues = Math.pow(base, blockSize),
+var utils = require('./pouch-utils');
+var version = require('./version');
+var ldj = require('ldjson-stream');
+var through = require('through2').obj;
+var pick = require('lodash/object/pick');
+var toBufferStream = require('./to-buffer-stream');
+var DEFAULT_BATCH_SIZE = 50;
 
-    pad = function pad(num, size) {
-      var s = "000000000" + num;
-      return s.substr(s.length-size);
-    },
-
-    randomBlock = function randomBlock() {
-      return pad((Math.random() *
-            discreteValues << 0)
-            .toString(base), blockSize);
-    },
-
-    safeCounter = function () {
-      c = (c < discreteValues) ? c : 0;
-      c++; // this is not subliminal
-      return c - 1;
-    },
-
-    api = function cuid() {
-      // Starting with a lowercase letter makes
-      // it HTML element ID friendly.
-      var letter = 'c', // hard-coded allows for sequential access
-
-        // timestamp
-        // warning: this exposes the exact date and time
-        // that the uid was created.
-        timestamp = (new Date().getTime()).toString(base),
-
-        // Prevent same-machine collisions.
-        counter,
-
-        // A few chars to generate distinct ids for different
-        // clients (so different computers are far less
-        // likely to generate the same id)
-        fingerprint = api.fingerprint(),
-
-        // Grab some more chars from Math.random()
-        random = randomBlock() + randomBlock();
-
-        counter = pad(safeCounter().toString(base), blockSize);
-
-      return  (letter + timestamp + counter + fingerprint + random);
-    };
-
-  api.slug = function slug() {
-    var date = new Date().getTime().toString(36),
-      counter,
-      print = api.fingerprint().slice(0,1) +
-        api.fingerprint().slice(-1),
-      random = randomBlock().slice(-2);
-
-      counter = safeCounter().toString(36).slice(-4);
-
-    return date.slice(-2) + 
-      counter + print + random;
-  };
-
-  api.globalCount = function globalCount() {
-    // We want to cache the results of this
-    var cache = (function calc() {
-        var i,
-          count = 0;
-
-        for (i in window) {
-          count++;
-        }
-
-        return count;
-      }());
-
-    api.globalCount = function () { return cache; };
-    return cache;
-  };
-
-  api.fingerprint = function browserPrint() {
-    return pad((navigator.mimeTypes.length +
-      navigator.userAgent.length).toString(36) +
-      api.globalCount().toString(36), 4);
-  };
-
-  // don't change anything from here down.
-  if (app.register) {
-    app.register(namespace, api);
-  } else if (typeof module !== 'undefined') {
-    module.exports = api;
-  } else {
-    app[namespace] = api;
-  }
-
-}(this.applitude || this));
-
-},{}],16:[function(require,module,exports){
-
-/**
- * This is the web browser implementation of `debug()`.
- *
- * Expose `debug()` as the module.
- */
-
-exports = module.exports = require('./debug');
-exports.log = log;
-exports.formatArgs = formatArgs;
-exports.save = save;
-exports.load = load;
-exports.useColors = useColors;
-exports.storage = 'undefined' != typeof chrome
-               && 'undefined' != typeof chrome.storage
-                  ? chrome.storage.local
-                  : localstorage();
-
-/**
- * Colors.
- */
-
-exports.colors = [
-  'lightseagreen',
-  'forestgreen',
-  'goldenrod',
-  'dodgerblue',
-  'darkorchid',
-  'crimson'
+// params to the replicate() API that the user is allowed to specify
+var ALLOWED_PARAMS = [
+  'batch_size',
+  'batches_limit',
+  'filter',
+  'doc_ids',
+  'query_params',
+  'since',
+  'view'
 ];
 
-/**
- * Currently only WebKit-based Web Inspectors, Firefox >= v31,
- * and the Firebug extension (any Firefox version) are known
- * to support "%c" CSS customizations.
- *
- * TODO: add a `localStorage` variable to explicitly enable/disable colors
- */
+exports.adapters = {};
+exports.adapters.writableStream = require('./writable-stream');
 
-function useColors() {
-  // is webkit? http://stackoverflow.com/a/16459606/376773
-  return ('WebkitAppearance' in document.documentElement.style) ||
-    // is firebug? http://stackoverflow.com/a/398120/376773
-    (window.console && (console.firebug || (console.exception && console.table))) ||
-    // is firefox >= v31?
-    // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
-    (navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31);
-}
+exports.plugin = require('pouch-stream');
 
-/**
- * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
- */
+exports.plugin.dump = utils.toPromise(function (writableStream, opts, callback) {
+  var self = this;
+  /* istanbul ignore else */
+  if (typeof opts === 'function') {
+    callback = opts;
+    opts = {};
+  }
 
-exports.formatters.j = function(v) {
-  return JSON.stringify(v);
-};
+  var PouchDB = self.constructor;
 
-
-/**
- * Colorize log arguments if enabled.
- *
- * @api public
- */
-
-function formatArgs() {
-  var args = arguments;
-  var useColors = this.useColors;
-
-  args[0] = (useColors ? '%c' : '')
-    + this.namespace
-    + (useColors ? ' %c' : ' ')
-    + args[0]
-    + (useColors ? '%c ' : ' ')
-    + '+' + exports.humanize(this.diff);
-
-  if (!useColors) return args;
-
-  var c = 'color: ' + this.color;
-  args = [args[0], c, 'color: inherit'].concat(Array.prototype.slice.call(args, 1));
-
-  // the final "%c" is somewhat tricky, because there could be other
-  // arguments passed either before or after the %c, so we need to
-  // figure out the correct index to insert the CSS into
-  var index = 0;
-  var lastC = 0;
-  args[0].replace(/%[a-z%]/g, function(match) {
-    if ('%%' === match) return;
-    index++;
-    if ('%c' === match) {
-      // we only are interested in the *last* %c
-      // (the user may have provided their own)
-      lastC = index;
-    }
+  var output = new PouchDB(self._db_name, {
+    stream: writableStream,
+    adapter: 'writableStream'
   });
 
-  args.splice(lastC, 0, c);
-  return args;
-}
-
-/**
- * Invokes `console.log()` when available.
- * No-op when `console.log` is not a "function".
- *
- * @api public
- */
-
-function log() {
-  // this hackery is required for IE8/9, where
-  // the `console.log` function doesn't have 'apply'
-  return 'object' === typeof console
-    && console.log
-    && Function.prototype.apply.call(console.log, console, arguments);
-}
-
-/**
- * Save `namespaces`.
- *
- * @param {String} namespaces
- * @api private
- */
-
-function save(namespaces) {
-  try {
-    if (null == namespaces) {
-      exports.storage.removeItem('debug');
-    } else {
-      exports.storage.debug = namespaces;
+  var chain = self.info().then(function (info) {
+    var header = {
+      version: version,
+      db_type: self.type(),
+      start_time: new Date().toJSON(),
+      db_info: info
+    };
+    writableStream.write(JSON.stringify(header) + '\n');
+    opts = pick(opts, ALLOWED_PARAMS);
+    if (!opts.batch_size) {
+      opts.batch_size = DEFAULT_BATCH_SIZE;
     }
-  } catch(e) {}
-}
-
-/**
- * Load `namespaces`.
- *
- * @return {String} returns the previously persisted debug modes
- * @api private
- */
-
-function load() {
-  var r;
-  try {
-    r = exports.storage.debug;
-  } catch(e) {}
-  return r;
-}
-
-/**
- * Enable namespaces listed in `localStorage.debug` initially.
- */
-
-exports.enable(load());
-
-/**
- * Localstorage attempts to return the localstorage.
- *
- * This is necessary because safari throws
- * when a user disables cookies/localstorage
- * and you attempt to access it.
- *
- * @return {LocalStorage}
- * @api private
- */
-
-function localstorage(){
-  try {
-    return window.localStorage;
-  } catch (e) {}
-}
-
-},{"./debug":17}],17:[function(require,module,exports){
-
-/**
- * This is the common logic for both the Node.js and web browser
- * implementations of `debug()`.
- *
- * Expose `debug()` as the module.
- */
-
-exports = module.exports = debug;
-exports.coerce = coerce;
-exports.disable = disable;
-exports.enable = enable;
-exports.enabled = enabled;
-exports.humanize = require('ms');
-
-/**
- * The currently active debug mode names, and names to skip.
- */
-
-exports.names = [];
-exports.skips = [];
-
-/**
- * Map of special "%n" handling functions, for the debug "format" argument.
- *
- * Valid key names are a single, lowercased letter, i.e. "n".
- */
-
-exports.formatters = {};
-
-/**
- * Previously assigned color.
- */
-
-var prevColor = 0;
-
-/**
- * Previous log timestamp.
- */
-
-var prevTime;
-
-/**
- * Select a color.
- *
- * @return {Number}
- * @api private
- */
-
-function selectColor() {
-  return exports.colors[prevColor++ % exports.colors.length];
-}
-
-/**
- * Create a debugger with the given `namespace`.
- *
- * @param {String} namespace
- * @return {Function}
- * @api public
- */
-
-function debug(namespace) {
-
-  // define the `disabled` version
-  function disabled() {
+    return self.replicate.to(output, opts);
+  }).then(function () {
+    return output.close();
+  }).then(function () {
+    callback(null, {ok: true});
+  });
+  /* istanbul ignore next */
+  function onErr(err) {
+    callback(err);
   }
-  disabled.enabled = false;
+  chain.catch(onErr);
+});
 
-  // define the `enabled` version
-  function enabled() {
-
-    var self = enabled;
-
-    // set `diff` timestamp
-    var curr = +new Date();
-    var ms = curr - (prevTime || curr);
-    self.diff = ms;
-    self.prev = prevTime;
-    self.curr = curr;
-    prevTime = curr;
-
-    // add the `color` if not set
-    if (null == self.useColors) self.useColors = exports.useColors();
-    if (null == self.color && self.useColors) self.color = selectColor();
-
-    var args = Array.prototype.slice.call(arguments);
-
-    args[0] = exports.coerce(args[0]);
-
-    if ('string' !== typeof args[0]) {
-      // anything else let's inspect with %o
-      args = ['%o'].concat(args);
-    }
-
-    // apply any `formatters` transformations
-    var index = 0;
-    args[0] = args[0].replace(/%([a-z%])/g, function(match, format) {
-      // if we encounter an escaped % then don't increase the array index
-      if (match === '%%') return match;
-      index++;
-      var formatter = exports.formatters[format];
-      if ('function' === typeof formatter) {
-        var val = args[index];
-        match = formatter.call(self, val);
-
-        // now we need to remove `args[index]` since it's inlined in the `format`
-        args.splice(index, 1);
-        index--;
-      }
-      return match;
-    });
-
-    if ('function' === typeof exports.formatArgs) {
-      args = exports.formatArgs.apply(self, args);
-    }
-    var logFn = enabled.log || exports.log || console.log.bind(console);
-    logFn.apply(self, args);
+exports.plugin.load = utils.toPromise(function (readableStream, opts, callback) {
+  /* istanbul ignore else */
+  if (typeof opts === 'function') {
+    callback = opts;
+    opts = {};
   }
-  enabled.enabled = true;
 
-  var fn = exports.enabled(namespace) ? enabled : disabled;
+  var batchSize;
+  /* istanbul ignore if */
+  if ('batch_size' in opts) {
+    batchSize = opts.batch_size;
+  } else {
+    batchSize = DEFAULT_BATCH_SIZE;
+  }
 
-  fn.namespace = namespace;
+  var queue = [];
+  readableStream.pipe(toBufferStream()).pipe(ldj.parse()).pipe(through(function (data, _, next) {
+    if (!data.docs) {
+      return next();
+    }
+    // lets smooth it out
+    data.docs.forEach(function (doc) {
+      this.push(doc);
+    }, this);
+    next();
+  }))
+  .pipe(through(function (doc, _, next) {
+    queue.push(doc);
+    if (queue.length >= batchSize) {
+      this.push(queue);
+      queue = [];
+    }
+    next();
+  }, function (next) {
+    if (queue.length) {
+      this.push(queue);
+    }
+    next();
+  }))
+  .pipe(this.createWriteStream({new_edits: false}))
+  .on('error', callback)
+  .on('finish', function () {
+    callback(null, {ok: true});
+  });
+});
 
-  return fn;
+/* istanbul ignore next */
+if (typeof window !== 'undefined' && window.PouchDB) {
+  window.PouchDB.plugin(exports.plugin);
+  window.PouchDB.adapter('writableStream', exports.adapters.writableStream);
 }
 
-/**
- * Enables a debug mode by namespaces. This can include modes
- * separated by a colon and wildcards.
- *
- * @param {String} namespaces
- * @api public
- */
+},{"./pouch-utils":87,"./to-buffer-stream":88,"./version":89,"./writable-stream":90,"ldjson-stream":17,"lodash/object/pick":60,"pouch-stream":63,"through2":85}],16:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"dup":2}],17:[function(require,module,exports){
+var through = require('through2')
+var split = require('split2')
+var EOL = require('os').EOL
 
-function enable(namespaces) {
-  exports.save(namespaces);
+module.exports = parse
+module.exports.serialize = serialize
+module.exports.parse = parse
 
-  var split = (namespaces || '').split(/[\s,]+/);
-  var len = split.length;
+function parse(opts) {
+  opts = opts || {}
+  opts.strict = opts.strict !== false
 
-  for (var i = 0; i < len; i++) {
-    if (!split[i]) continue; // ignore empty strings
-    namespaces = split[i].replace(/\*/g, '.*?');
-    if (namespaces[0] === '-') {
-      exports.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
-    } else {
-      exports.names.push(new RegExp('^' + namespaces + '$'));
+  function strict(row) {
+    if (row) return JSON.parse(row)
+  }
+
+  function nonStrict(row) {
+    try {
+      if (row) return JSON.parse(row)
+    } catch(e) {
+      // ignore
     }
   }
+
+  return opts.strict ? split(strict) : split(nonStrict)
 }
 
-/**
- * Disable debug output.
- *
- * @api public
- */
-
-function disable() {
-  exports.enable('');
+function serialize() {
+  return through.obj(function(obj, enc, cb) {
+    cb(null, JSON.stringify(obj) + EOL)
+  })
 }
 
-/**
- * Returns true if the given mode name is enabled, false otherwise.
- *
- * @param {String} name
- * @return {Boolean}
- * @api public
- */
+},{"os":202,"split2":18,"through2":85}],18:[function(require,module,exports){
+/*
+Copyright (c) 2014, Matteo Collina <hello@matteocollina.com>
 
-function enabled(name) {
-  var i, len;
-  for (i = 0, len = exports.skips.length; i < len; i++) {
-    if (exports.skips[i].test(name)) {
-      return false;
-    }
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
+IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
+
+'use strict';
+
+var through = require('through2')
+
+function transform(chunk, enc, cb) {
+  var list = chunk.toString('utf8').split(this.matcher)
+    , remaining = list.pop()
+    , i
+
+  if (list.length >= 1) {
+    push(this, this.mapper((this._last + list.shift())))
+  } else {
+    remaining = this._last + remaining
   }
-  for (i = 0, len = exports.names.length; i < len; i++) {
-    if (exports.names[i].test(name)) {
-      return true;
-    }
+
+  for (i = 0; i < list.length; i++) {
+    push(this, this.mapper(list[i]))
   }
-  return false;
+
+  this._last = remaining
+
+  cb()
 }
 
-/**
- * Coerce `val`.
- *
- * @param {Mixed} val
- * @return {Mixed}
- * @api private
- */
+function flush(cb) {
+  if (this._last)
+    push(this, this.mapper(this._last))
 
-function coerce(val) {
-  if (val instanceof Error) return val.stack || val.message;
-  return val;
+  cb()
 }
 
-},{"ms":37}],18:[function(require,module,exports){
-if (typeof Object.create === 'function') {
-  // implementation from standard node.js 'util' module
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    ctor.prototype = Object.create(superCtor.prototype, {
-      constructor: {
-        value: ctor,
-        enumerable: false,
-        writable: true,
-        configurable: true
-      }
-    });
-  };
-} else {
-  // old school shim for old browsers
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    var TempCtor = function () {}
-    TempCtor.prototype = superCtor.prototype
-    ctor.prototype = new TempCtor()
-    ctor.prototype.constructor = ctor
+function push(self, val) {
+  if (val !== undefined)
+    self.push(val)
+}
+
+function noop(incoming) {
+  return incoming
+}
+
+function split(matcher, mapper, options) {
+
+  if (typeof matcher === 'object' && !(matcher instanceof RegExp)) {
+    options = matcher
+    matcher = null
   }
+
+  if (typeof matcher === 'function') {
+    mapper = matcher
+    matcher = null
+  }
+
+  options = options || {}
+
+  var stream = through(options, transform, flush)
+
+  // this stream is in objectMode only in the readable part
+  stream._readableState.objectMode = true;
+
+  stream._last = ''
+  stream.matcher = matcher || /\r?\n/
+  stream.mapper = mapper || noop
+
+  return stream
 }
 
-},{}],19:[function(require,module,exports){
+module.exports = split
+
+},{"through2":85}],19:[function(require,module,exports){
 'use strict';
 
 module.exports = INTERNAL;
@@ -3909,7 +3648,7 @@ function immediate(task) {
     scheduleDrain();
   }
 }
-},{"./messageChannel":33,"./mutation.js":34,"./nextTick":231,"./stateChange":35,"./timeout":36}],33:[function(require,module,exports){
+},{"./messageChannel":33,"./mutation.js":34,"./nextTick":193,"./stateChange":35,"./timeout":36}],33:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -3994,552 +3733,6 @@ exports.install = function (t) {
   };
 };
 },{}],37:[function(require,module,exports){
-/**
- * Helpers.
- */
-
-var s = 1000;
-var m = s * 60;
-var h = m * 60;
-var d = h * 24;
-var y = d * 365.25;
-
-/**
- * Parse or format the given `val`.
- *
- * Options:
- *
- *  - `long` verbose formatting [false]
- *
- * @param {String|Number} val
- * @param {Object} options
- * @return {String|Number}
- * @api public
- */
-
-module.exports = function(val, options){
-  options = options || {};
-  if ('string' == typeof val) return parse(val);
-  return options.long
-    ? long(val)
-    : short(val);
-};
-
-/**
- * Parse the given `str` and return milliseconds.
- *
- * @param {String} str
- * @return {Number}
- * @api private
- */
-
-function parse(str) {
-  str = '' + str;
-  if (str.length > 10000) return;
-  var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(str);
-  if (!match) return;
-  var n = parseFloat(match[1]);
-  var type = (match[2] || 'ms').toLowerCase();
-  switch (type) {
-    case 'years':
-    case 'year':
-    case 'yrs':
-    case 'yr':
-    case 'y':
-      return n * y;
-    case 'days':
-    case 'day':
-    case 'd':
-      return n * d;
-    case 'hours':
-    case 'hour':
-    case 'hrs':
-    case 'hr':
-    case 'h':
-      return n * h;
-    case 'minutes':
-    case 'minute':
-    case 'mins':
-    case 'min':
-    case 'm':
-      return n * m;
-    case 'seconds':
-    case 'second':
-    case 'secs':
-    case 'sec':
-    case 's':
-      return n * s;
-    case 'milliseconds':
-    case 'millisecond':
-    case 'msecs':
-    case 'msec':
-    case 'ms':
-      return n;
-  }
-}
-
-/**
- * Short format for `ms`.
- *
- * @param {Number} ms
- * @return {String}
- * @api private
- */
-
-function short(ms) {
-  if (ms >= d) return Math.round(ms / d) + 'd';
-  if (ms >= h) return Math.round(ms / h) + 'h';
-  if (ms >= m) return Math.round(ms / m) + 'm';
-  if (ms >= s) return Math.round(ms / s) + 's';
-  return ms + 'ms';
-}
-
-/**
- * Long format for `ms`.
- *
- * @param {Number} ms
- * @return {String}
- * @api private
- */
-
-function long(ms) {
-  return plural(ms, d, 'day')
-    || plural(ms, h, 'hour')
-    || plural(ms, m, 'minute')
-    || plural(ms, s, 'second')
-    || ms + ' ms';
-}
-
-/**
- * Pluralization helper.
- */
-
-function plural(ms, n, name) {
-  if (ms < n) return;
-  if (ms < n * 1.5) return Math.floor(ms / n) + ' ' + name;
-  return Math.ceil(ms / n) + ' ' + name + 's';
-}
-
-},{}],38:[function(require,module,exports){
-"use strict";
-
-// Extends method
-// (taken from http://code.jquery.com/jquery-1.9.0.js)
-// Populate the class2type map
-var class2type = {};
-
-var types = [
-  "Boolean", "Number", "String", "Function", "Array",
-  "Date", "RegExp", "Object", "Error"
-];
-for (var i = 0; i < types.length; i++) {
-  var typename = types[i];
-  class2type["[object " + typename + "]"] = typename.toLowerCase();
-}
-
-var core_toString = class2type.toString;
-var core_hasOwn = class2type.hasOwnProperty;
-
-function type(obj) {
-  if (obj === null) {
-    return String(obj);
-  }
-  return typeof obj === "object" || typeof obj === "function" ?
-    class2type[core_toString.call(obj)] || "object" :
-    typeof obj;
-}
-
-function isWindow(obj) {
-  return obj !== null && obj === obj.window;
-}
-
-function isPlainObject(obj) {
-  // Must be an Object.
-  // Because of IE, we also have to check the presence of
-  // the constructor property.
-  // Make sure that DOM nodes and window objects don't pass through, as well
-  if (!obj || type(obj) !== "object" || obj.nodeType || isWindow(obj)) {
-    return false;
-  }
-
-  try {
-    // Not own constructor property must be Object
-    if (obj.constructor &&
-      !core_hasOwn.call(obj, "constructor") &&
-      !core_hasOwn.call(obj.constructor.prototype, "isPrototypeOf")) {
-      return false;
-    }
-  } catch ( e ) {
-    // IE8,9 Will throw exceptions on certain host objects #9897
-    return false;
-  }
-
-  // Own properties are enumerated firstly, so to speed up,
-  // if last one is own, then all properties are own.
-  var key;
-  for (key in obj) {}
-
-  return key === undefined || core_hasOwn.call(obj, key);
-}
-
-
-function isFunction(obj) {
-  return type(obj) === "function";
-}
-
-var isArray = Array.isArray || function (obj) {
-  return type(obj) === "array";
-};
-
-function extend() {
-  // originally extend() was recursive, but this ended up giving us
-  // "call stack exceeded", so it's been unrolled to use a literal stack
-  // (see https://github.com/pouchdb/pouchdb/issues/2543)
-  var stack = [];
-  var i = -1;
-  var len = arguments.length;
-  var args = new Array(len);
-  while (++i < len) {
-    args[i] = arguments[i];
-  }
-  var container = {};
-  stack.push({args: args, result: {container: container, key: 'key'}});
-  var next;
-  while ((next = stack.pop())) {
-    extendInner(stack, next.args, next.result);
-  }
-  return container.key;
-}
-
-function extendInner(stack, args, result) {
-  var options, name, src, copy, copyIsArray, clone,
-    target = args[0] || {},
-    i = 1,
-    length = args.length,
-    deep = false,
-    numericStringRegex = /\d+/,
-    optionsIsArray;
-
-  // Handle a deep copy situation
-  if (typeof target === "boolean") {
-    deep = target;
-    target = args[1] || {};
-    // skip the boolean and the target
-    i = 2;
-  }
-
-  // Handle case when target is a string or something (possible in deep copy)
-  if (typeof target !== "object" && !isFunction(target)) {
-    target = {};
-  }
-
-  // extend jQuery itself if only one argument is passed
-  if (length === i) {
-    /* jshint validthis: true */
-    target = this;
-    --i;
-  }
-
-  for (; i < length; i++) {
-    // Only deal with non-null/undefined values
-    if ((options = args[i]) != null) {
-      optionsIsArray = isArray(options);
-      // Extend the base object
-      for (name in options) {
-        //if (options.hasOwnProperty(name)) {
-        if (!(name in Object.prototype)) {
-          if (optionsIsArray && !numericStringRegex.test(name)) {
-            continue;
-          }
-
-          src = target[name];
-          copy = options[name];
-
-          // Prevent never-ending loop
-          if (target === copy) {
-            continue;
-          }
-
-          // Recurse if we're merging plain objects or arrays
-          if (deep && copy && (isPlainObject(copy) ||
-              (copyIsArray = isArray(copy)))) {
-            if (copyIsArray) {
-              copyIsArray = false;
-              clone = src && isArray(src) ? src : [];
-
-            } else {
-              clone = src && isPlainObject(src) ? src : {};
-            }
-
-            // Never move original objects, clone them
-            stack.push({
-              args: [deep, clone, copy],
-              result: {
-                container: target,
-                key: name
-              }
-            });
-
-          // Don't bring in undefined values
-          } else if (copy !== undefined) {
-            if (!(isArray(options) && isFunction(copy))) {
-              target[name] = copy;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  // "Return" the modified object by setting the key
-  // on the given container
-  result.container[result.key] = target;
-}
-
-
-module.exports = extend;
-
-
-
-},{}],39:[function(require,module,exports){
-'use strict';
-
-var utils = require('./pouch-utils');
-var version = require('./version');
-var ldj = require('ldjson-stream');
-var through = require('through2').obj;
-var pick = require('lodash/object/pick');
-var toBufferStream = require('./to-buffer-stream');
-var DEFAULT_BATCH_SIZE = 50;
-
-// params to the replicate() API that the user is allowed to specify
-var ALLOWED_PARAMS = [
-  'batch_size',
-  'batches_limit',
-  'filter',
-  'doc_ids',
-  'query_params',
-  'since',
-  'view'
-];
-
-exports.adapters = {};
-exports.adapters.writableStream = require('./writable-stream');
-
-exports.plugin = require('pouch-stream');
-
-exports.plugin.dump = utils.toPromise(function (writableStream, opts, callback) {
-  var self = this;
-  /* istanbul ignore else */
-  if (typeof opts === 'function') {
-    callback = opts;
-    opts = {};
-  }
-
-  var PouchDB = self.constructor;
-
-  var output = new PouchDB(self._db_name, {
-    stream: writableStream,
-    adapter: 'writableStream'
-  });
-
-  var chain = self.info().then(function (info) {
-    var header = {
-      version: version,
-      db_type: self.type(),
-      start_time: new Date().toJSON(),
-      db_info: info
-    };
-    writableStream.write(JSON.stringify(header) + '\n');
-    opts = pick(opts, ALLOWED_PARAMS);
-    if (!opts.batch_size) {
-      opts.batch_size = DEFAULT_BATCH_SIZE;
-    }
-    return self.replicate.to(output, opts);
-  }).then(function () {
-    return output.close();
-  }).then(function () {
-    callback(null, {ok: true});
-  });
-  /* istanbul ignore next */
-  function onErr(err) {
-    callback(err);
-  }
-  chain.catch(onErr);
-});
-
-exports.plugin.load = utils.toPromise(function (readableStream, opts, callback) {
-  /* istanbul ignore else */
-  if (typeof opts === 'function') {
-    callback = opts;
-    opts = {};
-  }
-
-  var batchSize;
-  /* istanbul ignore if */
-  if ('batch_size' in opts) {
-    batchSize = opts.batch_size;
-  } else {
-    batchSize = DEFAULT_BATCH_SIZE;
-  }
-
-  var queue = [];
-  readableStream.pipe(toBufferStream()).pipe(ldj.parse()).pipe(through(function (data, _, next) {
-    if (!data.docs) {
-      return next();
-    }
-    // lets smooth it out
-    data.docs.forEach(function (doc) {
-      this.push(doc);
-    }, this);
-    next();
-  }))
-  .pipe(through(function (doc, _, next) {
-    queue.push(doc);
-    if (queue.length >= batchSize) {
-      this.push(queue);
-      queue = [];
-    }
-    next();
-  }, function (next) {
-    if (queue.length) {
-      this.push(queue);
-    }
-    next();
-  }))
-  .pipe(this.createWriteStream({new_edits: false}))
-  .on('error', callback)
-  .on('finish', function () {
-    callback(null, {ok: true});
-  });
-});
-
-/* istanbul ignore next */
-if (typeof window !== 'undefined' && window.PouchDB) {
-  window.PouchDB.plugin(exports.plugin);
-  window.PouchDB.adapter('writableStream', exports.adapters.writableStream);
-}
-
-},{"./pouch-utils":91,"./to-buffer-stream":92,"./version":93,"./writable-stream":94,"ldjson-stream":40,"lodash/object/pick":65,"pouch-stream":68,"through2":89}],40:[function(require,module,exports){
-var through = require('through2')
-var split = require('split2')
-var EOL = require('os').EOL
-
-module.exports = parse
-module.exports.serialize = serialize
-module.exports.parse = parse
-
-function parse(opts) {
-  opts = opts || {}
-  opts.strict = opts.strict !== false
-
-  function strict(row) {
-    if (row) return JSON.parse(row)
-  }
-
-  function nonStrict(row) {
-    try {
-      if (row) return JSON.parse(row)
-    } catch(e) {
-      // ignore
-    }
-  }
-
-  return opts.strict ? split(strict) : split(nonStrict)
-}
-
-function serialize() {
-  return through.obj(function(obj, enc, cb) {
-    cb(null, JSON.stringify(obj) + EOL)
-  })
-}
-
-},{"os":240,"split2":41,"through2":89}],41:[function(require,module,exports){
-/*
-Copyright (c) 2014, Matteo Collina <hello@matteocollina.com>
-
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted, provided that the above
-copyright notice and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
-ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
-ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
-IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-*/
-
-'use strict';
-
-var through = require('through2')
-
-function transform(chunk, enc, cb) {
-  var list = chunk.toString('utf8').split(this.matcher)
-    , remaining = list.pop()
-    , i
-
-  if (list.length >= 1) {
-    push(this, this.mapper((this._last + list.shift())))
-  } else {
-    remaining = this._last + remaining
-  }
-
-  for (i = 0; i < list.length; i++) {
-    push(this, this.mapper(list[i]))
-  }
-
-  this._last = remaining
-
-  cb()
-}
-
-function flush(cb) {
-  if (this._last)
-    push(this, this.mapper(this._last))
-
-  cb()
-}
-
-function push(self, val) {
-  if (val !== undefined)
-    self.push(val)
-}
-
-function noop(incoming) {
-  return incoming
-}
-
-function split(matcher, mapper, options) {
-
-  if (typeof matcher === 'object' && !(matcher instanceof RegExp)) {
-    options = matcher
-    matcher = null
-  }
-
-  if (typeof matcher === 'function') {
-    mapper = matcher
-    matcher = null
-  }
-
-  options = options || {}
-
-  var stream = through(options, transform, flush)
-
-  // this stream is in objectMode only in the readable part
-  stream._readableState.objectMode = true;
-
-  stream._last = ''
-  stream.matcher = matcher || /\r?\n/
-  stream.mapper = mapper || noop
-
-  return stream
-}
-
-module.exports = split
-
-},{"through2":89}],42:[function(require,module,exports){
 /** Used as the `TypeError` message for "Functions" methods. */
 var FUNC_ERROR_TEXT = 'Expected a function';
 
@@ -4599,7 +3792,7 @@ function restParam(func, start) {
 
 module.exports = restParam;
 
-},{}],43:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 /**
  * Appends the elements of `values` to `array`.
  *
@@ -4621,7 +3814,7 @@ function arrayPush(array, values) {
 
 module.exports = arrayPush;
 
-},{}],44:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 var arrayPush = require('./arrayPush'),
     isArguments = require('../lang/isArguments'),
     isArray = require('../lang/isArray'),
@@ -4664,7 +3857,7 @@ function baseFlatten(array, isDeep, isStrict, result) {
 
 module.exports = baseFlatten;
 
-},{"../lang/isArguments":59,"../lang/isArray":60,"./arrayPush":43,"./isArrayLike":52,"./isObjectLike":55}],45:[function(require,module,exports){
+},{"../lang/isArguments":54,"../lang/isArray":55,"./arrayPush":38,"./isArrayLike":47,"./isObjectLike":50}],40:[function(require,module,exports){
 var createBaseFor = require('./createBaseFor');
 
 /**
@@ -4683,7 +3876,7 @@ var baseFor = createBaseFor();
 
 module.exports = baseFor;
 
-},{"./createBaseFor":49}],46:[function(require,module,exports){
+},{"./createBaseFor":44}],41:[function(require,module,exports){
 var baseFor = require('./baseFor'),
     keysIn = require('../object/keysIn');
 
@@ -4702,7 +3895,7 @@ function baseForIn(object, iteratee) {
 
 module.exports = baseForIn;
 
-},{"../object/keysIn":64,"./baseFor":45}],47:[function(require,module,exports){
+},{"../object/keysIn":59,"./baseFor":40}],42:[function(require,module,exports){
 /**
  * The base implementation of `_.property` without support for deep paths.
  *
@@ -4718,7 +3911,7 @@ function baseProperty(key) {
 
 module.exports = baseProperty;
 
-},{}],48:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 var identity = require('../utility/identity');
 
 /**
@@ -4759,7 +3952,7 @@ function bindCallback(func, thisArg, argCount) {
 
 module.exports = bindCallback;
 
-},{"../utility/identity":66}],49:[function(require,module,exports){
+},{"../utility/identity":61}],44:[function(require,module,exports){
 var toObject = require('./toObject');
 
 /**
@@ -4788,7 +3981,7 @@ function createBaseFor(fromRight) {
 
 module.exports = createBaseFor;
 
-},{"./toObject":58}],50:[function(require,module,exports){
+},{"./toObject":53}],45:[function(require,module,exports){
 var baseProperty = require('./baseProperty');
 
 /**
@@ -4805,7 +3998,7 @@ var getLength = baseProperty('length');
 
 module.exports = getLength;
 
-},{"./baseProperty":47}],51:[function(require,module,exports){
+},{"./baseProperty":42}],46:[function(require,module,exports){
 var isNative = require('../lang/isNative');
 
 /**
@@ -4823,7 +4016,7 @@ function getNative(object, key) {
 
 module.exports = getNative;
 
-},{"../lang/isNative":62}],52:[function(require,module,exports){
+},{"../lang/isNative":57}],47:[function(require,module,exports){
 var getLength = require('./getLength'),
     isLength = require('./isLength');
 
@@ -4840,7 +4033,7 @@ function isArrayLike(value) {
 
 module.exports = isArrayLike;
 
-},{"./getLength":50,"./isLength":54}],53:[function(require,module,exports){
+},{"./getLength":45,"./isLength":49}],48:[function(require,module,exports){
 /** Used to detect unsigned integer values. */
 var reIsUint = /^\d+$/;
 
@@ -4866,7 +4059,7 @@ function isIndex(value, length) {
 
 module.exports = isIndex;
 
-},{}],54:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 /**
  * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
  * of an array-like value.
@@ -4888,7 +4081,7 @@ function isLength(value) {
 
 module.exports = isLength;
 
-},{}],55:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 /**
  * Checks if `value` is object-like.
  *
@@ -4902,7 +4095,7 @@ function isObjectLike(value) {
 
 module.exports = isObjectLike;
 
-},{}],56:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 var toObject = require('./toObject');
 
 /**
@@ -4932,7 +4125,7 @@ function pickByArray(object, props) {
 
 module.exports = pickByArray;
 
-},{"./toObject":58}],57:[function(require,module,exports){
+},{"./toObject":53}],52:[function(require,module,exports){
 var baseForIn = require('./baseForIn');
 
 /**
@@ -4956,7 +4149,7 @@ function pickByCallback(object, predicate) {
 
 module.exports = pickByCallback;
 
-},{"./baseForIn":46}],58:[function(require,module,exports){
+},{"./baseForIn":41}],53:[function(require,module,exports){
 var isObject = require('../lang/isObject');
 
 /**
@@ -4972,7 +4165,7 @@ function toObject(value) {
 
 module.exports = toObject;
 
-},{"../lang/isObject":63}],59:[function(require,module,exports){
+},{"../lang/isObject":58}],54:[function(require,module,exports){
 var isArrayLike = require('../internal/isArrayLike'),
     isObjectLike = require('../internal/isObjectLike');
 
@@ -5008,7 +4201,7 @@ function isArguments(value) {
 
 module.exports = isArguments;
 
-},{"../internal/isArrayLike":52,"../internal/isObjectLike":55}],60:[function(require,module,exports){
+},{"../internal/isArrayLike":47,"../internal/isObjectLike":50}],55:[function(require,module,exports){
 var getNative = require('../internal/getNative'),
     isLength = require('../internal/isLength'),
     isObjectLike = require('../internal/isObjectLike');
@@ -5050,7 +4243,7 @@ var isArray = nativeIsArray || function(value) {
 
 module.exports = isArray;
 
-},{"../internal/getNative":51,"../internal/isLength":54,"../internal/isObjectLike":55}],61:[function(require,module,exports){
+},{"../internal/getNative":46,"../internal/isLength":49,"../internal/isObjectLike":50}],56:[function(require,module,exports){
 var isObject = require('./isObject');
 
 /** `Object#toString` result references. */
@@ -5090,7 +4283,7 @@ function isFunction(value) {
 
 module.exports = isFunction;
 
-},{"./isObject":63}],62:[function(require,module,exports){
+},{"./isObject":58}],57:[function(require,module,exports){
 var isFunction = require('./isFunction'),
     isObjectLike = require('../internal/isObjectLike');
 
@@ -5140,7 +4333,7 @@ function isNative(value) {
 
 module.exports = isNative;
 
-},{"../internal/isObjectLike":55,"./isFunction":61}],63:[function(require,module,exports){
+},{"../internal/isObjectLike":50,"./isFunction":56}],58:[function(require,module,exports){
 /**
  * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
  * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
@@ -5170,7 +4363,7 @@ function isObject(value) {
 
 module.exports = isObject;
 
-},{}],64:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 var isArguments = require('../lang/isArguments'),
     isArray = require('../lang/isArray'),
     isIndex = require('../internal/isIndex'),
@@ -5236,7 +4429,7 @@ function keysIn(object) {
 
 module.exports = keysIn;
 
-},{"../internal/isIndex":53,"../internal/isLength":54,"../lang/isArguments":59,"../lang/isArray":60,"../lang/isObject":63}],65:[function(require,module,exports){
+},{"../internal/isIndex":48,"../internal/isLength":49,"../lang/isArguments":54,"../lang/isArray":55,"../lang/isObject":58}],60:[function(require,module,exports){
 var baseFlatten = require('../internal/baseFlatten'),
     bindCallback = require('../internal/bindCallback'),
     pickByArray = require('../internal/pickByArray'),
@@ -5280,7 +4473,7 @@ var pick = restParam(function(object, props) {
 
 module.exports = pick;
 
-},{"../function/restParam":42,"../internal/baseFlatten":44,"../internal/bindCallback":48,"../internal/pickByArray":56,"../internal/pickByCallback":57}],66:[function(require,module,exports){
+},{"../function/restParam":37,"../internal/baseFlatten":39,"../internal/bindCallback":43,"../internal/pickByArray":51,"../internal/pickByCallback":52}],61:[function(require,module,exports){
 /**
  * This method returns the first argument provided to it.
  *
@@ -5302,7 +4495,7 @@ function identity(value) {
 
 module.exports = identity;
 
-},{}],67:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 'use strict';
 module.exports = function (source, target, events) {
   source.on('newListener', function (event, listener) {
@@ -5317,7 +4510,7 @@ module.exports = function (source, target, events) {
   });
 };
 
-},{}],68:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 'use strict';
 var Writable = require('./writable');
 var Readable = require('./readable');
@@ -5351,7 +4544,7 @@ exports.end = function () {
   this.emit('done');
 };
 
-},{"./eventProxy":67,"./readable":78,"./writable":79}],69:[function(require,module,exports){
+},{"./eventProxy":62,"./readable":73,"./writable":74}],64:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -5444,7 +4637,7 @@ function forEach (xs, f) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_readable":71,"./_stream_writable":73,"_process":241,"core-util-is":74,"inherits":18}],70:[function(require,module,exports){
+},{"./_stream_readable":66,"./_stream_writable":68,"_process":203,"core-util-is":69,"inherits":16}],65:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -5492,7 +4685,7 @@ PassThrough.prototype._transform = function(chunk, encoding, cb) {
   cb(null, chunk);
 };
 
-},{"./_stream_transform":72,"core-util-is":74,"inherits":18}],71:[function(require,module,exports){
+},{"./_stream_transform":67,"core-util-is":69,"inherits":16}],66:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -6447,7 +5640,7 @@ function indexOf (xs, x) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":69,"_process":241,"buffer":232,"core-util-is":74,"events":237,"inherits":18,"isarray":75,"stream":253,"string_decoder/":76,"util":231}],72:[function(require,module,exports){
+},{"./_stream_duplex":64,"_process":203,"buffer":194,"core-util-is":69,"events":199,"inherits":16,"isarray":70,"stream":215,"string_decoder/":71,"util":193}],67:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -6658,7 +5851,7 @@ function done(stream, er) {
   return stream.push(null);
 }
 
-},{"./_stream_duplex":69,"core-util-is":74,"inherits":18}],73:[function(require,module,exports){
+},{"./_stream_duplex":64,"core-util-is":69,"inherits":16}],68:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -7139,13 +6332,13 @@ function endWritable(stream, state, cb) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":69,"_process":241,"buffer":232,"core-util-is":74,"inherits":18,"stream":253}],74:[function(require,module,exports){
+},{"./_stream_duplex":64,"_process":203,"buffer":194,"core-util-is":69,"inherits":16,"stream":215}],69:[function(require,module,exports){
 arguments[4][8][0].apply(exports,arguments)
-},{"buffer":232,"dup":8}],75:[function(require,module,exports){
+},{"buffer":194,"dup":8}],70:[function(require,module,exports){
 arguments[4][9][0].apply(exports,arguments)
-},{"dup":9}],76:[function(require,module,exports){
+},{"dup":9}],71:[function(require,module,exports){
 arguments[4][11][0].apply(exports,arguments)
-},{"buffer":232,"dup":11}],77:[function(require,module,exports){
+},{"buffer":194,"dup":11}],72:[function(require,module,exports){
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = require('stream');
 exports.Readable = exports;
@@ -7154,7 +6347,7 @@ exports.Duplex = require('./lib/_stream_duplex.js');
 exports.Transform = require('./lib/_stream_transform.js');
 exports.PassThrough = require('./lib/_stream_passthrough.js');
 
-},{"./lib/_stream_duplex.js":69,"./lib/_stream_passthrough.js":70,"./lib/_stream_readable.js":71,"./lib/_stream_transform.js":72,"./lib/_stream_writable.js":73,"stream":253}],78:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":64,"./lib/_stream_passthrough.js":65,"./lib/_stream_readable.js":66,"./lib/_stream_transform.js":67,"./lib/_stream_writable.js":68,"stream":215}],73:[function(require,module,exports){
 'use strict';
 var inherits = require('inherits');
 var Readable = require('readable-stream').Readable;
@@ -7209,7 +6402,7 @@ ReadStream.prototype.cancel = function () {
   }
 };
 
-},{"inherits":18,"readable-stream":77}],79:[function(require,module,exports){
+},{"inherits":16,"readable-stream":72}],74:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 var inherits = require('inherits');
@@ -7256,9 +6449,190 @@ WriteStream.prototype._write = function (chunk, _, next) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":232,"inherits":18,"readable-stream":77}],80:[function(require,module,exports){
-arguments[4][69][0].apply(exports,arguments)
-},{"./_stream_readable":81,"./_stream_writable":83,"_process":241,"core-util-is":84,"dup":69,"inherits":18}],81:[function(require,module,exports){
+},{"buffer":194,"inherits":16,"readable-stream":72}],75:[function(require,module,exports){
+"use strict";
+
+// Extends method
+// (taken from http://code.jquery.com/jquery-1.9.0.js)
+// Populate the class2type map
+var class2type = {};
+
+var types = [
+  "Boolean", "Number", "String", "Function", "Array",
+  "Date", "RegExp", "Object", "Error"
+];
+for (var i = 0; i < types.length; i++) {
+  var typename = types[i];
+  class2type["[object " + typename + "]"] = typename.toLowerCase();
+}
+
+var core_toString = class2type.toString;
+var core_hasOwn = class2type.hasOwnProperty;
+
+function type(obj) {
+  if (obj === null) {
+    return String(obj);
+  }
+  return typeof obj === "object" || typeof obj === "function" ?
+    class2type[core_toString.call(obj)] || "object" :
+    typeof obj;
+}
+
+function isWindow(obj) {
+  return obj !== null && obj === obj.window;
+}
+
+function isPlainObject(obj) {
+  // Must be an Object.
+  // Because of IE, we also have to check the presence of
+  // the constructor property.
+  // Make sure that DOM nodes and window objects don't pass through, as well
+  if (!obj || type(obj) !== "object" || obj.nodeType || isWindow(obj)) {
+    return false;
+  }
+
+  try {
+    // Not own constructor property must be Object
+    if (obj.constructor &&
+      !core_hasOwn.call(obj, "constructor") &&
+      !core_hasOwn.call(obj.constructor.prototype, "isPrototypeOf")) {
+      return false;
+    }
+  } catch ( e ) {
+    // IE8,9 Will throw exceptions on certain host objects #9897
+    return false;
+  }
+
+  // Own properties are enumerated firstly, so to speed up,
+  // if last one is own, then all properties are own.
+  var key;
+  for (key in obj) {}
+
+  return key === undefined || core_hasOwn.call(obj, key);
+}
+
+
+function isFunction(obj) {
+  return type(obj) === "function";
+}
+
+var isArray = Array.isArray || function (obj) {
+  return type(obj) === "array";
+};
+
+function extend() {
+  // originally extend() was recursive, but this ended up giving us
+  // "call stack exceeded", so it's been unrolled to use a literal stack
+  // (see https://github.com/pouchdb/pouchdb/issues/2543)
+  var stack = [];
+  var i = -1;
+  var len = arguments.length;
+  var args = new Array(len);
+  while (++i < len) {
+    args[i] = arguments[i];
+  }
+  var container = {};
+  stack.push({args: args, result: {container: container, key: 'key'}});
+  var next;
+  while ((next = stack.pop())) {
+    extendInner(stack, next.args, next.result);
+  }
+  return container.key;
+}
+
+function extendInner(stack, args, result) {
+  var options, name, src, copy, copyIsArray, clone,
+    target = args[0] || {},
+    i = 1,
+    length = args.length,
+    deep = false,
+    numericStringRegex = /\d+/,
+    optionsIsArray;
+
+  // Handle a deep copy situation
+  if (typeof target === "boolean") {
+    deep = target;
+    target = args[1] || {};
+    // skip the boolean and the target
+    i = 2;
+  }
+
+  // Handle case when target is a string or something (possible in deep copy)
+  if (typeof target !== "object" && !isFunction(target)) {
+    target = {};
+  }
+
+  // extend jQuery itself if only one argument is passed
+  if (length === i) {
+    /* jshint validthis: true */
+    target = this;
+    --i;
+  }
+
+  for (; i < length; i++) {
+    // Only deal with non-null/undefined values
+    if ((options = args[i]) != null) {
+      optionsIsArray = isArray(options);
+      // Extend the base object
+      for (name in options) {
+        //if (options.hasOwnProperty(name)) {
+        if (!(name in Object.prototype)) {
+          if (optionsIsArray && !numericStringRegex.test(name)) {
+            continue;
+          }
+
+          src = target[name];
+          copy = options[name];
+
+          // Prevent never-ending loop
+          if (target === copy) {
+            continue;
+          }
+
+          // Recurse if we're merging plain objects or arrays
+          if (deep && copy && (isPlainObject(copy) ||
+              (copyIsArray = isArray(copy)))) {
+            if (copyIsArray) {
+              copyIsArray = false;
+              clone = src && isArray(src) ? src : [];
+
+            } else {
+              clone = src && isPlainObject(src) ? src : {};
+            }
+
+            // Never move original objects, clone them
+            stack.push({
+              args: [deep, clone, copy],
+              result: {
+                container: target,
+                key: name
+              }
+            });
+
+          // Don't bring in undefined values
+          } else if (copy !== undefined) {
+            if (!(isArray(options) && isFunction(copy))) {
+              target[name] = copy;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // "Return" the modified object by setting the key
+  // on the given container
+  result.container[result.key] = target;
+}
+
+
+module.exports = extend;
+
+
+
+},{}],76:[function(require,module,exports){
+arguments[4][64][0].apply(exports,arguments)
+},{"./_stream_readable":77,"./_stream_writable":79,"_process":203,"core-util-is":80,"dup":64,"inherits":16}],77:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -8244,7 +7618,7 @@ function indexOf (xs, x) {
 }
 
 }).call(this,require('_process'))
-},{"_process":241,"buffer":232,"core-util-is":84,"events":237,"inherits":18,"isarray":85,"stream":253,"string_decoder/":86}],82:[function(require,module,exports){
+},{"_process":203,"buffer":194,"core-util-is":80,"events":199,"inherits":16,"isarray":81,"stream":215,"string_decoder/":82}],78:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -8456,7 +7830,7 @@ function done(stream, er) {
   return stream.push(null);
 }
 
-},{"./_stream_duplex":80,"core-util-is":84,"inherits":18}],83:[function(require,module,exports){
+},{"./_stream_duplex":76,"core-util-is":80,"inherits":16}],79:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -8846,16 +8220,16 @@ function endWritable(stream, state, cb) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":80,"_process":241,"buffer":232,"core-util-is":84,"inherits":18,"stream":253}],84:[function(require,module,exports){
+},{"./_stream_duplex":76,"_process":203,"buffer":194,"core-util-is":80,"inherits":16,"stream":215}],80:[function(require,module,exports){
 arguments[4][8][0].apply(exports,arguments)
-},{"buffer":232,"dup":8}],85:[function(require,module,exports){
+},{"buffer":194,"dup":8}],81:[function(require,module,exports){
 arguments[4][9][0].apply(exports,arguments)
-},{"dup":9}],86:[function(require,module,exports){
+},{"dup":9}],82:[function(require,module,exports){
 arguments[4][11][0].apply(exports,arguments)
-},{"buffer":232,"dup":11}],87:[function(require,module,exports){
+},{"buffer":194,"dup":11}],83:[function(require,module,exports){
 module.exports = require("./lib/_stream_transform.js")
 
-},{"./lib/_stream_transform.js":82}],88:[function(require,module,exports){
+},{"./lib/_stream_transform.js":78}],84:[function(require,module,exports){
 module.exports = extend
 
 function extend() {
@@ -8874,7 +8248,7 @@ function extend() {
     return target
 }
 
-},{}],89:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 (function (process){
 var Transform = require('readable-stream/transform')
   , inherits  = require('util').inherits
@@ -8974,7 +8348,7 @@ module.exports.obj = through2(function (options, transform, flush) {
 })
 
 }).call(this,require('_process'))
-},{"_process":241,"readable-stream/transform":87,"util":256,"xtend":88}],90:[function(require,module,exports){
+},{"_process":203,"readable-stream/transform":83,"util":218,"xtend":84}],86:[function(require,module,exports){
 module.exports={
   "name": "pouchdb-replication-stream",
   "version": "1.2.4",
@@ -9071,7 +8445,7 @@ module.exports={
   "readme": "ERROR: No README data found!"
 }
 
-},{}],91:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 (function (process,global){
 'use strict';
 
@@ -9159,7 +8533,7 @@ exports.inherits = require('inherits');
 exports.Promise = Promise;
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":241,"inherits":18,"lie":22,"pouchdb-extend":38}],92:[function(require,module,exports){
+},{"_process":203,"inherits":16,"lie":22,"pouchdb-extend":75}],88:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -9178,9 +8552,9 @@ module.exports = function () {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":232,"through2":89}],93:[function(require,module,exports){
+},{"buffer":194,"through2":85}],89:[function(require,module,exports){
 module.exports = require('./package.json').version;
-},{"./package.json":90}],94:[function(require,module,exports){
+},{"./package.json":86}],90:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -9333,7 +8707,7 @@ WritableStreamPouch.destroy = utils.toPromise(function (name, opts, callback) {
 module.exports = WritableStreamPouch;
 
 }).call(this,require('_process'))
-},{"./pouch-utils":91,"_process":241,"ldjson-stream":40}],95:[function(require,module,exports){
+},{"./pouch-utils":87,"_process":203,"ldjson-stream":17}],91:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -10159,7 +9533,7 @@ AbstractPouchDB.prototype.destroy =
 });
 
 }).call(this,require('_process'))
-},{"./changes":107,"./deps/errors":118,"./deps/upsert":127,"./merge":131,"./utils":142,"_process":241,"events":237}],96:[function(require,module,exports){
+},{"./changes":103,"./deps/errors":114,"./deps/upsert":123,"./merge":127,"./utils":138,"_process":203,"events":199}],92:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -11272,7 +10646,7 @@ HttpPouch.valid = function () {
 module.exports = HttpPouch;
 
 }).call(this,require('_process'))
-},{"../../deps/binary/base64":111,"../../deps/binary/binaryStringToBlob":113,"../../deps/binary/readAsBinaryString":116,"../../deps/buffer":117,"../../deps/errors":118,"../../deps/multipart":121,"../../utils":142,"_process":241,"debug":16}],97:[function(require,module,exports){
+},{"../../deps/binary/base64":107,"../../deps/binary/binaryStringToBlob":109,"../../deps/binary/readAsBinaryString":112,"../../deps/buffer":113,"../../deps/errors":114,"../../deps/multipart":117,"../../utils":138,"_process":203,"debug":141}],93:[function(require,module,exports){
 'use strict';
 
 var merge = require('../../merge');
@@ -11457,7 +10831,7 @@ function idbAllDocs(opts, api, idb, callback) {
 }
 
 module.exports = idbAllDocs;
-},{"../../deps/errors":118,"../../merge":131,"./idb-constants":100,"./idb-utils":101}],98:[function(require,module,exports){
+},{"../../deps/errors":114,"../../merge":127,"./idb-constants":96,"./idb-utils":97}],94:[function(require,module,exports){
 'use strict';
 
 var utils = require('../../utils');
@@ -11521,7 +10895,7 @@ function checkBlobSupport(txn, idb) {
 }
 
 module.exports = checkBlobSupport;
-},{"../../utils":142,"./idb-constants":100}],99:[function(require,module,exports){
+},{"../../utils":138,"./idb-constants":96}],95:[function(require,module,exports){
 'use strict';
 
 var utils = require('../../utils');
@@ -11884,7 +11258,7 @@ function idbBulkDocs(req, opts, api, idb, Changes, callback) {
 }
 
 module.exports = idbBulkDocs;
-},{"../../deps/errors":118,"../../utils":142,"./idb-constants":100,"./idb-utils":101}],100:[function(require,module,exports){
+},{"../../deps/errors":114,"../../utils":138,"./idb-constants":96,"./idb-utils":97}],96:[function(require,module,exports){
 'use strict';
 
 // IndexedDB requires a versioned database structure, so we use the
@@ -11911,7 +11285,7 @@ exports.META_STORE = 'meta-store';
 exports.LOCAL_STORE = 'local-store';
 // Where we detect blob support
 exports.DETECT_BLOB_SUPPORT_STORE = 'detect-blob-support';
-},{}],101:[function(require,module,exports){
+},{}],97:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -12163,7 +11537,7 @@ exports.openTransactionSafely = function (idb, stores, mode) {
   }
 };
 }).call(this,require('_process'))
-},{"../../deps/binary/base64":111,"../../deps/binary/binaryStringToArrayBuffer":112,"../../deps/binary/readAsBinaryString":116,"../../deps/errors":118,"../../utils":142,"./idb-constants":100,"_process":241}],102:[function(require,module,exports){
+},{"../../deps/binary/base64":107,"../../deps/binary/binaryStringToArrayBuffer":108,"../../deps/binary/readAsBinaryString":112,"../../deps/errors":114,"../../utils":138,"./idb-constants":96,"_process":203}],98:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -13118,7 +12492,7 @@ IdbPouch.Changes = new utils.Changes();
 module.exports = IdbPouch;
 
 }).call(this,require('_process'))
-},{"../../deps/errors":118,"../../merge":131,"../../utils":142,"./idb-all-docs":97,"./idb-blob-support":98,"./idb-bulk-docs":99,"./idb-constants":100,"./idb-utils":101,"_process":241}],103:[function(require,module,exports){
+},{"../../deps/errors":114,"../../merge":127,"../../utils":138,"./idb-all-docs":93,"./idb-blob-support":94,"./idb-bulk-docs":95,"./idb-constants":96,"./idb-utils":97,"_process":203}],99:[function(require,module,exports){
 'use strict';
 
 var utils = require('../../utils');
@@ -13443,7 +12817,7 @@ function websqlBulkDocs(req, opts, api, db, Changes, callback) {
 
 module.exports = websqlBulkDocs;
 
-},{"../../deps/errors":118,"../../utils":142,"./websql-constants":104,"./websql-utils":105}],104:[function(require,module,exports){
+},{"../../deps/errors":114,"../../utils":138,"./websql-constants":100,"./websql-utils":101}],100:[function(require,module,exports){
 'use strict';
 
 function quote(str) {
@@ -13467,7 +12841,7 @@ exports.META_STORE = quote('metadata-store');
 exports.ATTACH_AND_SEQ_STORE = quote('attach-seq-store');
 
 
-},{}],105:[function(require,module,exports){
+},{}],101:[function(require,module,exports){
 'use strict';
 
 var utils = require('../../utils');
@@ -13696,7 +13070,7 @@ module.exports = {
   openDB: openDB,
   valid: valid
 };
-},{"../../deps/errors":118,"../../utils":142,"./websql-constants":104}],106:[function(require,module,exports){
+},{"../../deps/errors":114,"../../utils":138,"./websql-constants":100}],102:[function(require,module,exports){
 'use strict';
 
 var utils = require('../../utils');
@@ -14706,7 +14080,7 @@ WebSqlPouch.Changes = new utils.Changes();
 
 module.exports = WebSqlPouch;
 
-},{"../../deps/binary/binaryStringToBlob":113,"../../deps/errors":118,"../../deps/parse-hex":123,"../../merge":131,"../../utils":142,"./websql-bulk-docs":103,"./websql-constants":104,"./websql-utils":105}],107:[function(require,module,exports){
+},{"../../deps/binary/binaryStringToBlob":109,"../../deps/errors":114,"../../deps/parse-hex":119,"../../merge":127,"../../utils":138,"./websql-bulk-docs":99,"./websql-constants":100,"./websql-utils":101}],103:[function(require,module,exports){
 'use strict';
 var utils = require('./utils');
 var merge = require('./merge');
@@ -14963,7 +14337,7 @@ Changes.prototype.filterChanges = function (opts) {
     });
   }
 };
-},{"./deps/errors":118,"./evalFilter":129,"./evalView":130,"./merge":131,"./utils":142,"events":237}],108:[function(require,module,exports){
+},{"./deps/errors":114,"./evalFilter":125,"./evalView":126,"./merge":127,"./utils":138,"events":199}],104:[function(require,module,exports){
 (function (process,global){
 /*globals cordova */
 "use strict";
@@ -15127,7 +14501,7 @@ PouchDB.debug = require('debug');
 module.exports = PouchDB;
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./adapter":95,"./taskqueue":141,"./utils":142,"_process":241,"debug":16}],109:[function(require,module,exports){
+},{"./adapter":91,"./taskqueue":137,"./utils":138,"_process":203,"debug":141}],105:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -15268,7 +14642,7 @@ function ajax(options, adapterCallback) {
 module.exports = ajax;
 
 }).call(this,require('_process'))
-},{"../utils":142,"./buffer":117,"./errors":118,"_process":241,"request":126}],110:[function(require,module,exports){
+},{"../utils":138,"./buffer":113,"./errors":114,"_process":203,"request":122}],106:[function(require,module,exports){
 'use strict';
 
 //Can't find original post, but this is close
@@ -15283,7 +14657,7 @@ module.exports = function (buffer) {
   }
   return binary;
 };
-},{}],111:[function(require,module,exports){
+},{}],107:[function(require,module,exports){
 'use strict';
 
 var buffer = require('./../buffer');
@@ -15315,7 +14689,7 @@ if (typeof btoa === 'function') {
     return new buffer(str, 'binary').toString('base64');
   };
 }
-},{"./../buffer":117}],112:[function(require,module,exports){
+},{"./../buffer":113}],108:[function(require,module,exports){
 'use strict';
 
 // From http://stackoverflow.com/questions/14967647/ (continues on next line)
@@ -15329,7 +14703,7 @@ module.exports = function (bin) {
   }
   return buf;
 };
-},{}],113:[function(require,module,exports){
+},{}],109:[function(require,module,exports){
 'use strict';
 
 var createBlob = require('./blob');
@@ -15338,7 +14712,7 @@ var binaryStringToArrayBuffer = require('./binaryStringToArrayBuffer');
 module.exports = function binaryStringToBlob(binString, type) {
   return createBlob([binaryStringToArrayBuffer(binString)], {type: type});
 };
-},{"./binaryStringToArrayBuffer":112,"./blob":114}],114:[function(require,module,exports){
+},{"./binaryStringToArrayBuffer":108,"./blob":110}],110:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -15370,7 +14744,7 @@ module.exports = createBlob;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],115:[function(require,module,exports){
+},{}],111:[function(require,module,exports){
 'use strict';
 
 // simplified API. universal browser support is assumed
@@ -15382,7 +14756,7 @@ module.exports = function (blob, callback) {
   };
   reader.readAsArrayBuffer(blob);
 };
-},{}],116:[function(require,module,exports){
+},{}],112:[function(require,module,exports){
 'use strict';
 
 var arrayBufferToBinaryString = require('./arrayBufferToBinaryString');
@@ -15404,10 +14778,10 @@ module.exports = function (blob, callback) {
     reader.readAsArrayBuffer(blob);
   }
 };
-},{"./arrayBufferToBinaryString":110}],117:[function(require,module,exports){
+},{"./arrayBufferToBinaryString":106}],113:[function(require,module,exports){
 // hey guess what, we don't need this in the browser
 module.exports = {};
-},{}],118:[function(require,module,exports){
+},{}],114:[function(require,module,exports){
 "use strict";
 
 var inherits = require('inherits');
@@ -15669,7 +15043,7 @@ exports.generateErrorFromResponse = function (res) {
   return error;
 };
 
-},{"inherits":18}],119:[function(require,module,exports){
+},{"inherits":144}],115:[function(require,module,exports){
 (function (process,global){
 'use strict';
 
@@ -15683,7 +15057,7 @@ function explain404(str) {
 
 module.exports = explain404;
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":241}],120:[function(require,module,exports){
+},{"_process":203}],116:[function(require,module,exports){
 (function (process,global){
 'use strict';
 
@@ -15762,7 +15136,7 @@ module.exports = function (data, callback) {
 };
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./binary/base64":111,"_process":241,"crypto":231,"spark-md5":154}],121:[function(require,module,exports){
+},{"./binary/base64":107,"_process":203,"crypto":193,"spark-md5":174}],117:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -15844,7 +15218,7 @@ function createMultipart(doc) {
 module.exports = createMultipart;
 
 }).call(this,require('_process'))
-},{"../utils":142,"./binary/base64":111,"./binary/binaryStringToArrayBuffer":112,"./binary/blob":114,"./buffer":117,"./uuid":128,"_process":241}],122:[function(require,module,exports){
+},{"../utils":138,"./binary/base64":107,"./binary/binaryStringToArrayBuffer":108,"./binary/blob":110,"./buffer":113,"./uuid":124,"_process":203}],118:[function(require,module,exports){
 'use strict';
 
 var errors = require('./errors');
@@ -16012,7 +15386,7 @@ exports.parseDoc = function (doc, newEdits) {
   }
   return result;
 };
-},{"./errors":118,"./uuid":128}],123:[function(require,module,exports){
+},{"./errors":114,"./uuid":124}],119:[function(require,module,exports){
 'use strict';
 
 //
@@ -16080,7 +15454,7 @@ function parseHexString(str, encoding) {
 }
 
 module.exports = parseHexString;
-},{}],124:[function(require,module,exports){
+},{}],120:[function(require,module,exports){
 'use strict';
 
 // originally parseUri 1.2.2, now patched by us
@@ -16126,7 +15500,7 @@ function parseUri(str) {
 
 
 module.exports = parseUri;
-},{}],125:[function(require,module,exports){
+},{}],121:[function(require,module,exports){
 'use strict';
 
 if (typeof Promise === 'function') {
@@ -16134,7 +15508,7 @@ if (typeof Promise === 'function') {
 } else {
   module.exports = require('bluebird');
 }
-},{"bluebird":22}],126:[function(require,module,exports){
+},{"bluebird":148}],122:[function(require,module,exports){
 /* global fetch */
 /* global Headers */
 'use strict';
@@ -16368,7 +15742,7 @@ module.exports = function(options, callback) {
   }
 };
 
-},{"../utils":142,"./binary/blob.js":114,"./binary/readAsArrayBuffer":115}],127:[function(require,module,exports){
+},{"../utils":138,"./binary/blob.js":110,"./binary/readAsArrayBuffer":111}],123:[function(require,module,exports){
 'use strict';
 
 var upsert = require('pouchdb-upsert').upsert;
@@ -16377,7 +15751,7 @@ module.exports = function (db, doc, diffFun, cb) {
   return upsert.call(db, doc, diffFun, cb);
 };
 
-},{"pouchdb-upsert":153}],128:[function(require,module,exports){
+},{"pouchdb-upsert":173}],124:[function(require,module,exports){
 "use strict";
 
 // BEGIN Math.uuid.js
@@ -16462,7 +15836,7 @@ function uuid(len, radix) {
 module.exports = uuid;
 
 
-},{}],129:[function(require,module,exports){
+},{}],125:[function(require,module,exports){
 'use strict';
 
 module.exports = evalFilter;
@@ -16474,7 +15848,7 @@ function evalFilter(input) {
     ' })()'
   ].join(''));
 }
-},{}],130:[function(require,module,exports){
+},{}],126:[function(require,module,exports){
 'use strict';
 
 module.exports = evalView;
@@ -16496,7 +15870,7 @@ function evalView(input) {
     '})()'
   ].join('\n'));
 }
-},{}],131:[function(require,module,exports){
+},{}],127:[function(require,module,exports){
 'use strict';
 var extend = require('pouchdb-extend');
 
@@ -16798,7 +16172,7 @@ PouchMerge.rootToLeaf = function (tree) {
 
 module.exports = PouchMerge;
 
-},{"pouchdb-extend":38}],132:[function(require,module,exports){
+},{"pouchdb-extend":166}],128:[function(require,module,exports){
 'use strict';
 
 var STARTING_BACK_OFF = 0;
@@ -16852,7 +16226,7 @@ function backOff(opts, returnValue, error, callback) {
 }
 
 module.exports = backOff;
-},{}],133:[function(require,module,exports){
+},{}],129:[function(require,module,exports){
 'use strict';
 
 var Promise = require('./../deps/promise');
@@ -16954,7 +16328,7 @@ Checkpointer.prototype.getCheckpoint = function () {
 
 module.exports = Checkpointer;
 
-},{"./../deps/explain404":119,"./../deps/promise":125,"pouchdb-collate":144}],134:[function(require,module,exports){
+},{"./../deps/explain404":115,"./../deps/promise":121,"pouchdb-collate":163}],130:[function(require,module,exports){
 'use strict';
 
 var utils = require('../utils');
@@ -16979,7 +16353,7 @@ function genReplicationId(src, target, opts) {
 }
 
 module.exports = genReplicationId;
-},{"../utils":142}],135:[function(require,module,exports){
+},{"../utils":138}],131:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -17092,7 +16466,7 @@ function getDocs(src, diffs, state) {
 }
 
 module.exports = getDocs;
-},{"./../utils":142}],136:[function(require,module,exports){
+},{"./../utils":138}],132:[function(require,module,exports){
 'use strict';
 
 var utils = require('../utils');
@@ -17135,7 +16509,7 @@ module.exports = {
   replicate : replicateWrapper,
   toPouch: toPouch
 };
-},{"../utils":142,"./replicate":137,"./replication":138}],137:[function(require,module,exports){
+},{"../utils":138,"./replicate":133,"./replication":134}],133:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -17562,7 +16936,7 @@ function replicate(src, target, opts, returnValue, result) {
 }
 
 module.exports = replicate;
-},{"./../utils":142,"./backoff":132,"./checkpointer":133,"./gen-replication-id":134,"./get-docs":135}],138:[function(require,module,exports){
+},{"./../utils":138,"./backoff":128,"./checkpointer":129,"./gen-replication-id":130,"./get-docs":131}],134:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -17618,7 +16992,7 @@ Replication.prototype.ready = function (src, target) {
 };
 
 module.exports = Replication;
-},{"./../utils":142,"events":237}],139:[function(require,module,exports){
+},{"./../utils":138,"events":199}],135:[function(require,module,exports){
 "use strict";
 
 var PouchDB = require("./constructor");
@@ -17780,7 +17154,7 @@ PouchDB.defaults = function (defaultOpts) {
 
 module.exports = PouchDB;
 
-},{"./constructor":108,"./utils":142,"events":237}],140:[function(require,module,exports){
+},{"./constructor":104,"./utils":138,"events":199}],136:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -17966,7 +17340,7 @@ Sync.prototype.cancel = function () {
   }
 };
 
-},{"./replicate":136,"./utils":142,"events":237}],141:[function(require,module,exports){
+},{"./replicate":132,"./utils":138,"events":199}],137:[function(require,module,exports){
 'use strict';
 
 module.exports = TaskQueue;
@@ -18036,7 +17410,7 @@ TaskQueue.prototype.addTask = function (name, parameters) {
   }
 };
 
-},{}],142:[function(require,module,exports){
+},{}],138:[function(require,module,exports){
 (function (process){
 /*jshint strict: false */
 /*global chrome */
@@ -18781,10 +18155,564 @@ exports.safeJsonStringify = function safeJsonStringify(json) {
 };
 
 }).call(this,require('_process'))
-},{"./deps/ajax":109,"./deps/binary/arrayBufferToBinaryString":110,"./deps/binary/base64":111,"./deps/binary/binaryStringToBlob":113,"./deps/binary/blob":114,"./deps/binary/readAsArrayBuffer":115,"./deps/errors":118,"./deps/explain404":119,"./deps/md5":120,"./deps/parse-doc":122,"./deps/parse-uri":124,"./deps/promise":125,"./deps/uuid":128,"./merge":131,"_process":241,"argsarray":1,"debug":16,"events":237,"inherits":18,"pouchdb-collections":146,"pouchdb-extend":38,"vuvuzela":155}],143:[function(require,module,exports){
+},{"./deps/ajax":105,"./deps/binary/arrayBufferToBinaryString":106,"./deps/binary/base64":107,"./deps/binary/binaryStringToBlob":109,"./deps/binary/blob":110,"./deps/binary/readAsArrayBuffer":111,"./deps/errors":114,"./deps/explain404":115,"./deps/md5":116,"./deps/parse-doc":118,"./deps/parse-uri":120,"./deps/promise":121,"./deps/uuid":124,"./merge":127,"_process":203,"argsarray":140,"debug":141,"events":199,"inherits":144,"pouchdb-collections":165,"pouchdb-extend":166,"vuvuzela":175}],139:[function(require,module,exports){
 module.exports = "3.6.0";
 
+},{}],140:[function(require,module,exports){
+'use strict';
+
+module.exports = argsArray;
+
+function argsArray(fun) {
+  return function () {
+    var len = arguments.length;
+    if (len) {
+      var args = [];
+      var i = -1;
+      while (++i < len) {
+        args[i] = arguments[i];
+      }
+      return fun.call(this, args);
+    } else {
+      return fun.call(this, []);
+    }
+  };
+}
+},{}],141:[function(require,module,exports){
+
+/**
+ * This is the web browser implementation of `debug()`.
+ *
+ * Expose `debug()` as the module.
+ */
+
+exports = module.exports = require('./debug');
+exports.log = log;
+exports.formatArgs = formatArgs;
+exports.save = save;
+exports.load = load;
+exports.useColors = useColors;
+exports.storage = 'undefined' != typeof chrome
+               && 'undefined' != typeof chrome.storage
+                  ? chrome.storage.local
+                  : localstorage();
+
+/**
+ * Colors.
+ */
+
+exports.colors = [
+  'lightseagreen',
+  'forestgreen',
+  'goldenrod',
+  'dodgerblue',
+  'darkorchid',
+  'crimson'
+];
+
+/**
+ * Currently only WebKit-based Web Inspectors, Firefox >= v31,
+ * and the Firebug extension (any Firefox version) are known
+ * to support "%c" CSS customizations.
+ *
+ * TODO: add a `localStorage` variable to explicitly enable/disable colors
+ */
+
+function useColors() {
+  // is webkit? http://stackoverflow.com/a/16459606/376773
+  return ('WebkitAppearance' in document.documentElement.style) ||
+    // is firebug? http://stackoverflow.com/a/398120/376773
+    (window.console && (console.firebug || (console.exception && console.table))) ||
+    // is firefox >= v31?
+    // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
+    (navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31);
+}
+
+/**
+ * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
+ */
+
+exports.formatters.j = function(v) {
+  return JSON.stringify(v);
+};
+
+
+/**
+ * Colorize log arguments if enabled.
+ *
+ * @api public
+ */
+
+function formatArgs() {
+  var args = arguments;
+  var useColors = this.useColors;
+
+  args[0] = (useColors ? '%c' : '')
+    + this.namespace
+    + (useColors ? ' %c' : ' ')
+    + args[0]
+    + (useColors ? '%c ' : ' ')
+    + '+' + exports.humanize(this.diff);
+
+  if (!useColors) return args;
+
+  var c = 'color: ' + this.color;
+  args = [args[0], c, 'color: inherit'].concat(Array.prototype.slice.call(args, 1));
+
+  // the final "%c" is somewhat tricky, because there could be other
+  // arguments passed either before or after the %c, so we need to
+  // figure out the correct index to insert the CSS into
+  var index = 0;
+  var lastC = 0;
+  args[0].replace(/%[a-z%]/g, function(match) {
+    if ('%%' === match) return;
+    index++;
+    if ('%c' === match) {
+      // we only are interested in the *last* %c
+      // (the user may have provided their own)
+      lastC = index;
+    }
+  });
+
+  args.splice(lastC, 0, c);
+  return args;
+}
+
+/**
+ * Invokes `console.log()` when available.
+ * No-op when `console.log` is not a "function".
+ *
+ * @api public
+ */
+
+function log() {
+  // this hackery is required for IE8/9, where
+  // the `console.log` function doesn't have 'apply'
+  return 'object' === typeof console
+    && console.log
+    && Function.prototype.apply.call(console.log, console, arguments);
+}
+
+/**
+ * Save `namespaces`.
+ *
+ * @param {String} namespaces
+ * @api private
+ */
+
+function save(namespaces) {
+  try {
+    if (null == namespaces) {
+      exports.storage.removeItem('debug');
+    } else {
+      exports.storage.debug = namespaces;
+    }
+  } catch(e) {}
+}
+
+/**
+ * Load `namespaces`.
+ *
+ * @return {String} returns the previously persisted debug modes
+ * @api private
+ */
+
+function load() {
+  var r;
+  try {
+    r = exports.storage.debug;
+  } catch(e) {}
+  return r;
+}
+
+/**
+ * Enable namespaces listed in `localStorage.debug` initially.
+ */
+
+exports.enable(load());
+
+/**
+ * Localstorage attempts to return the localstorage.
+ *
+ * This is necessary because safari throws
+ * when a user disables cookies/localstorage
+ * and you attempt to access it.
+ *
+ * @return {LocalStorage}
+ * @api private
+ */
+
+function localstorage(){
+  try {
+    return window.localStorage;
+  } catch (e) {}
+}
+
+},{"./debug":142}],142:[function(require,module,exports){
+
+/**
+ * This is the common logic for both the Node.js and web browser
+ * implementations of `debug()`.
+ *
+ * Expose `debug()` as the module.
+ */
+
+exports = module.exports = debug;
+exports.coerce = coerce;
+exports.disable = disable;
+exports.enable = enable;
+exports.enabled = enabled;
+exports.humanize = require('ms');
+
+/**
+ * The currently active debug mode names, and names to skip.
+ */
+
+exports.names = [];
+exports.skips = [];
+
+/**
+ * Map of special "%n" handling functions, for the debug "format" argument.
+ *
+ * Valid key names are a single, lowercased letter, i.e. "n".
+ */
+
+exports.formatters = {};
+
+/**
+ * Previously assigned color.
+ */
+
+var prevColor = 0;
+
+/**
+ * Previous log timestamp.
+ */
+
+var prevTime;
+
+/**
+ * Select a color.
+ *
+ * @return {Number}
+ * @api private
+ */
+
+function selectColor() {
+  return exports.colors[prevColor++ % exports.colors.length];
+}
+
+/**
+ * Create a debugger with the given `namespace`.
+ *
+ * @param {String} namespace
+ * @return {Function}
+ * @api public
+ */
+
+function debug(namespace) {
+
+  // define the `disabled` version
+  function disabled() {
+  }
+  disabled.enabled = false;
+
+  // define the `enabled` version
+  function enabled() {
+
+    var self = enabled;
+
+    // set `diff` timestamp
+    var curr = +new Date();
+    var ms = curr - (prevTime || curr);
+    self.diff = ms;
+    self.prev = prevTime;
+    self.curr = curr;
+    prevTime = curr;
+
+    // add the `color` if not set
+    if (null == self.useColors) self.useColors = exports.useColors();
+    if (null == self.color && self.useColors) self.color = selectColor();
+
+    var args = Array.prototype.slice.call(arguments);
+
+    args[0] = exports.coerce(args[0]);
+
+    if ('string' !== typeof args[0]) {
+      // anything else let's inspect with %o
+      args = ['%o'].concat(args);
+    }
+
+    // apply any `formatters` transformations
+    var index = 0;
+    args[0] = args[0].replace(/%([a-z%])/g, function(match, format) {
+      // if we encounter an escaped % then don't increase the array index
+      if (match === '%%') return match;
+      index++;
+      var formatter = exports.formatters[format];
+      if ('function' === typeof formatter) {
+        var val = args[index];
+        match = formatter.call(self, val);
+
+        // now we need to remove `args[index]` since it's inlined in the `format`
+        args.splice(index, 1);
+        index--;
+      }
+      return match;
+    });
+
+    if ('function' === typeof exports.formatArgs) {
+      args = exports.formatArgs.apply(self, args);
+    }
+    var logFn = enabled.log || exports.log || console.log.bind(console);
+    logFn.apply(self, args);
+  }
+  enabled.enabled = true;
+
+  var fn = exports.enabled(namespace) ? enabled : disabled;
+
+  fn.namespace = namespace;
+
+  return fn;
+}
+
+/**
+ * Enables a debug mode by namespaces. This can include modes
+ * separated by a colon and wildcards.
+ *
+ * @param {String} namespaces
+ * @api public
+ */
+
+function enable(namespaces) {
+  exports.save(namespaces);
+
+  var split = (namespaces || '').split(/[\s,]+/);
+  var len = split.length;
+
+  for (var i = 0; i < len; i++) {
+    if (!split[i]) continue; // ignore empty strings
+    namespaces = split[i].replace(/\*/g, '.*?');
+    if (namespaces[0] === '-') {
+      exports.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
+    } else {
+      exports.names.push(new RegExp('^' + namespaces + '$'));
+    }
+  }
+}
+
+/**
+ * Disable debug output.
+ *
+ * @api public
+ */
+
+function disable() {
+  exports.enable('');
+}
+
+/**
+ * Returns true if the given mode name is enabled, false otherwise.
+ *
+ * @param {String} name
+ * @return {Boolean}
+ * @api public
+ */
+
+function enabled(name) {
+  var i, len;
+  for (i = 0, len = exports.skips.length; i < len; i++) {
+    if (exports.skips[i].test(name)) {
+      return false;
+    }
+  }
+  for (i = 0, len = exports.names.length; i < len; i++) {
+    if (exports.names[i].test(name)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Coerce `val`.
+ *
+ * @param {Mixed} val
+ * @return {Mixed}
+ * @api private
+ */
+
+function coerce(val) {
+  if (val instanceof Error) return val.stack || val.message;
+  return val;
+}
+
+},{"ms":143}],143:[function(require,module,exports){
+/**
+ * Helpers.
+ */
+
+var s = 1000;
+var m = s * 60;
+var h = m * 60;
+var d = h * 24;
+var y = d * 365.25;
+
+/**
+ * Parse or format the given `val`.
+ *
+ * Options:
+ *
+ *  - `long` verbose formatting [false]
+ *
+ * @param {String|Number} val
+ * @param {Object} options
+ * @return {String|Number}
+ * @api public
+ */
+
+module.exports = function(val, options){
+  options = options || {};
+  if ('string' == typeof val) return parse(val);
+  return options.long
+    ? long(val)
+    : short(val);
+};
+
+/**
+ * Parse the given `str` and return milliseconds.
+ *
+ * @param {String} str
+ * @return {Number}
+ * @api private
+ */
+
+function parse(str) {
+  str = '' + str;
+  if (str.length > 10000) return;
+  var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(str);
+  if (!match) return;
+  var n = parseFloat(match[1]);
+  var type = (match[2] || 'ms').toLowerCase();
+  switch (type) {
+    case 'years':
+    case 'year':
+    case 'yrs':
+    case 'yr':
+    case 'y':
+      return n * y;
+    case 'days':
+    case 'day':
+    case 'd':
+      return n * d;
+    case 'hours':
+    case 'hour':
+    case 'hrs':
+    case 'hr':
+    case 'h':
+      return n * h;
+    case 'minutes':
+    case 'minute':
+    case 'mins':
+    case 'min':
+    case 'm':
+      return n * m;
+    case 'seconds':
+    case 'second':
+    case 'secs':
+    case 'sec':
+    case 's':
+      return n * s;
+    case 'milliseconds':
+    case 'millisecond':
+    case 'msecs':
+    case 'msec':
+    case 'ms':
+      return n;
+  }
+}
+
+/**
+ * Short format for `ms`.
+ *
+ * @param {Number} ms
+ * @return {String}
+ * @api private
+ */
+
+function short(ms) {
+  if (ms >= d) return Math.round(ms / d) + 'd';
+  if (ms >= h) return Math.round(ms / h) + 'h';
+  if (ms >= m) return Math.round(ms / m) + 'm';
+  if (ms >= s) return Math.round(ms / s) + 's';
+  return ms + 'ms';
+}
+
+/**
+ * Long format for `ms`.
+ *
+ * @param {Number} ms
+ * @return {String}
+ * @api private
+ */
+
+function long(ms) {
+  return plural(ms, d, 'day')
+    || plural(ms, h, 'hour')
+    || plural(ms, m, 'minute')
+    || plural(ms, s, 'second')
+    || ms + ' ms';
+}
+
+/**
+ * Pluralization helper.
+ */
+
+function plural(ms, n, name) {
+  if (ms < n) return;
+  if (ms < n * 1.5) return Math.floor(ms / n) + ' ' + name;
+  return Math.ceil(ms / n) + ' ' + name + 's';
+}
+
 },{}],144:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"dup":2}],145:[function(require,module,exports){
+arguments[4][19][0].apply(exports,arguments)
+},{"dup":19}],146:[function(require,module,exports){
+arguments[4][20][0].apply(exports,arguments)
+},{"./INTERNAL":145,"./handlers":147,"./promise":149,"./reject":152,"./resolve":153,"dup":20}],147:[function(require,module,exports){
+arguments[4][21][0].apply(exports,arguments)
+},{"./resolveThenable":154,"./states":155,"./tryCatch":156,"dup":21}],148:[function(require,module,exports){
+arguments[4][22][0].apply(exports,arguments)
+},{"./all":146,"./promise":149,"./race":151,"./reject":152,"./resolve":153,"dup":22}],149:[function(require,module,exports){
+arguments[4][23][0].apply(exports,arguments)
+},{"./INTERNAL":145,"./queueItem":150,"./resolveThenable":154,"./states":155,"./unwrap":157,"dup":23}],150:[function(require,module,exports){
+arguments[4][24][0].apply(exports,arguments)
+},{"./handlers":147,"./unwrap":157,"dup":24}],151:[function(require,module,exports){
+arguments[4][25][0].apply(exports,arguments)
+},{"./INTERNAL":145,"./handlers":147,"./promise":149,"./reject":152,"./resolve":153,"dup":25}],152:[function(require,module,exports){
+arguments[4][26][0].apply(exports,arguments)
+},{"./INTERNAL":145,"./handlers":147,"./promise":149,"dup":26}],153:[function(require,module,exports){
+arguments[4][27][0].apply(exports,arguments)
+},{"./INTERNAL":145,"./handlers":147,"./promise":149,"dup":27}],154:[function(require,module,exports){
+arguments[4][28][0].apply(exports,arguments)
+},{"./handlers":147,"./tryCatch":156,"dup":28}],155:[function(require,module,exports){
+arguments[4][29][0].apply(exports,arguments)
+},{"dup":29}],156:[function(require,module,exports){
+arguments[4][30][0].apply(exports,arguments)
+},{"dup":30}],157:[function(require,module,exports){
+arguments[4][31][0].apply(exports,arguments)
+},{"./handlers":147,"dup":31,"immediate":158}],158:[function(require,module,exports){
+arguments[4][32][0].apply(exports,arguments)
+},{"./messageChannel":159,"./mutation.js":160,"./nextTick":193,"./stateChange":161,"./timeout":162,"dup":32}],159:[function(require,module,exports){
+arguments[4][33][0].apply(exports,arguments)
+},{"dup":33}],160:[function(require,module,exports){
+arguments[4][34][0].apply(exports,arguments)
+},{"dup":34}],161:[function(require,module,exports){
+arguments[4][35][0].apply(exports,arguments)
+},{"dup":35}],162:[function(require,module,exports){
+arguments[4][36][0].apply(exports,arguments)
+},{"dup":36}],163:[function(require,module,exports){
 'use strict';
 
 var MIN_MAGNITUDE = -324; // verified by -Number.MIN_VALUE
@@ -19139,7 +19067,7 @@ function numToIndexableString(num) {
   return result;
 }
 
-},{"./utils":145}],145:[function(require,module,exports){
+},{"./utils":164}],164:[function(require,module,exports){
 'use strict';
 
 function pad(str, padWith, upToLength) {
@@ -19210,7 +19138,7 @@ exports.intToDecimalForm = function (int) {
 
   return result;
 };
-},{}],146:[function(require,module,exports){
+},{}],165:[function(require,module,exports){
 'use strict';
 exports.Map = LazyMap; // TODO: use ES6 map
 exports.Set = LazySet; // TODO: use ES6 set
@@ -19282,7 +19210,9 @@ LazySet.prototype.delete = function (key) {
   return this.store.delete(key);
 };
 
-},{}],147:[function(require,module,exports){
+},{}],166:[function(require,module,exports){
+arguments[4][75][0].apply(exports,arguments)
+},{"dup":75}],167:[function(require,module,exports){
 'use strict';
 
 var upsert = require('./upsert');
@@ -19361,7 +19291,7 @@ module.exports = function (opts) {
   });
 };
 
-},{"./upsert":151,"./utils":152}],148:[function(require,module,exports){
+},{"./upsert":171,"./utils":172}],168:[function(require,module,exports){
 'use strict';
 
 module.exports = function (func, emit, sum, log, isArray, toJSON) {
@@ -19369,7 +19299,7 @@ module.exports = function (func, emit, sum, log, isArray, toJSON) {
   return eval("'use strict'; (" + func.replace(/;\s*$/, "") + ");");
 };
 
-},{}],149:[function(require,module,exports){
+},{}],169:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -20243,7 +20173,7 @@ function BuiltInError(message) {
 
 utils.inherits(BuiltInError, Error);
 }).call(this,require('_process'))
-},{"./create-view":147,"./evalfunc":148,"./taskqueue":150,"./utils":152,"_process":241,"pouchdb-collate":144}],150:[function(require,module,exports){
+},{"./create-view":167,"./evalfunc":168,"./taskqueue":170,"./utils":172,"_process":203,"pouchdb-collate":163}],170:[function(require,module,exports){
 'use strict';
 /*
  * Simple task queue to sequentialize actions. Assumes callbacks will eventually fire (once).
@@ -20268,7 +20198,7 @@ TaskQueue.prototype.finish = function () {
 
 module.exports = TaskQueue;
 
-},{"./utils":152}],151:[function(require,module,exports){
+},{"./utils":172}],171:[function(require,module,exports){
 'use strict';
 
 var upsert = require('pouchdb-upsert').upsert;
@@ -20276,7 +20206,7 @@ var upsert = require('pouchdb-upsert').upsert;
 module.exports = function (db, doc, diffFun) {
   return upsert.apply(db, [doc, diffFun]);
 };
-},{"pouchdb-upsert":153}],152:[function(require,module,exports){
+},{"pouchdb-upsert":173}],172:[function(require,module,exports){
 (function (process,global){
 'use strict';
 /* istanbul ignore if */
@@ -20385,7 +20315,7 @@ exports.MD5 = function (string) {
   }
 };
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":241,"argsarray":1,"crypto":231,"inherits":18,"lie":22,"pouchdb-extend":38,"spark-md5":154}],153:[function(require,module,exports){
+},{"_process":203,"argsarray":140,"crypto":193,"inherits":144,"lie":148,"pouchdb-extend":166,"spark-md5":174}],173:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -20492,7 +20422,7 @@ if (typeof window !== 'undefined' && window.PouchDB) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lie":22}],154:[function(require,module,exports){
+},{"lie":148}],174:[function(require,module,exports){
 /*jshint bitwise:false*/
 /*global unescape*/
 
@@ -21093,7 +21023,7 @@ if (typeof window !== 'undefined' && window.PouchDB) {
     return SparkMD5;
 }));
 
-},{}],155:[function(require,module,exports){
+},{}],175:[function(require,module,exports){
 'use strict';
 
 /**
@@ -21268,12 +21198,12 @@ exports.parse = function (str) {
   }
 };
 
-},{}],156:[function(require,module,exports){
+},{}],176:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib')
 
-},{"./lib":161}],157:[function(require,module,exports){
+},{"./lib":181}],177:[function(require,module,exports){
 'use strict';
 
 var asap = require('asap/raw');
@@ -21459,7 +21389,7 @@ function doResolve(fn, promise) {
   }
 }
 
-},{"asap/raw":165}],158:[function(require,module,exports){
+},{"asap/raw":185}],178:[function(require,module,exports){
 'use strict';
 
 var Promise = require('./core.js');
@@ -21474,7 +21404,7 @@ Promise.prototype.done = function (onFulfilled, onRejected) {
   });
 };
 
-},{"./core.js":157}],159:[function(require,module,exports){
+},{"./core.js":177}],179:[function(require,module,exports){
 'use strict';
 
 //This file contains the ES6 extensions to the core Promises/A+ API
@@ -21584,7 +21514,7 @@ Promise.prototype['catch'] = function (onRejected) {
   return this.then(null, onRejected);
 };
 
-},{"./core.js":157,"asap/raw":165}],160:[function(require,module,exports){
+},{"./core.js":177,"asap/raw":185}],180:[function(require,module,exports){
 'use strict';
 
 var Promise = require('./core.js');
@@ -21602,7 +21532,7 @@ Promise.prototype['finally'] = function (f) {
   });
 };
 
-},{"./core.js":157}],161:[function(require,module,exports){
+},{"./core.js":177}],181:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./core.js');
@@ -21611,7 +21541,7 @@ require('./finally.js');
 require('./es6-extensions.js');
 require('./node-extensions.js');
 
-},{"./core.js":157,"./done.js":158,"./es6-extensions.js":159,"./finally.js":160,"./node-extensions.js":162}],162:[function(require,module,exports){
+},{"./core.js":177,"./done.js":178,"./es6-extensions.js":179,"./finally.js":180,"./node-extensions.js":182}],182:[function(require,module,exports){
 'use strict';
 
 // This file contains then/promise specific extensions that are only useful
@@ -21686,7 +21616,7 @@ Promise.prototype.nodeify = function (callback, ctx) {
   });
 }
 
-},{"./core.js":157,"asap":163}],163:[function(require,module,exports){
+},{"./core.js":177,"asap":183}],183:[function(require,module,exports){
 "use strict";
 
 // rawAsap provides everything we need except exception management.
@@ -21754,7 +21684,7 @@ RawTask.prototype.call = function () {
     }
 };
 
-},{"./raw":164}],164:[function(require,module,exports){
+},{"./raw":184}],184:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -21978,7 +21908,7 @@ rawAsap.makeRequestCallFromTimer = makeRequestCallFromTimer;
 // https://github.com/tildeio/rsvp.js/blob/cddf7232546a9cf858524b75cde6f9edf72620a7/lib/rsvp/asap.js
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],165:[function(require,module,exports){
+},{}],185:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -22083,19 +22013,17 @@ function requestFlush() {
 }
 
 }).call(this,require('_process'))
-},{"_process":241,"domain":236}],166:[function(require,module,exports){
+},{"_process":203,"domain":198}],186:[function(require,module,exports){
+'use strict';
+
 var RtcDataStream = require('rtcstream');
 
 var Promise = require('promise');
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
-var quickconnect = require('rtc-quickconnect');
 
-
-var ReplicatorCommon = function(name, signalUrl, rtcOptions) {
+var ReplicatorCommon = function(name) {
   this.name = name;
-  this.signalUrl = signalUrl;
-  this.rtcOptions = rtcOptions;
 
   this.streams = [];
   this.peers = [];
@@ -22125,27 +22053,6 @@ ReplicatorCommon.prototype.removePeer = function(id) {
 };
 
 // common methods
-ReplicatorCommon.prototype.join = function(minPeers) {
-  minPeers = typeof minPeers !== 'undefined' ? minPeers : 0;
-  var self = this;
-
-  var p = new Promise(function(resolve, reject) {
-    self.signaller = quickconnect(self.signalUrl, self.rtcOptions);
-    self.signaller.createDataChannel(self.rtcOptions.room)
-      .on('channel:opened:' + self.rtcOptions.room, function(id, dc) {
-        self.addPeer(id, dc);
-        if (self.peers.length >= minPeers) {
-          resolve();
-        }
-      })
-      .on('channel:closed:' + self.rtcOptions.room, function(id, dc) {
-        self.removePeer(id);
-      });
-  });
-
-  return p;
-};
-
 ReplicatorCommon.prototype.addPeer = function(id, dc) {
   var self = this;
 
@@ -22157,5784 +22064,11 @@ ReplicatorCommon.prototype.addPeer = function(id, dc) {
 
 };
 
-ReplicatorCommon.prototype.close = function() {
-  this.signaller.close();
-};
-
 ReplicatorCommon.prototype.getPeers = function() {
   return this.peers;
 };
-},{"events":237,"promise":156,"rtc-quickconnect":167,"rtcstream":228,"util":256}],167:[function(require,module,exports){
-/* jshint node: true */
-/* global location */
-'use strict';
 
-var rtc = require('rtc-tools');
-var mbus = require('mbus');
-var detectPlugin = require('rtc-core/plugin');
-var debug = rtc.logger('rtc-quickconnect');
-var extend = require('cog/extend');
-
-/**
-  # rtc-quickconnect
-
-  This is a high level helper module designed to help you get up
-  an running with WebRTC really, really quickly.  By using this module you
-  are trading off some flexibility, so if you need a more flexible
-  configuration you should drill down into lower level components of the
-  [rtc.io](http://www.rtc.io) suite.  In particular you should check out
-  [rtc](https://github.com/rtc-io/rtc).
-
-  ## Example Usage
-
-  In the simplest case you simply call quickconnect with a single string
-  argument which tells quickconnect which server to use for signaling:
-
-  <<< examples/simple.js
-
-  <<< docs/events.md
-
-  <<< docs/examples.md
-
-  ## Regarding Signalling and a Signalling Server
-
-  Signaling is an important part of setting up a WebRTC connection and for
-  our examples we use our own test instance of the
-  [rtc-switchboard](https://github.com/rtc-io/rtc-switchboard). For your
-  testing and development you are more than welcome to use this also, but
-  just be aware that we use this for our testing so it may go up and down
-  a little.  If you need something more stable, why not consider deploying
-  an instance of the switchboard yourself - it's pretty easy :)
-
-  ## Reference
-
-  ```
-  quickconnect(signalhost, opts?) => rtc-sigaller instance (+ helpers)
-  ```
-
-  ### Valid Quick Connect Options
-
-  The options provided to the `rtc-quickconnect` module function influence the
-  behaviour of some of the underlying components used from the rtc.io suite.
-
-  Listed below are some of the commonly used options:
-
-  - `ns` (default: '')
-
-    An optional namespace for your signalling room.  While quickconnect
-    will generate a unique hash for the room, this can be made to be more
-    unique by providing a namespace.  Using a namespace means two demos
-    that have generated the same hash but use a different namespace will be
-    in different rooms.
-
-  - `room` (default: null) _added 0.6_
-
-    Rather than use the internal hash generation
-    (plus optional namespace) for room name generation, simply use this room
-    name instead.  __NOTE:__ Use of the `room` option takes precendence over
-    `ns`.
-
-  - `debug` (default: false)
-
-  Write rtc.io suite debug output to the browser console.
-
-  - `expectedLocalStreams` (default: not specified) _added 3.0_
-
-    By providing a positive integer value for this option will mean that
-    the created quickconnect instance will wait until the specified number of
-    streams have been added to the quickconnect "template" before announcing
-    to the signaling server.
-
-  - `manualJoin` (default: `false`)
-
-    Set this value to `true` if you would prefer to call the `join` function
-    to connecting to the signalling server, rather than having that happen
-    automatically as soon as quickconnect is ready to.
-
-  #### Options for Peer Connection Creation
-
-  Options that are passed onto the
-  [rtc.createConnection](https://github.com/rtc-io/rtc#createconnectionopts-constraints)
-  function:
-
-  - `iceServers`
-
-  This provides a list of ice servers that can be used to help negotiate a
-  connection between peers.
-
-  #### Options for P2P negotiation
-
-  Under the hood, quickconnect uses the
-  [rtc/couple](https://github.com/rtc-io/rtc#rtccouple) logic, and the options
-  passed to quickconnect are also passed onto this function.
-
-**/
-module.exports = function(signalhost, opts) {
-  var hash = typeof location != 'undefined' && location.hash.slice(1);
-  var signaller = require('rtc-pluggable-signaller')(extend({
-    signaller: signalhost,
-
-    // use the primus endpoint as a fallback in case we are talking to an
-    // older switchboard instance
-    endpoints: ['/', '/primus']
-  }, opts));
-  var getPeerData = require('./lib/getpeerdata')(signaller.peers);
-
-  // init configurable vars
-  var ns = (opts || {}).ns || '';
-  var room = (opts || {}).room;
-  var debugging = (opts || {}).debug;
-  var allowJoin = !(opts || {}).manualJoin;
-  var profile = {};
-  var announced = false;
-
-  // initialise iceServers to undefined
-  // we will not announce until these have been properly initialised
-  var iceServers;
-
-  // collect the local streams
-  var localStreams = [];
-
-  // create the calls map
-  var calls = signaller.calls = require('./lib/calls')(signaller, opts);
-
-  // create the known data channels registry
-  var channels = {};
-
-  // save the plugins passed to the signaller
-  var plugins = signaller.plugins = (opts || {}).plugins || [];
-  var plugin = detectPlugin(plugins);
-  var pluginReady;
-
-  // check how many local streams have been expected (default: 0)
-  var expectedLocalStreams = parseInt((opts || {}).expectedLocalStreams, 10) || 0;
-  var announceTimer = 0;
-  var updateTimer = 0;
-
-  function checkReadyToAnnounce() {
-    clearTimeout(announceTimer);
-    // if we have already announced do nothing!
-    if (announced) {
-      return;
-    }
-
-    if (! allowJoin) {
-      return;
-    }
-
-    // if we have a plugin but it's not initialized we aren't ready
-    if (plugin && (! pluginReady)) {
-      return;
-    }
-
-    // if we have no iceServers we aren't ready
-    if (! iceServers) {
-      return;
-    }
-
-    // if we are waiting for a set number of streams, then wait until we have
-    // the required number
-    if (expectedLocalStreams && localStreams.length < expectedLocalStreams) {
-      return;
-    }
-
-    // announce ourselves to our new friend
-    announceTimer = setTimeout(function() {
-      var data = extend({ room: room }, profile);
-
-      // announce and emit the local announce event
-      signaller.announce(data);
-      announced = true;
-    }, 0);
-  }
-
-  function connect(id) {
-    var data = getPeerData(id);
-    var pc;
-    var monitor;
-
-    // if the room is not a match, abort
-    if (data.room !== room) {
-      return;
-    }
-
-    // end any call to this id so we know we are starting fresh
-    calls.end(id);
-
-    // create a peer connection
-    // iceServers that have been created using genice taking precendence
-    pc = rtc.createConnection(
-      extend({}, opts, { iceServers: iceServers }),
-      (opts || {}).constraints
-    );
-
-    signaller('peer:connect', data.id, pc, data);
-
-    // add this connection to the calls list
-    calls.create(data.id, pc);
-
-    // add the local streams
-    localStreams.forEach(function(stream) {
-      pc.addStream(stream);
-    });
-
-    // add the data channels
-    // do this differently based on whether the connection is a
-    // master or a slave connection
-    if (signaller.isMaster(data.id)) {
-      debug('is master, creating data channels: ', Object.keys(channels));
-
-      // create the channels
-      Object.keys(channels).forEach(function(label) {
-       gotPeerChannel(pc.createDataChannel(label, channels[label]), pc, data);
-      });
-    }
-    else {
-      pc.ondatachannel = function(evt) {
-        var channel = evt && evt.channel;
-
-        // if we have no channel, abort
-        if (! channel) {
-          return;
-        }
-
-        if (channels[channel.label] !== undefined) {
-          gotPeerChannel(channel, pc, getPeerData(id));
-        }
-      };
-    }
-
-    // couple the connections
-    debug('coupling ' + signaller.id + ' to ' + data.id);
-    monitor = rtc.couple(pc, id, signaller, extend({}, opts, {
-      logger: mbus('pc.' + id, signaller)
-    }));
-
-    signaller('peer:couple', id, pc, data, monitor);
-
-    // once active, trigger the peer connect event
-    monitor.once('connected', calls.start.bind(null, id, pc, data));
-    monitor.once('closed', calls.end.bind(null, id));
-
-    // if we are the master connnection, create the offer
-    // NOTE: this only really for the sake of politeness, as rtc couple
-    // implementation handles the slave attempting to create an offer
-    if (signaller.isMaster(id)) {
-      monitor.createOffer();
-    }
-  }
-
-  function getActiveCall(peerId) {
-    var call = calls.get(peerId);
-
-    if (! call) {
-      throw new Error('No active call for peer: ' + peerId);
-    }
-
-    return call;
-  }
-
-  function gotPeerChannel(channel, pc, data) {
-    var channelMonitor;
-
-    function channelReady() {
-      var call = calls.get(data.id);
-      var args = [ data.id, channel, data, pc ];
-
-      // decouple the channel.onopen listener
-      debug('reporting channel "' + channel.label + '" ready, have call: ' + (!!call));
-      clearInterval(channelMonitor);
-      channel.onopen = null;
-
-      // save the channel
-      if (call) {
-        call.channels.set(channel.label, channel);
-      }
-
-      // trigger the %channel.label%:open event
-      debug('triggering channel:opened events for channel: ' + channel.label);
-
-      // emit the plain channel:opened event
-      signaller.apply(signaller, ['channel:opened'].concat(args));
-
-      // emit the channel:opened:%label% eve
-      signaller.apply(
-        signaller,
-        ['channel:opened:' + channel.label].concat(args)
-      );
-    }
-
-    debug('channel ' + channel.label + ' discovered for peer: ' + data.id);
-    if (channel.readyState === 'open') {
-      return channelReady();
-    }
-
-    debug('channel not ready, current state = ' + channel.readyState);
-    channel.onopen = channelReady;
-
-    // monitor the channel open (don't trust the channel open event just yet)
-    channelMonitor = setInterval(function() {
-      debug('checking channel state, current state = ' + channel.readyState);
-      if (channel.readyState === 'open') {
-        channelReady();
-      }
-    }, 500);
-  }
-
-  function initPlugin() {
-    return plugin && plugin.init(opts, function(err) {
-      if (err) {
-        return console.error('Could not initialize plugin: ', err);
-      }
-
-      pluginReady = true;
-      checkReadyToAnnounce();
-    });
-  }
-
-  function handleLocalAnnounce(data) {
-    // if we send an announce with an updated room then update our local room name
-    if (data && typeof data.room != 'undefined') {
-      room = data.room;
-    }
-  }
-
-  function handlePeerFilter(id, data) {
-    // only connect with the peer if we are ready
-    data.allow = data.allow && (localStreams.length >= expectedLocalStreams);
-  }
-
-  function handlePeerUpdate(data) {
-    var id = data && data.id;
-    var activeCall = id && calls.get(id);
-
-    // if we have received an update for a peer that has no active calls,
-    // then pass this onto the announce handler
-    if (id && (! activeCall)) {
-      debug('received peer update from peer ' + id + ', no active calls');
-      signaller.to(id).send('/reconnect');
-      return connect(id);
-    }
-  }
-
-  // if the room is not defined, then generate the room name
-  if (! room) {
-    // if the hash is not assigned, then create a random hash value
-    if (typeof location != 'undefined' && (! hash)) {
-      hash = location.hash = '' + (Math.pow(2, 53) * Math.random());
-    }
-
-    room = ns + '#' + hash;
-  }
-
-  if (debugging) {
-    rtc.logger.enable.apply(rtc.logger, Array.isArray(debug) ? debugging : ['*']);
-  }
-
-  signaller.on('peer:announce', function(data) {
-    connect(data.id);
-  });
-
-  signaller.on('peer:update', handlePeerUpdate);
-
-  signaller.on('message:reconnect', function(sender) {
-    connect(sender.id);
-  });
-
-
-
-  /**
-    ### Quickconnect Broadcast and Data Channel Helper Functions
-
-    The following are functions that are patched into the `rtc-signaller`
-    instance that make working with and creating functional WebRTC applications
-    a lot simpler.
-
-  **/
-
-  /**
-    #### addStream
-
-    ```
-    addStream(stream:MediaStream) => qc
-    ```
-
-    Add the stream to active calls and also save the stream so that it
-    can be added to future calls.
-
-  **/
-  signaller.broadcast = signaller.addStream = function(stream) {
-    localStreams.push(stream);
-
-    // if we have any active calls, then add the stream
-    calls.values().forEach(function(data) {
-      data.pc.addStream(stream);
-    });
-
-    checkReadyToAnnounce();
-    return signaller;
-  };
-
-  /**
-    #### endCalls()
-
-    The `endCalls` function terminates all the active calls that have been
-    created in this quickconnect instance.  Calling `endCalls` does not
-    kill the connection with the signalling server.
-
-  **/
-  signaller.endCalls = function() {
-    calls.keys().forEach(calls.end);
-  };
-
-  /**
-    #### close()
-
-    The `close` function provides a convenient way of closing all associated
-    peer connections.  This function simply uses the `endCalls` function and
-    the underlying `leave` function of the signaller to do a "full cleanup"
-    of all connections.
-  **/
-  signaller.close = function() {
-    signaller.endCalls();
-    signaller.leave();
-  };
-
-  /**
-    #### createDataChannel(label, config)
-
-    Request that a data channel with the specified `label` is created on
-    the peer connection.  When the data channel is open and available, an
-    event will be triggered using the label of the data channel.
-
-    For example, if a new data channel was requested using the following
-    call:
-
-    ```js
-    var qc = quickconnect('https://switchboard.rtc.io/').createDataChannel('test');
-    ```
-
-    Then when the data channel is ready for use, a `test:open` event would
-    be emitted by `qc`.
-
-  **/
-  signaller.createDataChannel = function(label, opts) {
-    // create a channel on all existing calls
-    calls.keys().forEach(function(peerId) {
-      var call = calls.get(peerId);
-      var dc;
-
-      // if we are the master connection, create the data channel
-      if (call && call.pc && signaller.isMaster(peerId)) {
-        dc = call.pc.createDataChannel(label, opts);
-        gotPeerChannel(dc, call.pc, getPeerData(peerId));
-      }
-    });
-
-    // save the data channel opts in the local channels dictionary
-    channels[label] = opts || null;
-
-    return signaller;
-  };
-
-  /**
-    #### join()
-
-    The `join` function is used when `manualJoin` is set to true when creating
-    a quickconnect instance.  Call the `join` function once you are ready to
-    join the signalling server and initiate connections with other people.
-
-  **/
-  signaller.join = function() {
-    allowJoin = true;
-    checkReadyToAnnounce();
-  };
-
-  /**
-    #### `get(name)`
-
-    The `get` function returns the property value for the specified property name.
-  **/
-  signaller.get = function(name) {
-    return profile[name];
-  };
-
-  /**
-    #### `getLocalStreams()`
-
-    Return a copy of the local streams that have currently been configured
-  **/
-  signaller.getLocalStreams = function() {
-    return [].concat(localStreams);
-  };
-
-  /**
-    #### reactive()
-
-    Flag that this session will be a reactive connection.
-
-  **/
-  signaller.reactive = function() {
-    // add the reactive flag
-    opts = opts || {};
-    opts.reactive = true;
-
-    // chain
-    return signaller;
-  };
-
-  /**
-    #### removeStream
-
-    ```
-    removeStream(stream:MediaStream)
-    ```
-
-    Remove the specified stream from both the local streams that are to
-    be connected to new peers, and also from any active calls.
-
-  **/
-  signaller.removeStream = function(stream) {
-    var localIndex = localStreams.indexOf(stream);
-
-    // remove the stream from any active calls
-    calls.values().forEach(function(call) {
-      call.pc.removeStream(stream);
-    });
-
-    // remove the stream from the localStreams array
-    if (localIndex >= 0) {
-      localStreams.splice(localIndex, 1);
-    }
-
-    return signaller;
-  };
-
-  /**
-    #### requestChannel
-
-    ```
-    requestChannel(targetId, label, callback)
-    ```
-
-    This is a function that can be used to respond to remote peers supplying
-    a data channel as part of their configuration.  As per the `receiveStream`
-    function this function will either fire the callback immediately if the
-    channel is already available, or once the channel has been discovered on
-    the call.
-
-  **/
-  signaller.requestChannel = function(targetId, label, callback) {
-    var call = getActiveCall(targetId);
-    var channel = call && call.channels.get(label);
-
-    // if we have then channel trigger the callback immediately
-    if (channel) {
-      callback(null, channel);
-      return signaller;
-    }
-
-    // if not, wait for it
-    signaller.once('channel:opened:' + label, function(id, dc) {
-      callback(null, dc);
-    });
-
-    return signaller;
-  };
-
-  /**
-    #### requestStream
-
-    ```
-    requestStream(targetId, idx, callback)
-    ```
-
-    Used to request a remote stream from a quickconnect instance. If the
-    stream is already available in the calls remote streams, then the callback
-    will be triggered immediately, otherwise this function will monitor
-    `stream:added` events and wait for a match.
-
-    In the case that an unknown target is requested, then an exception will
-    be thrown.
-  **/
-  signaller.requestStream = function(targetId, idx, callback) {
-    var call = getActiveCall(targetId);
-    var stream;
-
-    function waitForStream(peerId) {
-      if (peerId !== targetId) {
-        return;
-      }
-
-      // get the stream
-      stream = call.pc.getRemoteStreams()[idx];
-
-      // if we have the stream, then remove the listener and trigger the cb
-      if (stream) {
-        signaller.removeListener('stream:added', waitForStream);
-        callback(null, stream);
-      }
-    }
-
-    // look for the stream in the remote streams of the call
-    stream = call.pc.getRemoteStreams()[idx];
-
-    // if we found the stream then trigger the callback
-    if (stream) {
-      callback(null, stream);
-      return signaller;
-    }
-
-    // otherwise wait for the stream
-    signaller.on('stream:added', waitForStream);
-    return signaller;
-  };
-
-  /**
-    #### profile(data)
-
-    Update the profile data with the attached information, so when
-    the signaller announces it includes this data in addition to any
-    room and id information.
-
-  **/
-  signaller.profile = function(data) {
-    extend(profile, data);
-
-    // if we have already announced, then reannounce our profile to provide
-    // others a `peer:update` event
-    if (announced) {
-      clearTimeout(updateTimer);
-      updateTimer = setTimeout(function() {
-        signaller.announce(profile);
-      }, (opts || {}).updateDelay || 1000);
-    }
-
-    return signaller;
-  };
-
-  /**
-    #### waitForCall
-
-    ```
-    waitForCall(targetId, callback)
-    ```
-
-    Wait for a call from the specified targetId.  If the call is already
-    active the callback will be fired immediately, otherwise we will wait
-    for a `call:started` event that matches the requested `targetId`
-
-  **/
-  signaller.waitForCall = function(targetId, callback) {
-    var call = calls.get(targetId);
-
-    if (call && call.active) {
-      callback(null, call.pc);
-      return signaller;
-    }
-
-    signaller.on('call:started', function handleNewCall(id) {
-      if (id === targetId) {
-        signaller.removeListener('call:started', handleNewCall);
-        callback(null, calls.get(id).pc);
-      }
-    });
-  };
-
-  // if we have an expected number of local streams, then use a filter to
-  // check if we should respond
-  if (expectedLocalStreams) {
-    signaller.on('peer:filter', handlePeerFilter);
-  }
-
-  // respond to local announce messages
-  signaller.on('local:announce', handleLocalAnnounce);
-
-  // handle ping messages
-  signaller.on('message:ping', calls.ping);
-
-  // use genice to find our iceServers
-  require('rtc-core/genice')(opts, function(err, servers) {
-    if (err) {
-      return console.error('could not find iceServers: ', err);
-    }
-
-    iceServers = servers;
-    checkReadyToAnnounce();
-  });
-
-  // if we plugin is active, then initialize it
-  if (plugin) {
-    initPlugin();
-  }
-
-  // pass the signaller on
-  return signaller;
-};
-
-},{"./lib/calls":168,"./lib/getpeerdata":169,"cog/extend":172,"mbus":177,"rtc-core/genice":179,"rtc-core/plugin":181,"rtc-pluggable-signaller":182,"rtc-tools":214}],168:[function(require,module,exports){
-(function (process){
-var rtc = require('rtc-tools');
-var debug = rtc.logger('rtc-quickconnect');
-var cleanup = require('rtc-tools/cleanup');
-var getable = require('cog/getable');
-
-module.exports = function(signaller, opts) {
-  var calls = getable({});
-  var getPeerData = require('./getpeerdata')(signaller.peers);
-  var heartbeat;
-
-  function create(id, pc) {
-    calls.set(id, {
-      active: false,
-      pc: pc,
-      channels: getable({}),
-      streams: [],
-      lastping: Date.now()
-    });
-  }
-
-  function createStreamAddHandler(id) {
-    return function(evt) {
-      debug('peer ' + id + ' added stream');
-      updateRemoteStreams(id);
-      receiveRemoteStream(id)(evt.stream);
-    };
-  }
-
-  function createStreamRemoveHandler(id) {
-    return function(evt) {
-      debug('peer ' + id + ' removed stream');
-      updateRemoteStreams(id);
-      signaller('stream:removed', id, evt.stream);
-    };
-  }
-
-  function end(id) {
-    var call = calls.get(id);
-
-    // if we have no data, then do nothing
-    if (! call) {
-      return;
-    }
-
-    // if we have no data, then return
-    call.channels.keys().forEach(function(label) {
-      var channel = call.channels.get(label);
-      var args = [id, channel, label];
-
-      // emit the plain channel:closed event
-      signaller.apply(signaller, ['channel:closed'].concat(args));
-
-      // emit the labelled version of the event
-      signaller.apply(signaller, ['channel:closed:' + label].concat(args));
-
-      // decouple the events
-      channel.onopen = null;
-    });
-
-    // trigger stream:removed events for each of the remotestreams in the pc
-    call.streams.forEach(function(stream) {
-      signaller('stream:removed', id, stream);
-    });
-
-    // delete the call data
-    calls.delete(id);
-
-    // if we have no more calls, disable the heartbeat
-    if (calls.keys().length === 0) {
-      resetHeartbeat();
-    }
-
-    // trigger the call:ended event
-    signaller('call:ended', id, call.pc);
-
-    // ensure the peer connection is properly cleaned up
-    cleanup(call.pc);
-  }
-
-  function ping(sender) {
-    var call = calls.get(sender && sender.id);
-
-    // set the last ping for the data
-    if (call) {
-      call.lastping = Date.now();
-    }
-  }
-
-  function receiveRemoteStream(id) {
-    return function(stream) {
-      signaller('stream:added', id, stream, getPeerData(id));
-    };
-  }
-
-  function resetHeartbeat() {
-    clearInterval(heartbeat);
-    heartbeat = 0;
-  }
-
-  function start(id, pc, data) {
-    var call = calls.get(id);
-    var streams = [].concat(pc.getRemoteStreams());
-
-    // flag the call as active
-    call.active = true;
-    call.streams = [].concat(pc.getRemoteStreams());
-
-    pc.onaddstream = createStreamAddHandler(id);
-    pc.onremovestream = createStreamRemoveHandler(id);
-
-    debug(signaller.id + ' - ' + id + ' call start: ' + streams.length + ' streams');
-    signaller('call:started', id, pc, data);
-
-    // configure the heartbeat timer
-    heartbeat = heartbeat || require('./heartbeat')(signaller, calls, opts);
-
-    // examine the existing remote streams after a short delay
-    process.nextTick(function() {
-      // iterate through any remote streams
-      streams.forEach(receiveRemoteStream(id));
-    });
-  }
-
-  function updateRemoteStreams(id) {
-    var call = calls.get(id);
-
-    if (call && call.pc) {
-      call.streams = [].concat(call.pc.getRemoteStreams());
-    }
-  }
-
-  calls.create = create;
-  calls.end = end;
-  calls.ping = ping;
-  calls.start = start;
-
-  return calls;
-};
-
-}).call(this,require('_process'))
-},{"./getpeerdata":169,"./heartbeat":170,"_process":241,"cog/getable":173,"rtc-tools":214,"rtc-tools/cleanup":210}],169:[function(require,module,exports){
-module.exports = function(peers) {
-  return function(id) {
-    var peer = peers.get(id);
-    return peer && peer.data;
-  };
-};
-
-},{}],170:[function(require,module,exports){
-module.exports = function(signaller, calls, opts) {
-  var heartbeat = (opts || {}).heartbeat || 2500;
-  var heartbeatTimer = 0;
-
-  function send() {
-    var tickInactive = (Date.now() - (heartbeat * 4));
-
-    // iterate through our established calls
-    calls.keys().forEach(function(id) {
-      var call = calls.get(id);
-
-      // if the call ping is too old, end the call
-      if (call.lastping < tickInactive) {
-        return calls.end(id);
-      }
-
-      // send a ping message
-      signaller.to(id).send('/ping');
-    });
-  }
-
-  if (! heartbeat) {
-    return;
-  }
-
-  return setInterval(send, heartbeat);
-};
-
-},{}],171:[function(require,module,exports){
-/* jshint node: true */
-'use strict';
-
-/**
-## cog/defaults
-
-```js
-var defaults = require('cog/defaults');
-```
-
-### defaults(target, *)
-
-Shallow copy object properties from the supplied source objects (*) into
-the target object, returning the target object once completed.  Do not,
-however, overwrite existing keys with new values:
-
-```js
-defaults({ a: 1, b: 2 }, { c: 3 }, { d: 4 }, { b: 5 }));
-```
-
-See an example on [requirebin](http://requirebin.com/?gist=6079475).
-**/
-module.exports = function(target) {
-  // ensure we have a target
-  target = target || {};
-
-  // iterate through the sources and copy to the target
-  [].slice.call(arguments, 1).forEach(function(source) {
-    if (! source) {
-      return;
-    }
-
-    for (var prop in source) {
-      if (target[prop] === void 0) {
-        target[prop] = source[prop];
-      }
-    }
-  });
-
-  return target;
-};
-},{}],172:[function(require,module,exports){
-/* jshint node: true */
-'use strict';
-
-/**
-## cog/extend
-
-```js
-var extend = require('cog/extend');
-```
-
-### extend(target, *)
-
-Shallow copy object properties from the supplied source objects (*) into
-the target object, returning the target object once completed:
-
-```js
-extend({ a: 1, b: 2 }, { c: 3 }, { d: 4 }, { b: 5 }));
-```
-
-See an example on [requirebin](http://requirebin.com/?gist=6079475).
-**/
-module.exports = function(target) {
-  [].slice.call(arguments, 1).forEach(function(source) {
-    if (! source) {
-      return;
-    }
-
-    for (var prop in source) {
-      target[prop] = source[prop];
-    }
-  });
-
-  return target;
-};
-},{}],173:[function(require,module,exports){
-/**
-  ## cog/getable
-
-  Take an object and provide a wrapper that allows you to `get` and
-  `set` values on that object.
-
-**/
-module.exports = function(target) {
-  function get(key) {
-    return target[key];
-  }
-
-  function set(key, value) {
-    target[key] = value;
-  }
-
-  function remove(key) {
-    return delete target[key];
-  }
-
-  function keys() {
-    return Object.keys(target);
-  };
-
-  function values() {
-    return Object.keys(target).map(function(key) {
-      return target[key];
-    });
-  };
-
-  if (typeof target != 'object') {
-    return target;
-  }
-
-  return {
-    get: get,
-    set: set,
-    remove: remove,
-    delete: remove,
-    keys: keys,
-    values: values
-  };
-};
-
-},{}],174:[function(require,module,exports){
-/* jshint node: true */
-'use strict';
-
-/**
-  ## cog/jsonparse
-
-  ```js
-  var jsonparse = require('cog/jsonparse');
-  ```
-
-  ### jsonparse(input)
-
-  This function will attempt to automatically detect stringified JSON, and
-  when detected will parse into JSON objects.  The function looks for strings
-  that look and smell like stringified JSON, and if found attempts to
-  `JSON.parse` the input into a valid object.
-
-**/
-module.exports = function(input) {
-  var isString = typeof input == 'string' || (input instanceof String);
-  var reNumeric = /^\-?\d+\.?\d*$/;
-  var shouldParse ;
-  var firstChar;
-  var lastChar;
-
-  if ((! isString) || input.length < 2) {
-    if (isString && reNumeric.test(input)) {
-      return parseFloat(input);
-    }
-
-    return input;
-  }
-
-  // check for true or false
-  if (input === 'true' || input === 'false') {
-    return input === 'true';
-  }
-
-  // check for null
-  if (input === 'null') {
-    return null;
-  }
-
-  // get the first and last characters
-  firstChar = input.charAt(0);
-  lastChar = input.charAt(input.length - 1);
-
-  // determine whether we should JSON.parse the input
-  shouldParse =
-    (firstChar == '{' && lastChar == '}') ||
-    (firstChar == '[' && lastChar == ']') ||
-    (firstChar == '"' && lastChar == '"');
-
-  if (shouldParse) {
-    try {
-      return JSON.parse(input);
-    }
-    catch (e) {
-      // apparently it wasn't valid json, carry on with regular processing
-    }
-  }
-
-
-  return reNumeric.test(input) ? parseFloat(input) : input;
-};
-},{}],175:[function(require,module,exports){
-/* jshint node: true */
-'use strict';
-
-/**
-  ## cog/logger
-
-  ```js
-  var logger = require('cog/logger');
-  ```
-
-  Simple browser logging offering similar functionality to the
-  [debug](https://github.com/visionmedia/debug) module.
-
-  ### Usage
-
-  Create your self a new logging instance and give it a name:
-
-  ```js
-  var debug = logger('phil');
-  ```
-
-  Now do some debugging:
-
-  ```js
-  debug('hello');
-  ```
-
-  At this stage, no log output will be generated because your logger is
-  currently disabled.  Enable it:
-
-  ```js
-  logger.enable('phil');
-  ```
-
-  Now do some more logger:
-
-  ```js
-  debug('Oh this is so much nicer :)');
-  // --> phil: Oh this is some much nicer :)
-  ```
-
-  ### Reference
-**/
-
-var active = [];
-var unleashListeners = [];
-var targets = [ console ];
-
-/**
-  #### logger(name)
-
-  Create a new logging instance.
-**/
-var logger = module.exports = function(name) {
-  // initial enabled check
-  var enabled = checkActive();
-
-  function checkActive() {
-    return enabled = active.indexOf('*') >= 0 || active.indexOf(name) >= 0;
-  }
-
-  // register the check active with the listeners array
-  unleashListeners[unleashListeners.length] = checkActive;
-
-  // return the actual logging function
-  return function() {
-    var args = [].slice.call(arguments);
-
-    // if we have a string message
-    if (typeof args[0] == 'string' || (args[0] instanceof String)) {
-      args[0] = name + ': ' + args[0];
-    }
-
-    // if not enabled, bail
-    if (! enabled) {
-      return;
-    }
-
-    // log
-    targets.forEach(function(target) {
-      target.log.apply(target, args);
-    });
-  };
-};
-
-/**
-  #### logger.reset()
-
-  Reset logging (remove the default console logger, flag all loggers as
-  inactive, etc, etc.
-**/
-logger.reset = function() {
-  // reset targets and active states
-  targets = [];
-  active = [];
-
-  return logger.enable();
-};
-
-/**
-  #### logger.to(target)
-
-  Add a logging target.  The logger must have a `log` method attached.
-
-**/
-logger.to = function(target) {
-  targets = targets.concat(target || []);
-
-  return logger;
-};
-
-/**
-  #### logger.enable(names*)
-
-  Enable logging via the named logging instances.  To enable logging via all
-  instances, you can pass a wildcard:
-
-  ```js
-  logger.enable('*');
-  ```
-
-  __TODO:__ wildcard enablers
-**/
-logger.enable = function() {
-  // update the active
-  active = active.concat([].slice.call(arguments));
-
-  // trigger the unleash listeners
-  unleashListeners.forEach(function(listener) {
-    listener();
-  });
-
-  return logger;
-};
-},{}],176:[function(require,module,exports){
-/* jshint node: true */
-'use strict';
-
-/**
-  ## cog/throttle
-
-  ```js
-  var throttle = require('cog/throttle');
-  ```
-
-  ### throttle(fn, delay, opts)
-
-  A cherry-pickable throttle function.  Used to throttle `fn` to ensure
-  that it can be called at most once every `delay` milliseconds.  Will
-  fire first event immediately, ensuring the next event fired will occur
-  at least `delay` milliseconds after the first, and so on.
-
-**/
-module.exports = function(fn, delay, opts) {
-  var lastExec = (opts || {}).leading !== false ? 0 : Date.now();
-  var trailing = (opts || {}).trailing;
-  var timer;
-  var queuedArgs;
-  var queuedScope;
-
-  // trailing defaults to true
-  trailing = trailing || trailing === undefined;
-  
-  function invokeDefered() {
-    fn.apply(queuedScope, queuedArgs || []);
-    lastExec = Date.now();
-  }
-
-  return function() {
-    var tick = Date.now();
-    var elapsed = tick - lastExec;
-
-    // always clear the defered timer
-    clearTimeout(timer);
-
-    if (elapsed < delay) {
-      queuedArgs = [].slice.call(arguments, 0);
-      queuedScope = this;
-
-      return trailing && (timer = setTimeout(invokeDefered, delay - elapsed));
-    }
-
-    // call the function
-    lastExec = tick;
-    fn.apply(this, arguments);
-  };
-};
-},{}],177:[function(require,module,exports){
-var reDelim = /[\.\:]/;
-
-/**
-  # mbus
-
-  If Node's EventEmitter and Eve were to have a child, it might look something like this.
-  No wildcard support at this stage though...
-
-  ## Example Usage
-
-  <<< docs/usage.md
-
-  ## Reference
-
-  ### `mbus(namespace?, parent?, scope?)`
-
-  Create a new message bus with `namespace` inheriting from the `parent`
-  mbus instance.  If events from this message bus should be triggered with
-  a specific `this` scope, then specify it using the `scope` argument.
-
-**/
-
-var createBus = module.exports = function(namespace, parent, scope) {
-  var registry = {};
-  var feeds = [];
-
-  function bus(name) {
-    var args = [].slice.call(arguments, 1);
-    var delimited = normalize(name);
-    var handlers = registry[delimited] || [];
-    var results;
-
-    // send through the feeds
-    feeds.forEach(function(feed) {
-      feed({ name: delimited, args: args });
-    });
-
-    // run the registered handlers
-    results = [].concat(handlers).map(function(handler) {
-      return handler.apply(scope || this, args);
-    });
-
-    // run the parent handlers
-    if (bus.parent) {
-      results = results.concat(
-        bus.parent.apply(
-          scope || this,
-          [(namespace ? namespace + '.' : '') + delimited].concat(args)
-        )
-      );
-    }
-
-    return results;
-  }
-
-  /**
-    ### `mbus#clear()`
-
-    Reset the handler registry, which essential deregisters all event listeners.
-
-    _Alias:_ `removeAllListeners`
-  **/
-  function clear(name) {
-    // if we have a name, reset handlers for that handler
-    if (name) {
-      delete registry[normalize(name)];
-    }
-    // otherwise, reset the entire handler registry
-    else {
-      registry = {};
-    }
-  }
-
-  /**
-    ### `mbus#feed(handler)`
-
-    Attach a handler function that will see all events that are sent through
-    this bus in an "object stream" format that matches the following format:
-
-    ```
-    { name: 'event.name', args: [ 'event', 'args' ] }
-    ```
-
-    The feed function returns a function that can be called to stop the feed
-    sending data.
-
-  **/
-  function feed(handler) {
-    function stop() {
-      feeds.splice(feeds.indexOf(handler), 1);
-    }
-
-    feeds.push(handler);
-    return stop;
-  }
-
-  function normalize(name) {
-    return (Array.isArray(name) ? name : name.split(reDelim)).join('.');
-  }
-
-  /**
-    ### `mbus#off(name, handler)`
-
-    Deregister an event handler.
-  **/
-  function off(name, handler) {
-    var handlers = registry[normalize(name)] || [];
-    var idx = handlers ? handlers.indexOf(handler._actual || handler) : -1;
-
-    if (idx >= 0) {
-      handlers.splice(idx, 1);
-    }
-  }
-
-  /**
-    ### `mbus#on(name, handler)`
-
-    Register an event handler for the event `name`.
-
-  **/
-  function on(name, handler) {
-    var handlers;
-
-    name = normalize(name);
-    handlers = registry[name];
-
-    if (handlers) {
-      handlers.push(handler);
-    }
-    else {
-      registry[name] = [ handler ];
-    }
-
-    return bus;
-  }
-
-
-  /**
-    ### `mbus#once(name, handler)`
-
-    Register an event handler for the event `name` that will only
-    trigger once (i.e. the handler will be deregistered immediately after
-    being triggered the first time).
-
-  **/
-  function once(name, handler) {
-    function handleEvent() {
-      var result = handler.apply(this, arguments);
-
-      bus.off(name, handleEvent);
-      return result;
-    }
-
-    handler._actual = handleEvent;
-    return on(name, handleEvent);
-  }
-
-  if (typeof namespace == 'function') {
-    parent = namespace;
-    namespace = '';
-  }
-
-  namespace = normalize(namespace || '');
-
-  bus.clear = bus.removeAllListeners = clear;
-  bus.feed = feed;
-  bus.on = bus.addListener = on;
-  bus.once = once;
-  bus.off = bus.removeListener = off;
-  bus.parent = parent || (namespace && createBus());
-
-  return bus;
-};
-
-},{}],178:[function(require,module,exports){
-/* jshint node: true */
-/* global window: false */
-/* global navigator: false */
-
-'use strict';
-
-var browser = require('detect-browser');
-
-/**
-  ### `rtc-core/detect`
-
-  A browser detection helper for accessing prefix-free versions of the various
-  WebRTC types.
-
-  ### Example Usage
-
-  If you wanted to get the native `RTCPeerConnection` prototype in any browser
-  you could do the following:
-
-  ```js
-  var detect = require('rtc-core/detect'); // also available in rtc/detect
-  var RTCPeerConnection = detect('RTCPeerConnection');
-  ```
-
-  This would provide whatever the browser prefixed version of the
-  RTCPeerConnection is available (`webkitRTCPeerConnection`,
-  `mozRTCPeerConnection`, etc).
-**/
-var detect = module.exports = function(target, opts) {
-  var attach = (opts || {}).attach;
-  var prefixIdx;
-  var prefix;
-  var testName;
-  var hostObject = this || (typeof window != 'undefined' ? window : undefined);
-
-  // initialise to default prefixes
-  // (reverse order as we use a decrementing for loop)
-  var prefixes = ((opts || {}).prefixes || ['ms', 'o', 'moz', 'webkit']).concat('');
-
-  // if we have no host object, then abort
-  if (! hostObject) {
-    return;
-  }
-
-  // iterate through the prefixes and return the class if found in global
-  for (prefixIdx = prefixes.length; prefixIdx--; ) {
-    prefix = prefixes[prefixIdx];
-
-    // construct the test class name
-    // if we have a prefix ensure the target has an uppercase first character
-    // such that a test for getUserMedia would result in a
-    // search for webkitGetUserMedia
-    testName = prefix + (prefix ?
-                            target.charAt(0).toUpperCase() + target.slice(1) :
-                            target);
-
-    if (typeof hostObject[testName] != 'undefined') {
-      // update the last used prefix
-      detect.browser = detect.browser || prefix.toLowerCase();
-
-      if (attach) {
-         hostObject[target] = hostObject[testName];
-      }
-
-      return hostObject[testName];
-    }
-  }
-};
-
-// detect mozilla (yes, this feels dirty)
-detect.moz = typeof navigator != 'undefined' && !!navigator.mozGetUserMedia;
-
-// set the browser and browser version
-detect.browser = browser.name;
-detect.browserVersion = detect.version = browser.version;
-
-},{"detect-browser":180}],179:[function(require,module,exports){
-/**
-  ### `rtc-core/genice`
-
-  Respond appropriately to options that are passed to packages like
-  `rtc-quickconnect` and trigger a `callback` (error first) with iceServer
-  values.
-
-  The function looks for either of the following keys in the options, in
-  the following order or precedence:
-
-  1. `ice` - this can either be an array of ice server values or a generator
-     function (in the same format as this function).  If this key contains a
-     value then any servers specified in the `iceServers` key (2) will be
-     ignored.
-
-  2. `iceServers` - an array of ice server values.
-**/
-module.exports = function(opts, callback) {
-  var ice = (opts || {}).ice;
-  var iceServers = (opts || {}).iceServers;
-
-  if (typeof ice == 'function') {
-    return ice(opts, callback);
-  }
-  else if (Array.isArray(ice)) {
-    return callback(null, [].concat(ice));
-  }
-
-  callback(null, [].concat(iceServers || []));
-};
-
-},{}],180:[function(require,module,exports){
-var browsers = [
-  [ 'chrome', /Chrom(?:e|ium)\/([0-9\.]+)(:?\s|$)/ ],
-  [ 'firefox', /Firefox\/([0-9\.]+)(?:\s|$)/ ],
-  [ 'opera', /Opera\/([0-9\.]+)(?:\s|$)/ ],
-  [ 'ie', /Trident\/7\.0.*rv\:([0-9\.]+)\).*Gecko$/ ],
-  [ 'ie', /MSIE\s([0-9\.]+);.*Trident\/[4-7].0/ ],
-  [ 'ie', /MSIE\s(7\.0)/ ],
-  [ 'bb10', /BB10;\sTouch.*Version\/([0-9\.]+)/ ],
-  [ 'android', /Android\s([0-9\.]+)/ ],
-  [ 'ios', /iPad\;\sCPU\sOS\s([0-9\._]+)/ ],
-  [ 'ios',  /iPhone\;\sCPU\siPhone\sOS\s([0-9\._]+)/ ],
-  [ 'safari', /Safari\/([0-9\._]+)/ ]
-];
-
-var match = browsers.map(match).filter(isMatch)[0];
-var parts = match && match[3].split(/[._]/).slice(0,3);
-
-while (parts && parts.length < 3) {
-  parts.push('0');
-}
-
-// set the name and version
-exports.name = match && match[0];
-exports.version = parts && parts.join('.');
-
-function match(pair) {
-  return pair.concat(pair[1].exec(navigator.userAgent));
-}
-
-function isMatch(pair) {
-  return !!pair[2];
-}
-
-},{}],181:[function(require,module,exports){
-var detect = require('./detect');
-var requiredFunctions = [
-  'init'
-];
-
-function isSupported(plugin) {
-  return plugin && typeof plugin.supported == 'function' && plugin.supported(detect);
-}
-
-function isValid(plugin) {
-  var supportedFunctions = requiredFunctions.filter(function(fn) {
-    return typeof plugin[fn] == 'function';
-  });
-
-  return supportedFunctions.length === requiredFunctions.length;
-}
-
-module.exports = function(plugins) {
-  return [].concat(plugins || []).filter(isSupported).filter(isValid)[0];
-}
-
-},{"./detect":178}],182:[function(require,module,exports){
-/**
-  # rtc-pluggable-signaller
-
-  By using `rtc-pluggable-signaller` in your code, you provide the ability
-  for your package to customize which signalling client it uses (and
-  thus have significant control) over how signalling operates in your
-  environment.
-
-  ## How it Works
-
-  The pluggable signaller looks in the provided `opts` for a `signaller`
-  attribute.  If the value of this attribute is a string, then it is
-  assumed that you wish to use the default
-  [`rtc-signaller`](https://github.com/rtc-io/rtc-signaller) in your
-  package.  If, however, it is not a string value then it will be passed
-  straight back as the signaller (assuming that you have provided an
-  object that is compliant with the rtc.io signalling API).
-
-**/
-module.exports = function(opts) {
-  var signaller = (opts || {}).signaller;
-  var messenger = (opts || {}).messenger || require('rtc-switchboard-messenger');
-
-  if (typeof signaller == 'string' || (signaller instanceof String)) {
-    return require('rtc-signaller')(messenger(signaller, opts), opts);
-  }
-
-  return signaller;
-};
-
-},{"rtc-signaller":183,"rtc-switchboard-messenger":201}],183:[function(require,module,exports){
-/* jshint node: true */
-'use strict';
-
-var detect = require('rtc-core/detect');
-var extend = require('cog/extend');
-var mbus = require('mbus');
-var getable = require('cog/getable');
-var uuid = require('cuid');
-var pull = require('pull-stream');
-var pushable = require('pull-pushable');
-var prepare = require('rtc-signal/prepare');
-var createQueue = require('pull-pushable');
-
-// ready state constants
-var RS_DISCONNECTED = 0;
-var RS_CONNECTING = 1;
-var RS_CONNECTED = 2;
-
-// initialise signaller metadata so we don't have to include the package.json
-// TODO: make this checkable with some kind of prepublish script
-var metadata = {
-  version: '6.2.1'
-};
-
-/**
-  # rtc-signaller
-
-  The `rtc-signaller` module provides a transportless signalling
-  mechanism for WebRTC.
-
-  ## Purpose
-
-  <<< docs/purpose.md
-
-  ## Getting Started
-
-  While the signaller is capable of communicating by a number of different
-  messengers (i.e. anything that can send and receive messages over a wire)
-  it comes with support for understanding how to connect to an
-  [rtc-switchboard](https://github.com/rtc-io/rtc-switchboard) out of the box.
-
-  The following code sample demonstrates how:
-
-  <<< examples/getting-started.js
-
-  <<< docs/events.md
-
-  <<< docs/signalflow-diagrams.md
-
-  <<< docs/identifying-participants.md
-
-  ## Reference
-
-  The `rtc-signaller` module is designed to be used primarily in a functional
-  way and when called it creates a new signaller that will enable
-  you to communicate with other peers via your messaging network.
-
-  ```js
-  // create a signaller from something that knows how to send messages
-  var signaller = require('rtc-signaller')(messenger);
-  ```
-
-  As demonstrated in the getting started guide, you can also pass through
-  a string value instead of a messenger instance if you simply want to
-  connect to an existing `rtc-switchboard` instance.
-
-**/
-module.exports = function(messenger, opts) {
-  var autoconnect = (opts || {}).autoconnect;
-  var reconnect = (opts || {}).reconnect;
-  var queue = createQueue();
-  var connectionCount = 0;
-
-  // create the signaller
-  var signaller = require('rtc-signal/signaller')(opts, bufferMessage);
-
-  var announced = false;
-  var announceTimer = 0;
-  var readyState = RS_DISCONNECTED;
-
-  function bufferMessage(message) {
-    queue.push(message);
-
-    // if we are not connected (and should autoconnect), then attempt connection
-    if (readyState === RS_DISCONNECTED && (autoconnect === undefined || autoconnect)) {
-      connect();
-    }
-  }
-
-  function handleDisconnect() {
-    if (reconnect === undefined || reconnect) {
-      setTimeout(connect, 50);
-    }
-  }
-
-  /**
-    ### `signaller.connect()`
-
-    Manually connect the signaller using the supplied messenger.
-
-    __NOTE:__ This should never have to be called if the default setting
-    for `autoconnect` is used.
-  **/
-  var connect = signaller.connect = function() {
-    // if we are already connecting then do nothing
-    if (readyState === RS_CONNECTING) {
-      return;
-    }
-
-    // initiate the messenger
-    readyState = RS_CONNECTING;
-    messenger(function(err, source, sink) {
-      if (err) {
-        readyState = RS_DISCONNECTED;
-        return signaller('error', err);
-      }
-
-      // increment the connection count
-      connectionCount += 1;
-
-      // flag as connected
-      readyState = RS_CONNECTED;
-
-      // pass messages to the processor
-      pull(
-        source,
-
-        // monitor disconnection
-        pull.through(null, function() {
-          queue = createQueue();
-          readyState = RS_DISCONNECTED;
-          signaller('disconnected');
-        }),
-        pull.drain(signaller._process)
-      );
-
-      // pass the queue to the sink
-      pull(queue, sink);
-
-      // handle disconnection
-      signaller.removeListener('disconnected', handleDisconnect);
-      signaller.on('disconnected', handleDisconnect);
-
-      // trigger the connected event
-      signaller('connected');
-
-      // if this is a reconnection, then reannounce
-      if (announced && connectionCount > 1) {
-        signaller._announce();
-      }
-    });
-  };
-
-  /**
-    ### announce(data?)
-
-    The `announce` function of the signaller will pass an `/announce` message
-    through the messenger network.  When no additional data is supplied to
-    this function then only the id of the signaller is sent to all active
-    members of the messenging network.
-
-    #### Joining Rooms
-
-    To join a room using an announce call you simply provide the name of the
-    room you wish to join as part of the data block that you annouce, for
-    example:
-
-    ```js
-    signaller.announce({ room: 'testroom' });
-    ```
-
-    Signalling servers (such as
-    [rtc-switchboard](https://github.com/rtc-io/rtc-switchboard)) will then
-    place your peer connection into a room with other peers that have also
-    announced in this room.
-
-    Once you have joined a room, the server will only deliver messages that
-    you `send` to other peers within that room.
-
-    #### Providing Additional Announce Data
-
-    There may be instances where you wish to send additional data as part of
-    your announce message in your application.  For instance, maybe you want
-    to send an alias or nick as part of your announce message rather than just
-    use the signaller's generated id.
-
-    If for instance you were writing a simple chat application you could join
-    the `webrtc` room and tell everyone your name with the following announce
-    call:
-
-    ```js
-    signaller.announce({
-      room: 'webrtc',
-      nick: 'Damon'
-    });
-    ```
-
-    #### Announcing Updates
-
-    The signaller is written to distinguish between initial peer announcements
-    and peer data updates (see the docs on the announce handler below). As
-    such it is ok to provide any data updates using the announce method also.
-
-    For instance, I could send a status update as an announce message to flag
-    that I am going offline:
-
-    ```js
-    signaller.announce({ status: 'offline' });
-    ```
-
-  **/
-  signaller.announce = function(data) {
-    announced = true;
-    signaller._update(data);
-    clearTimeout(announceTimer);
-
-    // send the attributes over the network
-    return announceTimer = setTimeout(signaller._announce, (opts || {}).announceDelay || 10);
-  };
-
-  /**
-    ### leave()
-
-    Tell the signalling server we are leaving.  Calling this function is
-    usually not required though as the signalling server should issue correct
-    `/leave` messages when it detects a disconnect event.
-
-  **/
-  signaller.leave = signaller.close = function() {
-    // send the leave signal
-    signaller.send('/leave', { id: signaller.id });
-
-    // stop announcing on reconnect
-    signaller.removeListener('disconnected', handleDisconnect);
-    signaller.removeListener('connected', signaller._announce);
-
-    // end our current queue
-    queue.end();
-
-    // set connected to false
-    readyState = RS_DISCONNECTED;
-  };
-
-  // update the signaller agent
-  signaller._update({ agent: 'signaller@' + metadata.version });
-
-  // autoconnect
-  if (autoconnect === undefined || autoconnect) {
-    connect();
-  }
-
-  return signaller;
-};
-
-},{"cog/extend":172,"cog/getable":173,"cuid":15,"mbus":177,"pull-pushable":184,"pull-stream":191,"rtc-core/detect":178,"rtc-signal/prepare":198,"rtc-signal/signaller":200}],184:[function(require,module,exports){
-var pull = require('pull-stream')
-
-module.exports = pull.Source(function (onClose) {
-  var buffer = [], cbs = [], waiting = [], ended
-
-  function drain() {
-    var l
-    while(waiting.length && ((l = buffer.length) || ended)) {
-      var data = buffer.shift()
-      var cb   = cbs.shift()
-      waiting.shift()(l ? null : ended, data)
-      cb && cb(ended === true ? null : ended)
-    }
-  }
-
-  function read (end, cb) {
-    ended = ended || end
-    waiting.push(cb)
-    drain()
-    if(ended)
-      onClose && onClose(ended === true ? null : ended)
-  }
-
-  read.push = function (data, cb) {
-    if(ended)
-      return cb && cb(ended === true ? null : ended)
-    buffer.push(data); cbs.push(cb)
-    drain()
-  }
-
-  read.end = function (end, cb) {
-    if('function' === typeof end)
-      cb = end, end = true
-    ended = ended || end || true;
-    if(cb) cbs.push(cb)
-    drain()
-    if(ended)
-      onClose && onClose(ended === true ? null : ended)
-  }
-
-  return read
-})
-
-
-},{"pull-stream":185}],185:[function(require,module,exports){
-
-var sources  = require('./sources')
-var sinks    = require('./sinks')
-var throughs = require('./throughs')
-var u        = require('pull-core')
-
-for(var k in sources)
-  exports[k] = u.Source(sources[k])
-
-for(var k in throughs)
-  exports[k] = u.Through(throughs[k])
-
-for(var k in sinks)
-  exports[k] = u.Sink(sinks[k])
-
-var maybe = require('./maybe')(exports)
-
-for(var k in maybe)
-  exports[k] = maybe[k]
-
-exports.Duplex  = 
-exports.Through = exports.pipeable       = u.Through
-exports.Source  = exports.pipeableSource = u.Source
-exports.Sink    = exports.pipeableSink   = u.Sink
-
-
-
-},{"./maybe":186,"./sinks":188,"./sources":189,"./throughs":190,"pull-core":187}],186:[function(require,module,exports){
-var u = require('pull-core')
-var prop = u.prop
-var id   = u.id
-var maybeSink = u.maybeSink
-
-module.exports = function (pull) {
-
-  var exports = {}
-  var drain = pull.drain
-
-  var find = 
-  exports.find = function (test, cb) {
-    return maybeSink(function (cb) {
-      var ended = false
-      if(!cb)
-        cb = test, test = id
-      else
-        test = prop(test) || id
-
-      return drain(function (data) {
-        if(test(data)) {
-          ended = true
-          cb(null, data)
-        return false
-        }
-      }, function (err) {
-        if(ended) return //already called back
-        cb(err === true ? null : err, null)
-      })
-
-    }, cb)
-  }
-
-  var reduce = exports.reduce = 
-  function (reduce, acc, cb) {
-    
-    return maybeSink(function (cb) {
-      return drain(function (data) {
-        acc = reduce(acc, data)
-      }, function (err) {
-        cb(err, acc)
-      })
-
-    }, cb)
-  }
-
-  var collect = exports.collect = exports.writeArray =
-  function (cb) {
-    return reduce(function (arr, item) {
-      arr.push(item)
-      return arr
-    }, [], cb)
-  }
-
-  return exports
-}
-
-},{"pull-core":187}],187:[function(require,module,exports){
-exports.id = 
-function (item) {
-  return item
-}
-
-exports.prop = 
-function (map) {  
-  if('string' == typeof map) {
-    var key = map
-    return function (data) { return data[key] }
-  }
-  return map
-}
-
-exports.tester = function (test) {
-  if(!test) return exports.id
-  if('object' === typeof test
-    && 'function' === typeof test.test)
-      return test.test.bind(test)
-  return exports.prop(test) || exports.id
-}
-
-exports.addPipe = addPipe
-
-function addPipe(read) {
-  if('function' !== typeof read)
-    return read
-
-  read.pipe = read.pipe || function (reader) {
-    if('function' != typeof reader)
-      throw new Error('must pipe to reader')
-    return addPipe(reader(read))
-  }
-  read.type = 'Source'
-  return read
-}
-
-var Source =
-exports.Source =
-function Source (createRead) {
-  function s() {
-    var args = [].slice.call(arguments)
-    return addPipe(createRead.apply(null, args))
-  }
-  s.type = 'Source'
-  return s
-}
-
-
-var Through =
-exports.Through = 
-function (createRead) {
-  return function () {
-    var args = [].slice.call(arguments)
-    var piped = []
-    function reader (read) {
-      args.unshift(read)
-      read = createRead.apply(null, args)
-      while(piped.length)
-        read = piped.shift()(read)
-      return read
-      //pipeing to from this reader should compose...
-    }
-    reader.pipe = function (read) {
-      piped.push(read) 
-      if(read.type === 'Source')
-        throw new Error('cannot pipe ' + reader.type + ' to Source')
-      reader.type = read.type === 'Sink' ? 'Sink' : 'Through'
-      return reader
-    }
-    reader.type = 'Through'
-    return reader
-  }
-}
-
-var Sink =
-exports.Sink = 
-function Sink(createReader) {
-  return function () {
-    var args = [].slice.call(arguments)
-    if(!createReader)
-      throw new Error('must be createReader function')
-    function s (read) {
-      args.unshift(read)
-      return createReader.apply(null, args)
-    }
-    s.type = 'Sink'
-    return s
-  }
-}
-
-
-exports.maybeSink = 
-exports.maybeDrain = 
-function (createSink, cb) {
-  if(!cb)
-    return Through(function (read) {
-      var ended
-      return function (close, cb) {
-        if(close) return read(close, cb)
-        if(ended) return cb(ended)
-
-        createSink(function (err, data) {
-          ended = err || true
-          if(!err) cb(null, data)
-          else     cb(ended)
-        }) (read)
-      }
-    })()
-
-  return Sink(function (read) {
-    return createSink(cb) (read)
-  })()
-}
-
-
-},{}],188:[function(require,module,exports){
-var drain = exports.drain = function (read, op, done) {
-
-  ;(function next() {
-    var loop = true, cbed = false
-    while(loop) {
-      cbed = false
-      read(null, function (end, data) {
-        cbed = true
-        if(end) {
-          loop = false
-          done && done(end === true ? null : end)
-        }
-        else if(op && false === op(data)) {
-          loop = false
-          read(true, done || function () {})
-        }
-        else if(!loop){
-          next()
-        }
-      })
-      if(!cbed) {
-        loop = false
-        return
-      }
-    }
-  })()
-}
-
-var onEnd = exports.onEnd = function (read, done) {
-  return drain(read, null, done)
-}
-
-var log = exports.log = function (read, done) {
-  return drain(read, function (data) {
-    console.log(data)
-  }, done)
-}
-
-
-},{}],189:[function(require,module,exports){
-
-var keys = exports.keys =
-function (object) {
-  return values(Object.keys(object))
-}
-
-var once = exports.once =
-function (value) {
-  return function (abort, cb) {
-    if(abort) return cb(abort)
-    if(value != null) {
-      var _value = value; value = null
-      cb(null, _value)
-    } else
-      cb(true)
-  }
-}
-
-var values = exports.values = exports.readArray =
-function (array) {
-  if(!Array.isArray(array))
-    array = Object.keys(array).map(function (k) {
-      return array[k]
-    })
-  var i = 0
-  return function (end, cb) {
-    if(end)
-      return cb && cb(end)  
-    cb(i >= array.length || null, array[i++])
-  }
-}
-
-
-var count = exports.count = 
-function (max) {
-  var i = 0; max = max || Infinity
-  return function (end, cb) {
-    if(end) return cb && cb(end)
-    if(i > max)
-      return cb(true)
-    cb(null, i++)
-  }
-}
-
-var infinite = exports.infinite = 
-function (generate) {
-  generate = generate || Math.random
-  return function (end, cb) {
-    if(end) return cb && cb(end)
-    return cb(null, generate())
-  }
-}
-
-var defer = exports.defer = function () {
-  var _read, cbs = [], _end
-
-  var read = function (end, cb) {
-    if(!_read) {
-      _end = end
-      cbs.push(cb)
-    } 
-    else _read(end, cb)
-  }
-  read.resolve = function (read) {
-    if(_read) throw new Error('already resolved')
-    _read = read
-    if(!_read) throw new Error('no read cannot resolve!' + _read)
-    while(cbs.length)
-      _read(_end, cbs.shift())
-  }
-  read.abort = function(err) {
-    read.resolve(function (_, cb) {
-      cb(err || true)
-    })
-  }
-  return read
-}
-
-var empty = exports.empty = function () {
-  return function (abort, cb) {
-    cb(true)
-  }
-}
-
-var depthFirst = exports.depthFirst =
-function (start, createStream) {
-  var reads = []
-
-  reads.unshift(once(start))
-
-  return function next (end, cb) {
-    if(!reads.length)
-      return cb(true)
-    reads[0](end, function (end, data) {
-      if(end) {
-        //if this stream has ended, go to the next queue
-        reads.shift()
-        return next(null, cb)
-      }
-      reads.unshift(createStream(data))
-      cb(end, data)
-    })
-  }
-}
-//width first is just like depth first,
-//but push each new stream onto the end of the queue
-var widthFirst = exports.widthFirst = 
-function (start, createStream) {
-  var reads = []
-
-  reads.push(once(start))
-
-  return function next (end, cb) {
-    if(!reads.length)
-      return cb(true)
-    reads[0](end, function (end, data) {
-      if(end) {
-        reads.shift()
-        return next(null, cb)
-      }
-      reads.push(createStream(data))
-      cb(end, data)
-    })
-  }
-}
-
-//this came out different to the first (strm)
-//attempt at leafFirst, but it's still a valid
-//topological sort.
-var leafFirst = exports.leafFirst = 
-function (start, createStream) {
-  var reads = []
-  var output = []
-  reads.push(once(start))
-  
-  return function next (end, cb) {
-    reads[0](end, function (end, data) {
-      if(end) {
-        reads.shift()
-        if(!output.length)
-          return cb(true)
-        return cb(null, output.shift())
-      }
-      reads.unshift(createStream(data))
-      output.unshift(data)
-      next(null, cb)
-    })
-  }
-}
-
-
-},{}],190:[function(require,module,exports){
-(function (process){
-var u      = require('pull-core')
-var sources = require('./sources')
-var sinks = require('./sinks')
-
-var prop   = u.prop
-var id     = u.id
-var tester = u.tester
-
-var map = exports.map = 
-function (read, map) {
-  map = prop(map) || id
-  return function (end, cb) {
-    read(end, function (end, data) {
-      var data = !end ? map(data) : null
-      cb(end, data)
-    })
-  }
-}
-
-var asyncMap = exports.asyncMap =
-function (read, map) {
-  if(!map) return read
-  return function (end, cb) {
-    if(end) return read(end, cb) //abort
-    read(null, function (end, data) {
-      if(end) return cb(end, data)
-      map(data, cb)
-    })
-  }
-}
-
-var paraMap = exports.paraMap =
-function (read, map, width) {
-  if(!map) return read
-  var ended = false, queue = [], _cb
-
-  function drain () {
-    if(!_cb) return
-    var cb = _cb
-    _cb = null
-    if(queue.length)
-      return cb(null, queue.shift())
-    else if(ended && !n)
-      return cb(ended)
-    _cb = cb
-  }
-
-  function pull () {
-    read(null, function (end, data) {
-      if(end) {
-        ended = end
-        return drain()
-      }
-      n++
-      map(data, function (err, data) {
-        n--
-
-        queue.push(data)
-        drain()
-      })
-
-      if(n < width && !ended)
-        pull()
-    })
-  }
-
-  var n = 0
-  return function (end, cb) {
-    if(end) return read(end, cb) //abort
-    //continue to read while there are less than 3 maps in flight
-    _cb = cb
-    if(queue.length || ended)
-      pull(), drain()
-    else pull()
-  }
-  return highWaterMark(asyncMap(read, map), width)
-}
-
-var filter = exports.filter =
-function (read, test) {
-  //regexp
-  test = tester(test)
-  return function next (end, cb) {
-    read(end, function (end, data) {
-      if(!end && !test(data))
-        return next(end, cb)
-      cb(end, data)
-    })
-  }
-}
-
-var filterNot = exports.filterNot =
-function (read, test) {
-  test = tester(test)
-  return filter(read, function (e) {
-    return !test(e)
-  })
-}
-
-var through = exports.through = 
-function (read, op, onEnd) {
-  var a = false
-  function once (abort) {
-    if(a || !onEnd) return
-    a = true
-    onEnd(abort === true ? null : abort)
-  }
-
-  return function (end, cb) {
-    if(end) once(end)
-    return read(end, function (end, data) {
-      if(!end) op && op(data)
-      else once(end)
-      cb(end, data)
-    })
-  }
-}
-
-var take = exports.take =
-function (read, test) {
-  var ended = false
-  if('number' === typeof test) {
-    var n = test; test = function () {
-      return n --
-    }
-  }
-
-  return function (end, cb) {
-    if(ended) return cb(ended)
-    if(ended = end) return read(ended, cb)
-
-    read(null, function (end, data) {
-      if(ended = ended || end) return cb(ended)
-      if(!test(data)) {
-        ended = true
-        read(true, function (end, data) {
-          cb(ended, data)
-        })
-      }
-      else
-        cb(null, data)
-    })
-  }
-}
-
-var unique = exports.unique = function (read, field, invert) {
-  field = prop(field) || id
-  var seen = {}
-  return filter(read, function (data) {
-    var key = field(data)
-    if(seen[key]) return !!invert //false, by default
-    else seen[key] = true
-    return !invert //true by default
-  })
-}
-
-var nonUnique = exports.nonUnique = function (read, field) {
-  return unique(read, field, true)
-}
-
-var group = exports.group =
-function (read, size) {
-  var ended; size = size || 5
-  var queue = []
-
-  return function (end, cb) {
-    //this means that the upstream is sending an error.
-    if(end) return read(ended = end, cb)
-    //this means that we read an end before.
-    if(ended) return cb(ended)
-
-    read(null, function next(end, data) {
-      if(ended = ended || end) {
-        if(!queue.length)
-          return cb(ended)
-
-        var _queue = queue; queue = []
-        return cb(null, _queue)
-      }
-      queue.push(data)
-      if(queue.length < size)
-        return read(null, next)
-
-      var _queue = queue; queue = []
-      cb(null, _queue)
-    })
-  }
-}
-
-var flatten = exports.flatten = function (read) {
-  var _read
-  return function (abort, cb) {
-    if(_read) nextChunk()
-    else      nextStream()
-
-    function nextChunk () {
-      _read(null, function (end, data) {
-        if(end) nextStream()
-        else    cb(null, data)
-      })
-    }
-    function nextStream () {
-      read(null, function (end, stream) {
-        if(end)
-          return cb(end)
-        if(Array.isArray(stream))
-          stream = sources.values(stream)
-        else if('function' != typeof stream)
-          throw new Error('expected stream of streams')
-        
-        _read = stream
-        nextChunk()
-      })
-    }
-  }
-}
-
-var prepend =
-exports.prepend =
-function (read, head) {
-
-  return function (abort, cb) {
-    if(head !== null) {
-      if(abort)
-        return read(abort, cb)
-      var _head = head
-      head = null
-      cb(null, _head)
-    } else {
-      read(abort, cb)
-    }
-  }
-
-}
-
-//var drainIf = exports.drainIf = function (op, done) {
-//  sinks.drain(
-//}
-
-var _reduce = exports._reduce = function (read, reduce, initial) {
-  return function (close, cb) {
-    if(close) return read(close, cb)
-    if(ended) return cb(ended)
-
-    sinks.drain(function (item) {
-      initial = reduce(initial, item)
-    }, function (err, data) {
-      ended = err || true
-      if(!err) cb(null, initial)
-      else     cb(ended)
-    })
-    (read)
-  }
-}
-
-var nextTick = process.nextTick
-
-var highWaterMark = exports.highWaterMark = 
-function (read, highWaterMark) {
-  var buffer = [], waiting = [], ended, reading = false
-  highWaterMark = highWaterMark || 10
-
-  function readAhead () {
-    while(waiting.length && (buffer.length || ended))
-      waiting.shift()(ended, ended ? null : buffer.shift())
-  }
-
-  function next () {
-    if(ended || reading || buffer.length >= highWaterMark)
-      return
-    reading = true
-    return read(ended, function (end, data) {
-      reading = false
-      ended = ended || end
-      if(data != null) buffer.push(data)
-      
-      next(); readAhead()
-    })
-  }
-
-  nextTick(next)
-
-  return function (end, cb) {
-    ended = ended || end
-    waiting.push(cb)
-
-    next(); readAhead()
-  }
-}
-
-
-
-
-}).call(this,require('_process'))
-},{"./sinks":188,"./sources":189,"_process":241,"pull-core":187}],191:[function(require,module,exports){
-var sources  = require('./sources')
-var sinks    = require('./sinks')
-var throughs = require('./throughs')
-var u        = require('pull-core')
-
-function isFunction (fun) {
-  return 'function' === typeof fun
-}
-
-function isReader (fun) {
-  return fun && (fun.type === "Through" || fun.length === 1)
-}
-var exports = module.exports = function pull () {
-  var args = [].slice.call(arguments)
-
-  if(isReader(args[0]))
-    return function (read) {
-      args.unshift(read)
-      return pull.apply(null, args)
-    }
-
-  var read = args.shift()
-
-  //if the first function is a duplex stream,
-  //pipe from the source.
-  if(isFunction(read.source))
-    read = read.source
-
-  function next () {
-    var s = args.shift()
-
-    if(null == s)
-      return next()
-
-    if(isFunction(s)) return s
-
-    return function (read) {
-      s.sink(read)
-      //this supports pipeing through a duplex stream
-      //pull(a, b, a) "telephone style".
-      //if this stream is in the a (first & last position)
-      //s.source will have already been used, but this should never be called
-      //so that is okay.
-      return s.source
-    }
-  }
-
-  while(args.length)
-    read = next() (read)
-
-  return read
-}
-
-
-for(var k in sources)
-  exports[k] = u.Source(sources[k])
-
-for(var k in throughs)
-  exports[k] = u.Through(throughs[k])
-
-for(var k in sinks)
-  exports[k] = u.Sink(sinks[k])
-
-var maybe = require('./maybe')(exports)
-
-for(var k in maybe)
-  exports[k] = maybe[k]
-
-exports.Duplex  = 
-exports.Through = exports.pipeable       = u.Through
-exports.Source  = exports.pipeableSource = u.Source
-exports.Sink    = exports.pipeableSink   = u.Sink
-
-
-
-},{"./maybe":192,"./sinks":194,"./sources":195,"./throughs":196,"pull-core":193}],192:[function(require,module,exports){
-var u = require('pull-core')
-var prop = u.prop
-var id   = u.id
-var maybeSink = u.maybeSink
-
-module.exports = function (pull) {
-
-  var exports = {}
-  var drain = pull.drain
-
-  var find =
-  exports.find = function (test, cb) {
-    return maybeSink(function (cb) {
-      var ended = false
-      if(!cb)
-        cb = test, test = id
-      else
-        test = prop(test) || id
-
-      return drain(function (data) {
-        if(test(data)) {
-          ended = true
-          cb(null, data)
-        return false
-        }
-      }, function (err) {
-        if(ended) return //already called back
-        cb(err === true ? null : err, null)
-      })
-
-    }, cb)
-  }
-
-  var reduce = exports.reduce =
-  function (reduce, acc, cb) {
-
-    return maybeSink(function (cb) {
-      return drain(function (data) {
-        acc = reduce(acc, data)
-      }, function (err) {
-        cb(err, acc)
-      })
-
-    }, cb)
-  }
-
-  var collect = exports.collect = exports.writeArray =
-  function (cb) {
-    return reduce(function (arr, item) {
-      arr.push(item)
-      return arr
-    }, [], cb)
-  }
-
-  var concat = exports.concat =
-  function (cb) {
-    return reduce(function (a, b) {
-      return a + b
-    }, '', cb)
-  }
-
-  return exports
-}
-
-},{"pull-core":193}],193:[function(require,module,exports){
-exports.id = 
-function (item) {
-  return item
-}
-
-exports.prop = 
-function (map) {  
-  if('string' == typeof map) {
-    var key = map
-    return function (data) { return data[key] }
-  }
-  return map
-}
-
-exports.tester = function (test) {
-  if(!test) return exports.id
-  if('object' === typeof test
-    && 'function' === typeof test.test)
-      return test.test.bind(test)
-  return exports.prop(test) || exports.id
-}
-
-exports.addPipe = addPipe
-
-function addPipe(read) {
-  if('function' !== typeof read)
-    return read
-
-  read.pipe = read.pipe || function (reader) {
-    if('function' != typeof reader && 'function' != typeof reader.sink)
-      throw new Error('must pipe to reader')
-    var pipe = addPipe(reader.sink ? reader.sink(read) : reader(read))
-    return reader.source || pipe;
-  }
-  
-  read.type = 'Source'
-  return read
-}
-
-var Source =
-exports.Source =
-function Source (createRead) {
-  function s() {
-    var args = [].slice.call(arguments)
-    return addPipe(createRead.apply(null, args))
-  }
-  s.type = 'Source'
-  return s
-}
-
-
-var Through =
-exports.Through = 
-function (createRead) {
-  return function () {
-    var args = [].slice.call(arguments)
-    var piped = []
-    function reader (read) {
-      args.unshift(read)
-      read = createRead.apply(null, args)
-      while(piped.length)
-        read = piped.shift()(read)
-      return read
-      //pipeing to from this reader should compose...
-    }
-    reader.pipe = function (read) {
-      piped.push(read) 
-      if(read.type === 'Source')
-        throw new Error('cannot pipe ' + reader.type + ' to Source')
-      reader.type = read.type === 'Sink' ? 'Sink' : 'Through'
-      return reader
-    }
-    reader.type = 'Through'
-    return reader
-  }
-}
-
-var Sink =
-exports.Sink = 
-function Sink(createReader) {
-  return function () {
-    var args = [].slice.call(arguments)
-    if(!createReader)
-      throw new Error('must be createReader function')
-    function s (read) {
-      args.unshift(read)
-      return createReader.apply(null, args)
-    }
-    s.type = 'Sink'
-    return s
-  }
-}
-
-
-exports.maybeSink = 
-exports.maybeDrain = 
-function (createSink, cb) {
-  if(!cb)
-    return Through(function (read) {
-      var ended
-      return function (close, cb) {
-        if(close) return read(close, cb)
-        if(ended) return cb(ended)
-
-        createSink(function (err, data) {
-          ended = err || true
-          if(!err) cb(null, data)
-          else     cb(ended)
-        }) (read)
-      }
-    })()
-
-  return Sink(function (read) {
-    return createSink(cb) (read)
-  })()
-}
-
-
-},{}],194:[function(require,module,exports){
-var drain = exports.drain = function (read, op, done) {
-
-  ;(function next() {
-    var loop = true, cbed = false
-    while(loop) {
-      cbed = false
-      read(null, function (end, data) {
-        cbed = true
-        if(end) {
-          loop = false
-          if(done) done(end === true ? null : end)
-          else if(end && end !== true)
-            throw end
-        }
-        else if(op && false === op(data)) {
-          loop = false
-          read(true, done || function () {})
-        }
-        else if(!loop){
-          next()
-        }
-      })
-      if(!cbed) {
-        loop = false
-        return
-      }
-    }
-  })()
-}
-
-var onEnd = exports.onEnd = function (read, done) {
-  return drain(read, null, done)
-}
-
-var log = exports.log = function (read, done) {
-  return drain(read, function (data) {
-    console.log(data)
-  }, done)
-}
-
-
-},{}],195:[function(require,module,exports){
-
-var keys = exports.keys =
-function (object) {
-  return values(Object.keys(object))
-}
-
-function abortCb(cb, abort, onAbort) {
-  cb(abort)
-  onAbort && onAbort(abort === true ? null: abort)
-  return
-}
-
-var once = exports.once =
-function (value, onAbort) {
-  return function (abort, cb) {
-    if(abort)
-      return abortCb(cb, abort, onAbort)
-    if(value != null) {
-      var _value = value; value = null
-      cb(null, _value)
-    } else
-      cb(true)
-  }
-}
-
-var values = exports.values = exports.readArray =
-function (array, onAbort) {
-  if(!array)
-    return function (abort, cb) {
-      if(abort) return abortCb(cb, abort, onAbort)
-      return cb(true)
-    }
-  if(!Array.isArray(array))
-    array = Object.keys(array).map(function (k) {
-      return array[k]
-    })
-  var i = 0
-  return function (abort, cb) {
-    if(abort)
-      return abortCb(cb, abort, onAbort)
-    cb(i >= array.length || null, array[i++])
-  }
-}
-
-
-var count = exports.count =
-function (max) {
-  var i = 0; max = max || Infinity
-  return function (end, cb) {
-    if(end) return cb && cb(end)
-    if(i > max)
-      return cb(true)
-    cb(null, i++)
-  }
-}
-
-var infinite = exports.infinite =
-function (generate) {
-  generate = generate || Math.random
-  return function (end, cb) {
-    if(end) return cb && cb(end)
-    return cb(null, generate())
-  }
-}
-
-var defer = exports.defer = function () {
-  var _read, cbs = [], _end
-
-  var read = function (end, cb) {
-    if(!_read) {
-      _end = end
-      cbs.push(cb)
-    } 
-    else _read(end, cb)
-  }
-  read.resolve = function (read) {
-    if(_read) throw new Error('already resolved')
-    _read = read
-    if(!_read) throw new Error('no read cannot resolve!' + _read)
-    while(cbs.length)
-      _read(_end, cbs.shift())
-  }
-  read.abort = function(err) {
-    read.resolve(function (_, cb) {
-      cb(err || true)
-    })
-  }
-  return read
-}
-
-var empty = exports.empty = function () {
-  return function (abort, cb) {
-    cb(true)
-  }
-}
-
-var error = exports.error = function (err) {
-  return function (abort, cb) {
-    cb(err)
-  }
-}
-
-var depthFirst = exports.depthFirst =
-function (start, createStream) {
-  var reads = []
-
-  reads.unshift(once(start))
-
-  return function next (end, cb) {
-    if(!reads.length)
-      return cb(true)
-    reads[0](end, function (end, data) {
-      if(end) {
-        //if this stream has ended, go to the next queue
-        reads.shift()
-        return next(null, cb)
-      }
-      reads.unshift(createStream(data))
-      cb(end, data)
-    })
-  }
-}
-//width first is just like depth first,
-//but push each new stream onto the end of the queue
-var widthFirst = exports.widthFirst =
-function (start, createStream) {
-  var reads = []
-
-  reads.push(once(start))
-
-  return function next (end, cb) {
-    if(!reads.length)
-      return cb(true)
-    reads[0](end, function (end, data) {
-      if(end) {
-        reads.shift()
-        return next(null, cb)
-      }
-      reads.push(createStream(data))
-      cb(end, data)
-    })
-  }
-}
-
-//this came out different to the first (strm)
-//attempt at leafFirst, but it's still a valid
-//topological sort.
-var leafFirst = exports.leafFirst =
-function (start, createStream) {
-  var reads = []
-  var output = []
-  reads.push(once(start))
-
-  return function next (end, cb) {
-    reads[0](end, function (end, data) {
-      if(end) {
-        reads.shift()
-        if(!output.length)
-          return cb(true)
-        return cb(null, output.shift())
-      }
-      reads.unshift(createStream(data))
-      output.unshift(data)
-      next(null, cb)
-    })
-  }
-}
-
-
-},{}],196:[function(require,module,exports){
-(function (process){
-var u      = require('pull-core')
-var sources = require('./sources')
-var sinks = require('./sinks')
-
-var prop   = u.prop
-var id     = u.id
-var tester = u.tester
-
-var map = exports.map =
-function (read, map) {
-  map = prop(map) || id
-  return function (abort, cb) {
-    read(abort, function (end, data) {
-      try {
-      data = !end ? map(data) : null
-      } catch (err) {
-        return read(err, function () {
-          return cb(err)
-        })
-      }
-      cb(end, data)
-    })
-  }
-}
-
-var asyncMap = exports.asyncMap =
-function (read, map) {
-  if(!map) return read
-  return function (end, cb) {
-    if(end) return read(end, cb) //abort
-    read(null, function (end, data) {
-      if(end) return cb(end, data)
-      map(data, cb)
-    })
-  }
-}
-
-var paraMap = exports.paraMap =
-function (read, map, width) {
-  if(!map) return read
-  var ended = false, queue = [], _cb
-
-  function drain () {
-    if(!_cb) return
-    var cb = _cb
-    _cb = null
-    if(queue.length)
-      return cb(null, queue.shift())
-    else if(ended && !n)
-      return cb(ended)
-    _cb = cb
-  }
-
-  function pull () {
-    read(null, function (end, data) {
-      if(end) {
-        ended = end
-        return drain()
-      }
-      n++
-      map(data, function (err, data) {
-        n--
-
-        queue.push(data)
-        drain()
-      })
-
-      if(n < width && !ended)
-        pull()
-    })
-  }
-
-  var n = 0
-  return function (end, cb) {
-    if(end) return read(end, cb) //abort
-    //continue to read while there are less than 3 maps in flight
-    _cb = cb
-    if(queue.length || ended)
-      pull(), drain()
-    else pull()
-  }
-  return highWaterMark(asyncMap(read, map), width)
-}
-
-var filter = exports.filter =
-function (read, test) {
-  //regexp
-  test = tester(test)
-  return function next (end, cb) {
-    var sync, loop = true
-    while(loop) {
-      loop = false
-      sync = true
-      read(end, function (end, data) {
-        if(!end && !test(data))
-          return sync ? loop = true : next(end, cb)
-        cb(end, data)
-      })
-      sync = false
-    }
-  }
-}
-
-var filterNot = exports.filterNot =
-function (read, test) {
-  test = tester(test)
-  return filter(read, function (e) {
-    return !test(e)
-  })
-}
-
-var through = exports.through =
-function (read, op, onEnd) {
-  var a = false
-  function once (abort) {
-    if(a || !onEnd) return
-    a = true
-    onEnd(abort === true ? null : abort)
-  }
-
-  return function (end, cb) {
-    if(end) once(end)
-    return read(end, function (end, data) {
-      if(!end) op && op(data)
-      else once(end)
-      cb(end, data)
-    })
-  }
-}
-
-var take = exports.take =
-function (read, test) {
-  var ended = false
-  if('number' === typeof test) {
-    var n = test; test = function () {
-      return n --
-    }
-  }
-
-  return function (end, cb) {
-    if(ended) return cb(ended)
-    if(ended = end) return read(ended, cb)
-
-    read(null, function (end, data) {
-      if(ended = ended || end) return cb(ended)
-      if(!test(data)) {
-        ended = true
-        read(true, function (end, data) {
-          cb(ended, data)
-        })
-      }
-      else
-        cb(null, data)
-    })
-  }
-}
-
-var unique = exports.unique = function (read, field, invert) {
-  field = prop(field) || id
-  var seen = {}
-  return filter(read, function (data) {
-    var key = field(data)
-    if(seen[key]) return !!invert //false, by default
-    else seen[key] = true
-    return !invert //true by default
-  })
-}
-
-var nonUnique = exports.nonUnique = function (read, field) {
-  return unique(read, field, true)
-}
-
-var group = exports.group =
-function (read, size) {
-  var ended; size = size || 5
-  var queue = []
-
-  return function (end, cb) {
-    //this means that the upstream is sending an error.
-    if(end) return read(ended = end, cb)
-    //this means that we read an end before.
-    if(ended) return cb(ended)
-
-    read(null, function next(end, data) {
-      if(ended = ended || end) {
-        if(!queue.length)
-          return cb(ended)
-
-        var _queue = queue; queue = []
-        return cb(null, _queue)
-      }
-      queue.push(data)
-      if(queue.length < size)
-        return read(null, next)
-
-      var _queue = queue; queue = []
-      cb(null, _queue)
-    })
-  }
-}
-
-var flatten = exports.flatten = function (read) {
-  var _read
-  return function (abort, cb) {
-    if(_read) nextChunk()
-    else      nextStream()
-
-    function nextChunk () {
-      _read(null, function (end, data) {
-        if(end) nextStream()
-        else    cb(null, data)
-      })
-    }
-    function nextStream () {
-      read(null, function (end, stream) {
-        if(end)
-          return cb(end)
-        if(Array.isArray(stream) || stream && 'object' === typeof stream)
-          stream = sources.values(stream)
-        else if('function' != typeof stream)
-          throw new Error('expected stream of streams')
-        _read = stream
-        nextChunk()
-      })
-    }
-  }
-}
-
-var prepend =
-exports.prepend =
-function (read, head) {
-
-  return function (abort, cb) {
-    if(head !== null) {
-      if(abort)
-        return read(abort, cb)
-      var _head = head
-      head = null
-      cb(null, _head)
-    } else {
-      read(abort, cb)
-    }
-  }
-
-}
-
-//var drainIf = exports.drainIf = function (op, done) {
-//  sinks.drain(
-//}
-
-var _reduce = exports._reduce = function (read, reduce, initial) {
-  return function (close, cb) {
-    if(close) return read(close, cb)
-    if(ended) return cb(ended)
-
-    sinks.drain(function (item) {
-      initial = reduce(initial, item)
-    }, function (err, data) {
-      ended = err || true
-      if(!err) cb(null, initial)
-      else     cb(ended)
-    })
-    (read)
-  }
-}
-
-var nextTick = process.nextTick
-
-var highWaterMark = exports.highWaterMark =
-function (read, highWaterMark) {
-  var buffer = [], waiting = [], ended, ending, reading = false
-  highWaterMark = highWaterMark || 10
-
-  function readAhead () {
-    while(waiting.length && (buffer.length || ended))
-      waiting.shift()(ended, ended ? null : buffer.shift())
-
-    if (!buffer.length && ending) ended = ending;
-  }
-
-  function next () {
-    if(ended || ending || reading || buffer.length >= highWaterMark)
-      return
-    reading = true
-    return read(ended || ending, function (end, data) {
-      reading = false
-      ending = ending || end
-      if(data != null) buffer.push(data)
-
-      next(); readAhead()
-    })
-  }
-
-  process.nextTick(next)
-
-  return function (end, cb) {
-    ended = ended || end
-    waiting.push(cb)
-
-    next(); readAhead()
-  }
-}
-
-var flatMap = exports.flatMap =
-function (read, mapper) {
-  mapper = mapper || id
-  var queue = [], ended
-
-  return function (abort, cb) {
-    if(queue.length) return cb(null, queue.shift())
-    else if(ended)   return cb(ended)
-
-    read(abort, function next (end, data) {
-      if(end) ended = end
-      else {
-        var add = mapper(data)
-        while(add && add.length)
-          queue.push(add.shift())
-      }
-
-      if(queue.length) cb(null, queue.shift())
-      else if(ended)   cb(ended)
-      else             read(null, next)
-    })
-  }
-}
-
-
-}).call(this,require('_process'))
-},{"./sinks":194,"./sources":195,"_process":241,"pull-core":193}],197:[function(require,module,exports){
-var extend = require('cog/extend');
-
-module.exports = function(signaller) {
-
-  function dataAllowed(data) {
-    var cloned = extend({ allow: true }, data);
-    signaller('peer:filter', data.id, cloned);
-
-    return cloned.allow;
-  }
-
-  return function(args, messageType, srcData, srcState, isDM) {
-    var data = args[0];
-    var peer;
-
-    // if we have valid data then process
-    if (data && data.id && data.id !== signaller.id) {
-      if (! dataAllowed(data)) {
-        return;
-      }
-      // check to see if this is a known peer
-      peer = signaller.peers.get(data.id);
-
-      // trigger the peer connected event to flag that we know about a
-      // peer connection. The peer has passed the "filter" check but may
-      // be announced / updated depending on previous connection status
-      signaller('peer:connected', data.id, data);
-
-      // if the peer is existing, then update the data
-      if (peer) {
-        // update the data
-        extend(peer.data, data);
-
-        // trigger the peer update event
-        return signaller('peer:update', data, srcData);
-      }
-
-      // create a new peer
-      peer = {
-        id: data.id,
-
-        // initialise the local role index
-        roleIdx: [data.id, signaller.id].sort().indexOf(data.id),
-
-        // initialise the peer data
-        data: {}
-      };
-
-      // initialise the peer data
-      extend(peer.data, data);
-
-      // set the peer data
-      signaller.peers.set(data.id, peer);
-
-      // if this is an initial announce message (no vector clock attached)
-      // then send a announce reply
-      if (signaller.autoreply && (! isDM)) {
-        signaller
-          .to(data.id)
-          .send('/announce', signaller.attributes);
-      }
-
-      // emit a new peer announce event
-      return signaller('peer:announce', data, peer);
-    }
-  };
-};
-
-},{"cog/extend":172}],198:[function(require,module,exports){
-/**
-  ### prepare
-
-  ```
-  fn(args) => String
-  ```
-
-  Convert an array of values into a pipe-delimited string.
-
-**/
-module.exports = function(args) {
-  return args.map(prepareArg).join('|');
-};
-
-function prepareArg(arg) {
-  if (typeof arg == 'object' && (! (arg instanceof String))) {
-    return JSON.stringify(arg);
-  }
-  else if (typeof arg == 'function') {
-    return null;
-  }
-
-  return arg;
-}
-
-},{}],199:[function(require,module,exports){
-var jsonparse = require('cog/jsonparse');
-
-/**
-  ### process
-
-  ```
-  fn(signaller, opts) => fn(message)
-  ```
-
-  The core processing logic that is used to respond to incoming signaling
-  messages.
-
-**/
-module.exports = function(signaller, opts) {
-  var handlers = {
-    announce: require('./handlers/announce')(signaller, opts)
-  };
-
-  function sendEvent(parts, srcState, data) {
-    // initialise the event name
-    var evtName = 'message:' + parts[0].slice(1);
-
-    // convert any valid json objects to json
-    var args = parts.slice(2).map(jsonparse);
-
-    signaller.apply(
-      signaller,
-      [evtName].concat(args).concat([srcState, data])
-    );
-  }
-
-  return function(originalData) {
-    var data = originalData;
-    var isMatch = true;
-    var parts;
-    var handler;
-    var srcData;
-    var srcState;
-    var isDirectMessage = false;
-
-    // discard primus messages
-    if (data && data.slice(0, 6) === 'primus') {
-      return;
-    }
-
-    // force the id into string format so we can run length and comparison tests on it
-    var id = signaller.id + '';
-
-    // process /to messages
-    if (data.slice(0, 3) === '/to') {
-      isMatch = data.slice(4, id.length + 4) === id;
-      if (isMatch) {
-        parts = data.slice(5 + id.length).split('|').map(jsonparse);
-
-        // get the source data
-        isDirectMessage = true;
-
-        // extract the vector clock and update the parts
-        parts = parts.map(jsonparse);
-      }
-    }
-
-    // if this is not a match, then bail
-    if (! isMatch) {
-      return;
-    }
-
-    // chop the data into parts
-    signaller('rawdata', data);
-    parts = parts || data.split('|').map(jsonparse);
-
-    // if we have a specific handler for the action, then invoke
-    if (typeof parts[0] == 'string') {
-      // extract the metadata from the input data
-      srcData = parts[1];
-
-      // if we got data from ourself, then this is pretty dumb
-      // but if we have then throw it away
-      if (srcData === signaller.id) {
-        return console.warn('got data from ourself, discarding');
-      }
-
-      // get the source state
-      srcState = signaller.peers.get(srcData) || srcData;
-
-      // handle commands
-      if (parts[0].charAt(0) === '/') {
-        // look for a handler for the message type
-        handler = handlers[parts[0].slice(1)];
-
-        if (typeof handler == 'function') {
-          handler(
-            parts.slice(2),
-            parts[0].slice(1),
-            srcData,
-            srcState,
-            isDirectMessage
-          );
-        }
-        else {
-          sendEvent(parts, srcState, originalData);
-        }
-      }
-      // otherwise, emit data
-      else {
-        signaller(
-          'data',
-          parts.slice(0, 1).concat(parts.slice(2)),
-          srcData,
-          srcState,
-          isDirectMessage
-        );
-      }
-    }
-  };
-};
-
-},{"./handlers/announce":197,"cog/jsonparse":174}],200:[function(require,module,exports){
-var detect = require('rtc-core/detect');
-var extend = require('cog/extend');
-var getable = require('cog/getable');
-var cuid = require('cuid');
-var mbus = require('mbus');
-var prepare = require('./prepare');
-
-/**
-  ## `signaller(opts, bufferMessage) => mbus`
-
-  Create a base level signaller which is capable of processing
-  messages from an incoming source.  The signaller is capable of
-  sending messages outbound using the `bufferMessage` function
-  that is supplied to the signaller.
-
-**/
-module.exports = function(opts, bufferMessage) {
-  // get the autoreply setting
-  var autoreply = (opts || {}).autoreply;
-
-  // create the signaller mbus
-  var signaller = mbus('', (opts || {}).logger);
-
-  // initialise the peers
-  var peers = signaller.peers = getable({});
-
-  // initialise the signaller attributes
-  var attributes = signaller.attributes = {
-    browser: detect.browser,
-    browserVersion: detect.browserVersion,
-    agent: 'unknown'
-  };
-
-  function createToMessage(header) {
-    return function() {
-      var args = header.concat([].slice.call(arguments));
-
-      // inject the signaller.id
-      args.splice(3, 0, signaller.id);
-      bufferMessage(prepare(args));
-    }
-  }
-
-  // initialise the signaller id
-  signaller.id = (opts || {}).id || cuid();
-
-  /**
-    #### `isMaster(targetId) => Boolean`
-
-    A simple function that indicates whether the local signaller is the master
-    for it's relationship with peer signaller indicated by `targetId`.  Roles
-    are determined at the point at which signalling peers discover each other,
-    and are simply worked out by whichever peer has the lowest signaller id
-    when lexigraphically sorted.
-
-    For example, if we have two signaller peers that have discovered each
-    others with the following ids:
-
-    - `b11f4fd0-feb5-447c-80c8-c51d8c3cced2`
-    - `8a07f82e-49a5-4b9b-a02e-43d911382be6`
-
-    They would be assigned roles:
-
-    - `b11f4fd0-feb5-447c-80c8-c51d8c3cced2`
-    - `8a07f82e-49a5-4b9b-a02e-43d911382be6` (master)
-
-  **/
-  signaller.isMaster = function(targetId) {
-    var peer = peers.get(targetId);
-
-    return peer && peer.roleIdx !== 0;
-  };
-
-  /**
-    #### `send(args*)`
-
-    Prepare a message for sending, e.g.:
-
-    ```js
-    signaller.send('/foo', 'bar');
-    ```
-
-  **/
-  signaller.send = function() {
-    var args = [].slice.call(arguments);
-
-    // inject the metadata
-    args.splice(1, 0, signaller.id);
-
-    // send the message
-    bufferMessage(prepare(args));
-  };
-
-
-  /**
-    #### `to(targetId)`
-
-    Use the `to` function to send a message to the specified target peer.
-    A large parge of negotiating a WebRTC peer connection involves direct
-    communication between two parties which must be done by the signalling
-    server.  The `to` function provides a simple way to provide a logical
-    communication channel between the two parties:
-
-    ```js
-    var send = signaller.to('e95fa05b-9062-45c6-bfa2-5055bf6625f4').send;
-
-    // create an offer on a local peer connection
-    pc.createOffer(
-      function(desc) {
-        // set the local description using the offer sdp
-        // if this occurs successfully send this to our peer
-        pc.setLocalDescription(
-          desc,
-          function() {
-            send('/sdp', desc);
-          },
-          handleFail
-        );
-      },
-      handleFail
-    );
-    ```
-
-  **/
-  signaller.to = function(targetId) {
-    return {
-      send: createToMessage(['/to', targetId])
-    };
-  };
-
-  /**
-    ### Signaller Internals
-
-    The following functions are designed for use by signallers that are built
-    on top of this base signaller.
-  **/
-
-  /**
-    #### `_announce()`
-
-    The internal function that constructs the `/announce` message and triggers
-    the `local:announce` event.
-
-  **/
-  signaller._announce = function() {
-    signaller.send('/announce', attributes);
-    signaller('local:announce', attributes);
-  };
-
-  /**
-    #### `_process(data)`
-
-
-  **/
-  signaller._process = require('./process')(signaller);
-
-  /**
-    #### `_update`
-
-    Internal function that updates core announce attributes with
-    updated data.
-
-**/
-  signaller._update = function(data) {
-    extend(attributes, data, { id: signaller.id });
-  };
-
-  // set the autoreply flag
-  signaller.autoreply = autoreply === undefined || autoreply;
-
-  return signaller;
-};
-
-},{"./prepare":198,"./process":199,"cog/extend":172,"cog/getable":173,"cuid":15,"mbus":177,"rtc-core/detect":178}],201:[function(require,module,exports){
-var extend = require('cog/extend');
-
-/**
-  # rtc-switchboard-messenger
-
-  A specialised version of
-  [`messenger-ws`](https://github.com/DamonOehlman/messenger-ws) designed to
-  connect to [`rtc-switchboard`](http://github.com/rtc-io/rtc-switchboard)
-  instances.
-
-**/
-module.exports = function(switchboard, opts) {
-  return require('messenger-ws')(switchboard, extend({
-    endpoints: (opts || {}).endpoints || ['/']
-  }, opts));
-};
-
-},{"cog/extend":172,"messenger-ws":202}],202:[function(require,module,exports){
-var WebSocket = require('ws');
-var wsurl = require('wsurl');
-var ps = require('pull-ws');
-var defaults = require('cog/defaults');
-var reTrailingSlash = /\/$/;
-var DEFAULT_FAILCODES = [];
-
-/**
-  # messenger-ws
-
-  This is a simple messaging implementation for sending and receiving data
-  via websockets.
-
-  Follows the [messenger-archetype](https://github.com/DamonOehlman/messenger-archetype)
-
-  ## Example Usage
-
-  <<< examples/simple.js
-
-**/
-module.exports = function(url, opts) {
-  var timeout = (opts || {}).timeout || 1000;
-  var failcodes = (opts || {}).failcodes || DEFAULT_FAILCODES;
-  var endpoints = ((opts || {}).endpoints || ['/']).map(function(endpoint) {
-    return url.replace(reTrailingSlash, '') + endpoint;
-  });
-
-  function connect(callback) {
-    var queue = [].concat(endpoints);
-    var isConnected = false;
-    var socket;
-    var failTimer;
-    var successTimer;
-    var removeListener;
-    var source;
-
-    function attemptNext() {
-      // if we have already connected, do nothing
-      // NOTE: workaround for websockets/ws#489
-      if (isConnected) {
-        return;
-      }
-
-      // if we have no more valid endpoints, then erorr out
-      if (queue.length === 0) {
-        return callback(new Error('Unable to connect to url: ' + url));
-      }
-
-      socket = new WebSocket(wsurl(queue.shift()));
-      socket.addEventListener('message', connect);
-      socket.addEventListener('error', handleError);
-      socket.addEventListener('close', handleClose);
-      socket.addEventListener('open', handleOpen);
-
-      removeListener = socket.removeEventListener || socket.removeListener;
-      failTimer = setTimeout(attemptNext, timeout);
-    }
-
-    function connect() {
-      // if we are already connected, abort
-      // NOTE: workaround for websockets/ws#489
-      if (isConnected) {
-        return;
-      }
-
-      // clear any monitors
-      clearTimeout(failTimer);
-      clearTimeout(successTimer);
-
-      // remove the close and error listeners as messenger-ws has done
-      // what it set out to do and that is create a connection
-      // NOTE: issue websockets/ws#489 causes means this fails in ws
-      removeListener.call(socket, 'open', handleOpen);
-      removeListener.call(socket, 'close', handleClose);
-      removeListener.call(socket, 'error', handleError);
-      removeListener.call(socket, 'message', connect);
-
-      // trigger the callback
-      isConnected = true;
-      callback(null, source, ps.sink(socket, opts));
-    }
-
-    function handleClose(evt) {
-      var clean = evt.wasClean && (
-        evt.code === undefined || failcodes.indexOf(evt.code) < 0
-      );
-
-      // if this was not a clean close, then handle error
-      if (! clean) {
-        return handleError();
-      }
-
-      clearTimeout(successTimer);
-      clearTimeout(failTimer);
-    }
-
-    function handleError() {
-      clearTimeout(successTimer);
-      clearTimeout(failTimer);
-      attemptNext();
-    }
-
-    function handleOpen() {
-      // create the source immediately to buffer any data
-      source = ps.source(socket, opts);
-
-      // monitor data flowing from the socket
-      successTimer = setTimeout(connect, 100);
-    }
-
-    attemptNext();
-  }
-
-  return connect;
-};
-
-},{"cog/defaults":171,"pull-ws":203,"ws":208,"wsurl":209}],203:[function(require,module,exports){
-exports = module.exports = duplex;
-
-exports.source = require('./source');
-exports.sink = require('./sink');
-
-function duplex (ws, opts) {
-  return {
-    source: exports.source(ws),
-    sink: exports.sink(ws, opts)
-  };
-};
-
-},{"./sink":206,"./source":207}],204:[function(require,module,exports){
-arguments[4][193][0].apply(exports,arguments)
-},{"dup":193}],205:[function(require,module,exports){
-module.exports = function(socket, callback) {
-  var remove = socket && (socket.removeEventListener || socket.removeListener);
-
-  function cleanup () {
-    if (typeof remove == 'function') {
-      remove.call(socket, 'open', handleOpen);
-      remove.call(socket, 'error', handleErr);
-    }
-  }
-
-  function handleOpen(evt) {
-    cleanup(); callback();
-  }
-
-  function handleErr (evt) {
-    cleanup(); callback(evt);
-  }
-
-  // if the socket is closing or closed, return end
-  if (socket.readyState >= 2) {
-    return callback(true);
-  }
-
-  // if open, trigger the callback
-  if (socket.readyState === 1) {
-    return callback();
-  }
-
-  socket.addEventListener('open', handleOpen);
-  socket.addEventListener('error', handleErr);
-};
-
-},{}],206:[function(require,module,exports){
-(function (process){
-var pull = require('pull-core');
-var ready = require('./ready');
-
-/**
-  ### `sink(socket, opts?)`
-
-  Create a pull-stream `Sink` that will write data to the `socket`.
-
-  <<< examples/write.js
-
-**/
-module.exports = pull.Sink(function(read, socket, opts) {
-  opts = opts || {}
-  var closeOnEnd = opts.closeOnEnd !== false;
-  var onClose = 'function' === typeof opts ? opts : opts.onClose;
-
-  function next(end, data) {
-    // if the stream has ended, simply return
-    if (end) {
-      if (closeOnEnd && socket.readyState <= 1) {
-        if(onClose)
-          socket.addEventListener('close', function (ev) {
-            if(ev.wasClean) onClose()
-            else {
-              var err = new Error('ws error')
-              err.event = ev
-              onClose(err)
-            }
-          });
-
-        socket.close();
-      }
-
-      return;
-    }
-
-    // socket ready?
-    ready(socket, function(end) {
-      if (end) {
-        return read(end, function () {});
-      }
-
-      socket.send(data);
-      process.nextTick(function() {
-        read(null, next);
-      });
-    });
-  }
-
-  read(null, next);
-});
-
-}).call(this,require('_process'))
-},{"./ready":205,"_process":241,"pull-core":204}],207:[function(require,module,exports){
-var pull = require('pull-core');
-var ready = require('./ready');
-
-/**
-  ### `source(socket)`
-
-  Create a pull-stream `Source` that will read data from the `socket`.
-
-  <<< examples/read.js
-
-**/
-module.exports = pull.Source(function(socket) {
-  var buffer = [];
-  var receiver;
-  var ended;
-
-  socket.addEventListener('message', function(evt) {
-    if (receiver) {
-      return receiver(null, evt.data);
-    }
-
-    buffer.push(evt.data);
-  });
-
-  socket.addEventListener('close', function(evt) {
-    if (ended) return;
-    if (receiver) {
-      return receiver(ended = true);
-    }
-  });
-
-  socket.addEventListener('error', function (evt) {
-    if (ended) return;
-    ended = evt;
-    if (receiver) {
-      receiver(ended);
-    }
-  });
-
-  function read(abort, cb) {
-    receiver = null;
-
-    //if stream has already ended.
-    if (ended)
-      return cb(ended)
-
-    // if ended, abort
-    if (abort) {
-      //this will callback when socket closes
-      receiver = cb
-      return socket.close()
-    }
-
-    ready(socket, function(end) {
-      if (end) {
-        return cb(ended = end);
-      }
-
-      // read from the socket
-      if (ended && ended !== true) {
-        return cb(ended);
-      }
-      else if (buffer.length > 0) {
-        return cb(null, buffer.shift());
-      }
-      else if (ended) {
-        return cb(true);
-      }
-
-      receiver = cb;
-    });
-  };
-
-  return read;
-});
-
-},{"./ready":205,"pull-core":204}],208:[function(require,module,exports){
-
-/**
- * Module dependencies.
- */
-
-var global = (function() { return this; })();
-
-/**
- * WebSocket constructor.
- */
-
-var WebSocket = global.WebSocket || global.MozWebSocket;
-
-/**
- * Module exports.
- */
-
-module.exports = WebSocket ? ws : null;
-
-/**
- * WebSocket constructor.
- *
- * The third `opts` options object gets ignored in web browsers, since it's
- * non-standard, and throws a TypeError if passed to the constructor.
- * See: https://github.com/einaros/ws/issues/227
- *
- * @param {String} uri
- * @param {Array} protocols (optional)
- * @param {Object) opts (optional)
- * @api public
- */
-
-function ws(uri, protocols, opts) {
-  var instance;
-  if (protocols) {
-    instance = new WebSocket(uri, protocols);
-  } else {
-    instance = new WebSocket(uri);
-  }
-  return instance;
-}
-
-if (WebSocket) ws.prototype = WebSocket.prototype;
-
-},{}],209:[function(require,module,exports){
-var reHttpUrl = /^http(.*)$/;
-
-/**
-  # wsurl
-
-  Given a url (including protocol relative urls - i.e. `//`), generate an appropriate
-  url for a WebSocket endpoint (`ws` or `wss`).
-
-  ## Example Usage
-
-  <<< examples/relative.js
-
-**/
-
-module.exports = function(url, opts) {
-  var current = (opts || {}).current || (typeof location != 'undefined' && location.href);
-  var currentProtocol = current && current.slice(0, current.indexOf(':'));
-  var insecure = (opts || {}).insecure;
-  var isRelative = url.slice(0, 2) == '//';
-  var forceWS = (! currentProtocol) || currentProtocol === 'file:';
-
-  if (isRelative) {
-    return forceWS ?
-      ((insecure ? 'ws:' : 'wss:') + url) :
-      (currentProtocol.replace(reHttpUrl, 'ws$1') + ':' + url);
-  }
-
-  return url.replace(reHttpUrl, 'ws$1');
-};
-
-},{}],210:[function(require,module,exports){
-/* jshint node: true */
-'use strict';
-
-var debug = require('cog/logger')('rtc/cleanup');
-
-var CANNOT_CLOSE_STATES = [
-  'closed'
-];
-
-var EVENTS_DECOUPLE_BC = [
-  'addstream',
-  'datachannel',
-  'icecandidate',
-  'negotiationneeded',
-  'removestream',
-  'signalingstatechange'
-];
-
-var EVENTS_DECOUPLE_AC = [
-  'iceconnectionstatechange'
-];
-
-/**
-  ### rtc-tools/cleanup
-
-  ```
-  cleanup(pc)
-  ```
-
-  The `cleanup` function is used to ensure that a peer connection is properly
-  closed and ready to be cleaned up by the browser.
-
-**/
-module.exports = function(pc) {
-  // see if we can close the connection
-  var currentState = pc.iceConnectionState;
-  var canClose = CANNOT_CLOSE_STATES.indexOf(currentState) < 0;
-
-  function decouple(events) {
-    events.forEach(function(evtName) {
-      if (pc['on' + evtName]) {
-        pc['on' + evtName] = null;
-      }
-    });
-  }
-
-  // decouple "before close" events
-  decouple(EVENTS_DECOUPLE_BC);
-
-  if (canClose) {
-    debug('attempting connection close, current state: '+ pc.iceConnectionState);
-    pc.close();
-  }
-
-  // remove the event listeners
-  // after a short delay giving the connection time to trigger
-  // close and iceconnectionstatechange events
-  setTimeout(function() {
-    decouple(EVENTS_DECOUPLE_AC);
-  }, 100);
-};
-
-},{"cog/logger":175}],211:[function(require,module,exports){
-/* jshint node: true */
-'use strict';
-
-var mbus = require('mbus');
-var queue = require('rtc-taskqueue');
-var cleanup = require('./cleanup');
-var monitor = require('./monitor');
-var throttle = require('cog/throttle');
-var pluck = require('whisk/pluck');
-var pluckCandidate = pluck('candidate', 'sdpMid', 'sdpMLineIndex');
-var CLOSED_STATES = [ 'closed', 'failed' ];
-var CHECKING_STATES = [ 'checking' ];
-
-/**
-  ### rtc-tools/couple
-
-  #### couple(pc, targetId, signaller, opts?)
-
-  Couple a WebRTC connection with another webrtc connection identified by
-  `targetId` via the signaller.
-
-  The following options can be provided in the `opts` argument:
-
-  - `sdpfilter` (default: null)
-
-    A simple function for filtering SDP as part of the peer
-    connection handshake (see the Using Filters details below).
-
-  ##### Example Usage
-
-  ```js
-  var couple = require('rtc/couple');
-
-  couple(pc, '54879965-ce43-426e-a8ef-09ac1e39a16d', signaller);
-  ```
-
-  ##### Using Filters
-
-  In certain instances you may wish to modify the raw SDP that is provided
-  by the `createOffer` and `createAnswer` calls.  This can be done by passing
-  a `sdpfilter` function (or array) in the options.  For example:
-
-  ```js
-  // run the sdp from through a local tweakSdp function.
-  couple(pc, '54879965-ce43-426e-a8ef-09ac1e39a16d', signaller, {
-    sdpfilter: tweakSdp
-  });
-  ```
-
-**/
-function couple(pc, targetId, signaller, opts) {
-  var debugLabel = (opts || {}).debugLabel || 'rtc';
-  var debug = require('cog/logger')(debugLabel + '/couple');
-
-  // create a monitor for the connection
-  var mon = monitor(pc, targetId, signaller, (opts || {}).logger);
-  var emit = mbus('', mon);
-  var reactive = (opts || {}).reactive;
-  var endOfCandidates = true;
-
-  // configure the time to wait between receiving a 'disconnect'
-  // iceConnectionState and determining that we are closed
-  var disconnectTimeout = (opts || {}).disconnectTimeout || 10000;
-  var disconnectTimer;
-
-  // initilaise the negotiation helpers
-  var isMaster = signaller.isMaster(targetId);
-
-  // initialise the processing queue (one at a time please)
-  var q = queue(pc, opts);
-
-  var createOrRequestOffer = throttle(function() {
-    if (! isMaster) {
-      return signaller.to(targetId).send('/negotiate');
-    }
-
-    q.createOffer();
-  }, 100, { leading: false });
-
-  var debounceOffer = throttle(q.createOffer, 100, { leading: false });
-
-  function decouple() {
-    debug('decoupling ' + signaller.id + ' from ' + targetId);
-
-    // stop the monitor
-//     mon.removeAllListeners();
-    mon.stop();
-
-    // cleanup the peerconnection
-    cleanup(pc);
-
-    // remove listeners
-    signaller.removeListener('sdp', handleSdp);
-    signaller.removeListener('candidate', handleCandidate);
-    signaller.removeListener('negotiate', handleNegotiateRequest);
-
-    // remove listeners (version >= 5)
-    signaller.removeListener('message:sdp', handleSdp);
-    signaller.removeListener('message:candidate', handleCandidate);
-    signaller.removeListener('message:negotiate', handleNegotiateRequest);
-  }
-
-  function handleCandidate(data) {
-    q.addIceCandidate(data);
-  }
-
-  function handleSdp(sdp, src) {
-    emit('sdp.remote', sdp);
-
-    // if the source is unknown or not a match, then don't process
-    if ((! src) || (src.id !== targetId)) {
-      return;
-    }
-
-    q.setRemoteDescription(sdp);
-  }
-
-  function handleConnectionClose() {
-    debug('captured pc close, iceConnectionState = ' + pc.iceConnectionState);
-    decouple();
-  }
-
-  function handleDisconnect() {
-    debug('captured pc disconnect, monitoring connection status');
-
-    // start the disconnect timer
-    disconnectTimer = setTimeout(function() {
-      debug('manually closing connection after disconnect timeout');
-      cleanup(pc);
-    }, disconnectTimeout);
-
-    mon.on('statechange', handleDisconnectAbort);
-  }
-
-  function handleDisconnectAbort() {
-    debug('connection state changed to: ' + pc.iceConnectionState);
-
-    // if the state is checking, then do not reset the disconnect timer as
-    // we are doing our own checking
-    if (CHECKING_STATES.indexOf(pc.iceConnectionState) >= 0) {
-      return;
-    }
-
-    resetDisconnectTimer();
-
-    // if we have a closed or failed status, then close the connection
-    if (CLOSED_STATES.indexOf(pc.iceConnectionState) >= 0) {
-      return mon('closed');
-    }
-
-    mon.once('disconnect', handleDisconnect);
-  }
-
-  function handleLocalCandidate(evt) {
-    var data = evt.candidate && pluckCandidate(evt.candidate);
-
-    if (evt.candidate) {
-      resetDisconnectTimer();
-      emit('ice.local', data);
-      signaller.to(targetId).send('/candidate', data);
-      endOfCandidates = false;
-    }
-    else if (! endOfCandidates) {
-      endOfCandidates = true;
-      emit('ice.gathercomplete');
-      signaller.to(targetId).send('/endofcandidates', {});
-    }
-  }
-
-  function handleNegotiateRequest(src) {
-    if (src.id === targetId) {
-      emit('negotiate.request', src.id);
-      debounceOffer();
-    }
-  }
-
-  function resetDisconnectTimer() {
-    mon.off('statechange', handleDisconnectAbort);
-
-    // clear the disconnect timer
-    debug('reset disconnect timer, state: ' + pc.iceConnectionState);
-    clearTimeout(disconnectTimer);
-  }
-
-  // when regotiation is needed look for the peer
-  if (reactive) {
-    pc.onnegotiationneeded = function() {
-      emit('negotiate.renegotiate');
-      createOrRequestOffer();
-    };
-  }
-
-  pc.onicecandidate = handleLocalCandidate;
-
-  // when the task queue tells us we have sdp available, send that over the wire
-  q.on('sdp.local', function(desc) {
-    signaller.to(targetId).send('/sdp', desc);
-  });
-
-  // when we receive sdp, then
-  signaller.on('sdp', handleSdp);
-  signaller.on('candidate', handleCandidate);
-
-  // listeners (signaller >= 5)
-  signaller.on('message:sdp', handleSdp);
-  signaller.on('message:candidate', handleCandidate);
-
-  // if this is a master connection, listen for negotiate events
-  if (isMaster) {
-    signaller.on('negotiate', handleNegotiateRequest);
-    signaller.on('message:negotiate', handleNegotiateRequest); // signaller >= 5
-  }
-
-  // when the connection closes, remove event handlers
-  mon.once('closed', handleConnectionClose);
-  mon.once('disconnected', handleDisconnect);
-
-  // patch in the create offer functions
-  mon.createOffer = createOrRequestOffer;
-
-  return mon;
-}
-
-module.exports = couple;
-
-},{"./cleanup":210,"./monitor":215,"cog/logger":175,"cog/throttle":176,"mbus":177,"rtc-taskqueue":216,"whisk/pluck":227}],212:[function(require,module,exports){
-/* jshint node: true */
-'use strict';
-
-/**
-  ### rtc-tools/detect
-
-  Provide the [rtc-core/detect](https://github.com/rtc-io/rtc-core#detect)
-  functionality.
-**/
-module.exports = require('rtc-core/detect');
-
-},{"rtc-core/detect":178}],213:[function(require,module,exports){
-/* jshint node: true */
-'use strict';
-
-var debug = require('cog/logger')('generators');
-var detect = require('./detect');
-var defaults = require('cog/defaults');
-
-var mappings = {
-  create: {
-    dtls: function(c) {
-      if (! detect.moz) {
-        c.optional = (c.optional || []).concat({ DtlsSrtpKeyAgreement: true });
-      }
-    }
-  }
-};
-
-/**
-  ### rtc-tools/generators
-
-  The generators package provides some utility methods for generating
-  constraint objects and similar constructs.
-
-  ```js
-  var generators = require('rtc/generators');
-  ```
-
-**/
-
-/**
-  #### generators.config(config)
-
-  Generate a configuration object suitable for passing into an W3C
-  RTCPeerConnection constructor first argument, based on our custom config.
-
-  In the event that you use short term authentication for TURN, and you want
-  to generate new `iceServers` regularly, you can specify an iceServerGenerator
-  that will be used prior to coupling. This generator should return a fully
-  compliant W3C (RTCIceServer dictionary)[http://www.w3.org/TR/webrtc/#idl-def-RTCIceServer].
-
-  If you pass in both a generator and iceServers, the iceServers _will be
-  ignored and the generator used instead.
-**/
-
-exports.config = function(config) {
-  var iceServerGenerator = (config || {}).iceServerGenerator;
-
-  return defaults({}, config, {
-    iceServers: typeof iceServerGenerator == 'function' ? iceServerGenerator() : []
-  });
-};
-
-/**
-  #### generators.connectionConstraints(flags, constraints)
-
-  This is a helper function that will generate appropriate connection
-  constraints for a new `RTCPeerConnection` object which is constructed
-  in the following way:
-
-  ```js
-  var conn = new RTCPeerConnection(flags, constraints);
-  ```
-
-  In most cases the constraints object can be left empty, but when creating
-  data channels some additional options are required.  This function
-  can generate those additional options and intelligently combine any
-  user defined constraints (in `constraints`) with shorthand flags that
-  might be passed while using the `rtc.createConnection` helper.
-**/
-exports.connectionConstraints = function(flags, constraints) {
-  var generated = {};
-  var m = mappings.create;
-  var out;
-
-  // iterate through the flags and apply the create mappings
-  Object.keys(flags || {}).forEach(function(key) {
-    if (m[key]) {
-      m[key](generated);
-    }
-  });
-
-  // generate the connection constraints
-  out = defaults({}, constraints, generated);
-  debug('generated connection constraints: ', out);
-
-  return out;
-};
-
-},{"./detect":212,"cog/defaults":171,"cog/logger":175}],214:[function(require,module,exports){
-/* jshint node: true */
-
-'use strict';
-
-/**
-  # rtc-tools
-
-  The `rtc-tools` module does most of the heavy lifting within the
-  [rtc.io](http://rtc.io) suite.  Primarily it handles the logic of coupling
-  a local `RTCPeerConnection` with it's remote counterpart via an
-  [rtc-signaller](https://github.com/rtc-io/rtc-signaller) signalling
-  channel.
-
-  ## Getting Started
-
-  If you decide that the `rtc-tools` module is a better fit for you than either
-  [rtc-quickconnect](https://github.com/rtc-io/rtc-quickconnect) or
-  [rtc](https://github.com/rtc-io/rtc) then the code snippet below
-  will provide you a guide on how to get started using it in conjunction with
-  the [rtc-signaller](https://github.com/rtc-io/rtc-signaller) (version 5.0 and above)
-  and [rtc-media](https://github.com/rtc-io/rtc-media) modules:
-
-  <<< examples/getting-started.js
-
-  This code definitely doesn't cover all the cases that you need to consider
-  (i.e. peers leaving, etc) but it should demonstrate how to:
-
-  1. Capture video and add it to a peer connection
-  2. Couple a local peer connection with a remote peer connection
-  3. Deal with the remote steam being discovered and how to render
-     that to the local interface.
-
-  ## Reference
-
-**/
-
-var gen = require('./generators');
-
-// export detect
-var detect = exports.detect = require('./detect');
-var findPlugin = require('rtc-core/plugin');
-
-// export cog logger for convenience
-exports.logger = require('cog/logger');
-
-// export peer connection
-var RTCPeerConnection =
-exports.RTCPeerConnection = detect('RTCPeerConnection');
-
-// add the couple utility
-exports.couple = require('./couple');
-
-/**
-  ### createConnection
-
-  ```
-  createConnection(opts?, constraints?) => RTCPeerConnection
-  ```
-
-  Create a new `RTCPeerConnection` auto generating default opts as required.
-
-  ```js
-  var conn;
-
-  // this is ok
-  conn = rtc.createConnection();
-
-  // and so is this
-  conn = rtc.createConnection({
-    iceServers: []
-  });
-  ```
-**/
-exports.createConnection = function(opts, constraints) {
-  var plugin = findPlugin((opts || {}).plugins);
-  var PeerConnection = (opts || {}).RTCPeerConnection || RTCPeerConnection;
-
-  // generate the config based on options provided
-  var config = gen.config(opts);
-
-  // generate appropriate connection constraints
-  constraints = gen.connectionConstraints(opts, constraints);
-
-  if (plugin && typeof plugin.createConnection == 'function') {
-    return plugin.createConnection(config, constraints);
-  }
-
-  return new PeerConnection(config, constraints);
-};
-
-},{"./couple":211,"./detect":212,"./generators":213,"cog/logger":175,"rtc-core/plugin":181}],215:[function(require,module,exports){
-/* jshint node: true */
-'use strict';
-
-var mbus = require('mbus');
-
-// define some state mappings to simplify the events we generate
-var stateMappings = {
-  completed: 'connected'
-};
-
-// define the events that we need to watch for peer connection
-// state changes
-var peerStateEvents = [
-  'signalingstatechange',
-  'iceconnectionstatechange',
-];
-
-/**
-  ### rtc-tools/monitor
-
-  ```
-  monitor(pc, targetId, signaller, parentBus) => mbus
-  ```
-
-  The monitor is a useful tool for determining the state of `pc` (an
-  `RTCPeerConnection`) instance in the context of your application. The
-  monitor uses both the `iceConnectionState` information of the peer
-  connection and also the various
-  [signaller events](https://github.com/rtc-io/rtc-signaller#signaller-events)
-  to determine when the connection has been `connected` and when it has
-  been `disconnected`.
-
-  A monitor created `mbus` is returned as the result of a
-  [couple](https://github.com/rtc-io/rtc#rtccouple) between a local peer
-  connection and it's remote counterpart.
-
-**/
-module.exports = function(pc, targetId, signaller, parentBus) {
-  var monitor = mbus('', parentBus);
-  var state;
-
-  function checkState() {
-    var newState = getMappedState(pc.iceConnectionState);
-
-    // flag the we had a state change
-    monitor('statechange', pc, newState);
-
-    // if the active state has changed, then send the appopriate message
-    if (state !== newState) {
-      monitor(newState);
-      state = newState;
-    }
-  }
-
-  function handleClose() {
-    monitor('closed');
-  }
-
-  pc.onclose = handleClose;
-  peerStateEvents.forEach(function(evtName) {
-    pc['on' + evtName] = checkState;
-  });
-
-  monitor.stop = function() {
-    pc.onclose = null;
-    peerStateEvents.forEach(function(evtName) {
-      pc['on' + evtName] = null;
-    });
-  };
-
-  monitor.checkState = checkState;
-
-  // if we haven't been provided a valid peer connection, abort
-  if (! pc) {
-    return monitor;
-  }
-
-  // determine the initial is active state
-  state = getMappedState(pc.iceConnectionState);
-
-  return monitor;
-};
-
-/* internal helpers */
-
-function getMappedState(state) {
-  return stateMappings[state] || state;
-}
-
-},{"mbus":177}],216:[function(require,module,exports){
-var detect = require('rtc-core/detect');
-var findPlugin = require('rtc-core/plugin');
-var PriorityQueue = require('priorityqueuejs');
-var pluck = require('whisk/pluck');
-var pluckSessionDesc = pluck('sdp', 'type');
-
-// some validation routines
-var checkCandidate = require('rtc-validator/candidate');
-
-// the sdp cleaner
-var sdpclean = require('rtc-sdpclean');
-var parseSdp = require('rtc-sdp');
-
-var PRIORITY_LOW = 100;
-var PRIORITY_WAIT = 1000;
-
-// priority order (lower is better)
-var DEFAULT_PRIORITIES = [
-  'addIceCandidate',
-  'setLocalDescription',
-  'setRemoteDescription',
-  'createAnswer',
-  'createOffer'
-];
-
-// define event mappings
-var METHOD_EVENTS = {
-  setLocalDescription: 'setlocaldesc',
-  setRemoteDescription: 'setremotedesc',
-  createOffer: 'offer',
-  createAnswer: 'answer'
-};
-
-var MEDIA_MAPPINGS = {
-  data: 'application'
-};
-
-// define states in which we will attempt to finalize a connection on receiving a remote offer
-var VALID_RESPONSE_STATES = ['have-remote-offer', 'have-local-pranswer'];
-
-/**
-  # rtc-taskqueue
-
-  This is a package that assists with applying actions to an `RTCPeerConnection`
-  in as reliable order as possible. It is primarily used by the coupling logic
-  of the [`rtc-tools`](https://github.com/rtc-io/rtc-tools).
-
-  ## Example Usage
-
-  For the moment, refer to the simple coupling test as an example of how to use
-  this package (see below):
-
-  <<< test/couple.js
-
-**/
-module.exports = function(pc, opts) {
-  opts = opts || {};
-  // create the task queue
-  var queue = new PriorityQueue(orderTasks);
-  var tq = require('mbus')('', (opts || {}).logger);
-
-  // initialise task importance
-  var priorities = (opts || {}).priorities || DEFAULT_PRIORITIES;
-  var queueInterval = (opts || {}).interval || 50;
-
-  // check for plugin usage
-  var plugin = findPlugin((opts || {}).plugins);
-
-  // initialise state tracking
-  var checkQueueTimer = 0;
-  var defaultFail = tq.bind(tq, 'fail');
-
-  // look for an sdpfilter function (allow slight mis-spellings)
-  var sdpFilter = (opts || {}).sdpfilter || (opts || {}).sdpFilter;
-  var alwaysParse = (opts.sdpParseMode === 'always');
-
-  // initialise session description and icecandidate objects
-  var RTCSessionDescription = (opts || {}).RTCSessionDescription ||
-    detect('RTCSessionDescription');
-
-  var RTCIceCandidate = (opts || {}).RTCIceCandidate ||
-    detect('RTCIceCandidate');
-
-  function abortQueue(err) {
-    console.error(err);
-  }
-
-  function applyCandidate(task, next) {
-    var data = task.args[0];
-    // Allow selective filtering of ICE candidates
-    if (opts && opts.filterCandidate && !opts.filterCandidate(data)) {
-      tq('ice.remote.filtered', candidate);
-      return next();
-    }
-    var candidate = data && data.candidate && createIceCandidate(data);
-
-    function handleOk() {
-      tq('ice.remote.applied', candidate);
-      next();
-    }
-
-    function handleFail(err) {
-      tq('ice.remote.invalid', candidate);
-      next(err);
-    }
-
-    // we have a null candidate, we have finished gathering candidates
-    if (! candidate) {
-      return next();
-    }
-
-    pc.addIceCandidate(candidate, handleOk, handleFail);
-  }
-
-  function checkQueue() {
-    // peek at the next item on the queue
-    var next = (! queue.isEmpty()) && queue.peek();
-    var ready = next && testReady(next);
-
-    // reset the queue timer
-    checkQueueTimer = 0;
-
-    // if we don't have a task ready, then abort
-    if (! ready) {
-      // if we have a task and it has expired then dequeue it
-      if (next && expired(next)) {
-        tq('task.expire', next);
-        queue.deq();
-      }
-
-      return (! queue.isEmpty()) && isNotClosed(pc) && triggerQueueCheck();
-    }
-
-    // properly dequeue task
-    next = queue.deq();
-
-    // process the task
-    next.fn(next, function(err) {
-      var fail = next.fail || defaultFail;
-      var pass = next.pass;
-      var taskName = next.name;
-
-      // if errored, fail
-      if (err) {
-        console.error(taskName + ' task failed: ', err);
-        return fail(err);
-      }
-
-      if (typeof pass == 'function') {
-        pass.apply(next, [].slice.call(arguments, 1));
-      }
-
-      triggerQueueCheck();
-    });
-  }
-
-  function cleansdp(desc) {
-    // ensure we have clean sdp
-    var sdpErrors = [];
-    var sdp = desc && sdpclean(desc.sdp, { collector: sdpErrors });
-
-    // if we don't have a match, log some info
-    if (desc && sdp !== desc.sdp) {
-      console.info('invalid lines removed from sdp: ', sdpErrors);
-      desc.sdp = sdp;
-    }
-
-    // if a filter has been specified, then apply the filter
-    if (typeof sdpFilter == 'function') {
-      desc.sdp = sdpFilter(desc.sdp, pc);
-    }
-
-    return desc;
-  }
-
-  function completeConnection() {
-    if (VALID_RESPONSE_STATES.indexOf(pc.signalingState) >= 0) {
-      return tq.createAnswer();
-    }
-  }
-
-  function createIceCandidate(data) {
-    if (plugin && typeof plugin.createIceCandidate == 'function') {
-      return plugin.createIceCandidate(data);
-    }
-
-    return new RTCIceCandidate(data);
-  }
-
-  function createSessionDescription(data) {
-    if (plugin && typeof plugin.createSessionDescription == 'function') {
-      return plugin.createSessionDescription(data);
-    }
-
-    return new RTCSessionDescription(data);
-  }
-
-  function emitSdp() {
-    tq('sdp.local', pluckSessionDesc(this.args[0]));
-  }
-
-  function enqueue(name, handler, opts) {
-    return function() {
-      var args = [].slice.call(arguments);
-
-      if (opts && typeof opts.processArgs == 'function') {
-        args = args.map(opts.processArgs);
-      }
-
-      var priority = priorities.indexOf(name);
-
-      queue.enq({
-        args: args,
-        name: name,
-        fn: handler,
-        priority: priority >= 0 ? priority : PRIORITY_LOW,
-
-        // record the time at which the task was queued
-        start: Date.now(),
-
-        // initilaise any checks that need to be done prior
-        // to the task executing
-        checks: [ isNotClosed ].concat((opts || {}).checks || []),
-
-        // initialise the pass and fail handlers
-        pass: (opts || {}).pass,
-        fail: (opts || {}).fail
-      });
-
-      triggerQueueCheck();
-    };
-  }
-
-  function execMethod(task, next) {
-    var fn = pc[task.name];
-    var eventName = METHOD_EVENTS[task.name] || (task.name || '').toLowerCase();
-    var cbArgs = [ success, fail ];
-    var isOffer = task.name === 'createOffer';
-
-    function fail(err) {
-      tq.apply(tq, [ 'negotiate.error', task.name, err ].concat(task.args));
-      next(err);
-    }
-
-    function success() {
-      tq.apply(tq, [ ['negotiate', eventName, 'ok'], task.name ].concat(task.args));
-      next.apply(null, [null].concat([].slice.call(arguments)));
-    }
-
-    if (! fn) {
-      return next(new Error('cannot call "' + task.name + '" on RTCPeerConnection'));
-    }
-
-    // invoke the function
-    tq.apply(tq, ['negotiate.' + eventName].concat(task.args));
-    fn.apply(
-      pc,
-      task.args.concat(cbArgs).concat(isOffer ? generateConstraints() : [])
-    );
-  }
-
-  function expired(task) {
-    return (typeof task.ttl == 'number') && (task.start + task.ttl < Date.now());
-  }
-
-  function extractCandidateEventData(data) {
-    // extract nested candidate data (like we will see in an event being passed to this function)
-    while (data && data.candidate && data.candidate.candidate) {
-      data = data.candidate;
-    }
-
-    return data;
-  }
-
-  function generateConstraints() {
-    var allowedKeys = {
-      offertoreceivevideo: 'OfferToReceiveVideo',
-      offertoreceiveaudio: 'OfferToReceiveAudio',
-      icerestart: 'IceRestart',
-      voiceactivitydetection: 'VoiceActivityDetection'
-    };
-
-    var constraints = {
-      OfferToReceiveVideo: true,
-      OfferToReceiveAudio: true
-    };
-
-    // update known keys to match
-    Object.keys(opts || {}).forEach(function(key) {
-      if (allowedKeys[key.toLowerCase()]) {
-        constraints[allowedKeys[key.toLowerCase()]] = opts[key];
-      }
-    });
-
-    return { mandatory: constraints };
-  }
-
-  function hasLocalOrRemoteDesc(pc, task) {
-    return pc.__hasDesc || (pc.__hasDesc = !!pc.remoteDescription);
-  }
-
-  function isNotNegotiating(pc) {
-    return pc.signalingState !== 'have-local-offer';
-  }
-
-  function isNotClosed(pc) {
-    return pc.signalingState !== 'closed';
-  }
-
-  function isStable(pc) {
-    return pc.signalingState === 'stable';
-  }
-
-  function isValidCandidate(pc, data) {
-    return data.__valid ||
-      (data.__valid = checkCandidate(data.args[0]).length === 0);
-  }
-
-  function isConnReadyForCandidate(pc, data) {
-    var sdpMid = data.args[0] && data.args[0].sdpMid;
-
-    // remap media types as appropriate
-    sdpMid = MEDIA_MAPPINGS[sdpMid] || sdpMid;
-
-    if (sdpMid === '')
-      return true;
-
-    // Allow parsing of SDP always if required
-    if (alwaysParse || !pc.__mediaTypes) {
-      var sdp = parseSdp(pc.remoteDescription && pc.remoteDescription.sdp);
-      // We only want to cache the SDP media types if we've received them, otherwise
-      // bad things can happen
-      var mediaTypes = sdp.getMediaTypes();
-      if (mediaTypes && mediaTypes.length > 0) {
-        pc.__mediaTypes = sdp.getMediaTypes();
-      }
-    }
-
-    // the candidate is valid if we know about the media type
-    return pc.__mediaTypes && pc.__mediaTypes.indexOf(sdpMid) >= 0;
-  }
-
-  function orderTasks(a, b) {
-    // apply each of the checks for each task
-    var tasks = [a,b];
-    var readiness = tasks.map(testReady);
-    var taskPriorities = tasks.map(function(task, idx) {
-      var ready = readiness[idx];
-      return ready ? task.priority : PRIORITY_WAIT;
-    });
-
-    return taskPriorities[1] - taskPriorities[0];
-  }
-
-  // check whether a task is ready (does it pass all the checks)
-  function testReady(task) {
-    return (task.checks || []).reduce(function(memo, check) {
-      return memo && check(pc, task);
-    }, true);
-  }
-
-  function triggerQueueCheck() {
-    if (checkQueueTimer) return;
-    checkQueueTimer = setTimeout(checkQueue, queueInterval);
-  }
-
-  // patch in the queue helper methods
-  tq.addIceCandidate = enqueue('addIceCandidate', applyCandidate, {
-    processArgs: extractCandidateEventData,
-    checks: [hasLocalOrRemoteDesc, isValidCandidate, isConnReadyForCandidate ],
-
-    // set ttl to 5s
-    ttl: 5000
-  });
-
-  tq.setLocalDescription = enqueue('setLocalDescription', execMethod, {
-    processArgs: cleansdp,
-    pass: emitSdp
-  });
-
-  tq.setRemoteDescription = enqueue('setRemoteDescription', execMethod, {
-    processArgs: createSessionDescription,
-    pass: completeConnection
-  });
-
-  tq.createOffer = enqueue('createOffer', execMethod, {
-    checks: [ isNotNegotiating ],
-    pass: tq.setLocalDescription
-  });
-
-  tq.createAnswer = enqueue('createAnswer', execMethod, {
-    pass: tq.setLocalDescription
-  });
-
-  return tq;
-};
-
-},{"mbus":177,"priorityqueuejs":217,"rtc-core/detect":178,"rtc-core/plugin":181,"rtc-sdp":218,"rtc-sdpclean":220,"rtc-validator/candidate":221,"whisk/pluck":227}],217:[function(require,module,exports){
-/**
- * Expose `PriorityQueue`.
- */
-module.exports = PriorityQueue;
-
-/**
- * Initializes a new empty `PriorityQueue` with the given `comparator(a, b)`
- * function, uses `.DEFAULT_COMPARATOR()` when no function is provided.
- *
- * The comparator function must return a positive number when `a > b`, 0 when
- * `a == b` and a negative number when `a < b`.
- *
- * @param {Function}
- * @return {PriorityQueue}
- * @api public
- */
-function PriorityQueue(comparator) {
-  this._comparator = comparator || PriorityQueue.DEFAULT_COMPARATOR;
-  this._elements = [];
-}
-
-/**
- * Compares `a` and `b`, when `a > b` it returns a positive number, when
- * it returns 0 and when `a < b` it returns a negative number.
- *
- * @param {String|Number} a
- * @param {String|Number} b
- * @return {Number}
- * @api public
- */
-PriorityQueue.DEFAULT_COMPARATOR = function(a, b) {
-  if (typeof a === 'number' && typeof b === 'number') {
-    return a - b;
-  } else {
-    a = a.toString();
-    b = b.toString();
-
-    if (a == b) return 0;
-
-    return (a > b) ? 1 : -1;
-  }
-};
-
-/**
- * Returns whether the priority queue is empty or not.
- *
- * @return {Boolean}
- * @api public
- */
-PriorityQueue.prototype.isEmpty = function() {
-  return this.size() === 0;
-};
-
-/**
- * Peeks at the top element of the priority queue.
- *
- * @return {Object}
- * @throws {Error} when the queue is empty.
- * @api public
- */
-PriorityQueue.prototype.peek = function() {
-  if (this.isEmpty()) throw new Error('PriorityQueue is empty');
-
-  return this._elements[0];
-};
-
-/**
- * Dequeues the top element of the priority queue.
- *
- * @return {Object}
- * @throws {Error} when the queue is empty.
- * @api public
- */
-PriorityQueue.prototype.deq = function() {
-  var first = this.peek();
-  var last = this._elements.pop();
-  var size = this.size();
-
-  if (size === 0) return first;
-
-  this._elements[0] = last;
-  var current = 0;
-
-  while (current < size) {
-    var largest = current;
-    var left = (2 * current) + 1;
-    var right = (2 * current) + 2;
-
-    if (left < size && this._compare(left, largest) >= 0) {
-      largest = left;
-    }
-
-    if (right < size && this._compare(right, largest) >= 0) {
-      largest = right;
-    }
-
-    if (largest === current) break;
-
-    this._swap(largest, current);
-    current = largest;
-  }
-
-  return first;
-};
-
-/**
- * Enqueues the `element` at the priority queue and returns its new size.
- *
- * @param {Object} element
- * @return {Number}
- * @api public
- */
-PriorityQueue.prototype.enq = function(element) {
-  var size = this._elements.push(element);
-  var current = size - 1;
-
-  while (current > 0) {
-    var parent = Math.floor((current - 1) / 2);
-
-    if (this._compare(current, parent) <= 0) break;
-
-    this._swap(parent, current);
-    current = parent;
-  }
-
-  return size;
-};
-
-/**
- * Returns the size of the priority queue.
- *
- * @return {Number}
- * @api public
- */
-PriorityQueue.prototype.size = function() {
-  return this._elements.length;
-};
-
-/**
- *  Iterates over queue elements
- *
- *  @param {Function} fn
- */
-PriorityQueue.prototype.forEach = function(fn) {
-  return this._elements.forEach(fn);
-};
-
-/**
- * Compares the values at position `a` and `b` in the priority queue using its
- * comparator function.
- *
- * @param {Number} a
- * @param {Number} b
- * @return {Number}
- * @api private
- */
-PriorityQueue.prototype._compare = function(a, b) {
-  return this._comparator(this._elements[a], this._elements[b]);
-};
-
-/**
- * Swaps the values at position `a` and `b` in the priority queue.
- *
- * @param {Number} a
- * @param {Number} b
- * @api private
- */
-PriorityQueue.prototype._swap = function(a, b) {
-  var aux = this._elements[a];
-  this._elements[a] = this._elements[b];
-  this._elements[b] = aux;
-};
-
-},{}],218:[function(require,module,exports){
-/* jshint node: true */
-'use strict';
-
-var nub = require('whisk/nub');
-var pluck = require('whisk/pluck');
-var flatten = require('whisk/flatten');
-var reLineBreak = /\r?\n/;
-var reTrailingNewlines = /\r?\n$/;
-
-// list sdp line types that are not "significant"
-var nonHeaderLines = [ 'a', 'c', 'b', 'k' ];
-var parsers = require('./parsers');
-
-/**
-  # rtc-sdp
-
-  This is a utility module for intepreting and patching sdp.
-
-  ## Usage
-
-  The `rtc-sdp` main module exposes a single function that is capable of
-  parsing lines of SDP, and providing an object allowing you to perform
-  operations on those parsed lines:
-
-  ```js
-  var sdp = require('rtc-sdp')(lines);
-  ```
-
-  The currently supported operations are listed below:
-
-**/
-module.exports = function(sdp) {
-  var ops = {};
-  var parsed = [];
-  var activeCollector;
-
-  // initialise the lines
-  var lines = sdp.split(reLineBreak).filter(Boolean).map(function(line) {
-    return line.split('=');
-  });
-
-  var inputOrder = nub(lines.filter(function(line) {
-    return line[0] && nonHeaderLines.indexOf(line[0]) < 0;
-  }).map(pluck(0)));
-
-  var findLine = ops.findLine = function(type, index) {
-    var lineData = parsed.filter(function(line) {
-      return line[0] === type;
-    })[index || 0];
-
-    return lineData && lineData[1];
-  };
-
-  // push into parsed sections
-  lines.forEach(function(line) {
-    var customParser = parsers[line[0]];
-
-    if (customParser) {
-      activeCollector = customParser(parsed, line);
-    }
-    else if (activeCollector) {
-      activeCollector = activeCollector(line);
-    }
-    else {
-      parsed.push(line);
-    }
-  });
-
-  /**
-    ### `sdp.addIceCandidate(data)`
-
-    Modify the sdp to include candidates as denoted by the data.
-
-**/
-  ops.addIceCandidate = function(data) {
-    var lineIndex = (data || {}).lineIndex || (data || {}).sdpMLineIndex;
-    var mLine = typeof lineIndex != 'undefined' && findLine('m', lineIndex);
-    var candidate = (data || {}).candidate;
-
-    // if we have the mLine add the new candidate
-    if (mLine && candidate) {
-      mLine.childlines.push(candidate.replace(reTrailingNewlines, '').split('='));
-    }
-  };
-
-  /**
-    ### `sdp.getMediaTypes() => []`
-
-    Retrieve the list of media types that have been defined in the sdp via
-    `m=` lines.
-  **/
-  ops.getMediaTypes = function() {
-    function getMediaType(data) {
-      return data[1].def.split(/\s/)[0];
-    }
-
-    return parsed.filter(function(parts) {
-      return parts[0] === 'm' && parts[1] && parts[1].def;
-    }).map(getMediaType);
-  };
-
-  /**
-    ### `sdp.toString()`
-
-    Convert the SDP structure that is currently retained in memory, into a string
-    that can be provided to a `setLocalDescription` (or `setRemoteDescription`)
-    WebRTC call.
-
-  **/
-  ops.toString = function() {
-    return parsed.map(function(line) {
-      return typeof line[1].toArray == 'function' ? line[1].toArray() : [ line ];
-    }).reduce(flatten).map(function(line) {
-      return line.join('=');
-    }).join('\n');
-  };
-
-  /**
-    ## SDP Filtering / Munging Functions
-
-    There are additional functions included in the module to assign with
-    performing "single-shot" SDP filtering (or munging) operations:
-
-  **/
-
-  return ops;
-};
-
-},{"./parsers":219,"whisk/flatten":224,"whisk/nub":226,"whisk/pluck":227}],219:[function(require,module,exports){
-/* jshint node: true */
-'use strict';
-
-exports.m = function(parsed, line) {
-  var media = {
-    def: line[1],
-    childlines: [],
-
-    toArray: function() {
-      return [
-        ['m', media.def ]
-      ].concat(media.childlines);
-    }
-  };
-
-  function addChildLine(childLine) {
-    media.childlines.push(childLine);
-    return addChildLine;
-  }
-
-  parsed.push([ 'm', media ]);
-
-  return addChildLine;
-};
-},{}],220:[function(require,module,exports){
-var validators = [
-  [ /^(a\=candidate.*)$/, require('rtc-validator/candidate') ]
-];
-
-var reSdpLineBreak = /(\r?\n|\\r\\n)/;
-
-/**
-  # rtc-sdpclean
-
-  Remove invalid lines from your SDP.
-
-  ## Why?
-
-  This module removes the occasional "bad egg" that will slip into SDP when it
-  is generated by the browser.  In particular these situations are catered for:
-
-  - invalid ICE candidates
-
-**/
-module.exports = function(input, opts) {
-  var lineBreak = detectLineBreak(input);
-  var lines = input.split(lineBreak);
-  var collector = (opts || {}).collector;
-
-  // filter out invalid lines
-  lines = lines.filter(function(line) {
-    // iterate through the validators and use the one that matches
-    var validator = validators.reduce(function(memo, data, idx) {
-      return typeof memo != 'undefined' ? memo : (data[0].exec(line) && {
-        line: line.replace(data[0], '$1'),
-        fn: data[1]
-      });
-    }, undefined);
-
-    // if we have a validator, ensure we have no errors
-    var errors = validator ? validator.fn(validator.line) : [];
-
-    // if we have errors and an error collector, then add to the collector
-    if (collector) {
-      errors.forEach(function(err) {
-        collector.push(err);
-      });
-    }
-
-    return errors.length === 0;
-  });
-
-  return lines.join(lineBreak);
-};
-
-function detectLineBreak(input) {
-  var match = reSdpLineBreak.exec(input);
-
-  return match && match[0];
-}
-
-},{"rtc-validator/candidate":221}],221:[function(require,module,exports){
-var debug = require('cog/logger')('rtc-validator');
-var rePrefix = /^(?:a=)?candidate:/;
-
-/*
-
-validation rules as per:
-http://tools.ietf.org/html/draft-ietf-mmusic-ice-sip-sdp-03#section-8.1
-
-   candidate-attribute   = "candidate" ":" foundation SP component-id SP
-                           transport SP
-                           priority SP
-                           connection-address SP     ;from RFC 4566
-                           port         ;port from RFC 4566
-                           SP cand-type
-                           [SP rel-addr]
-                           [SP rel-port]
-                           *(SP extension-att-name SP
-                                extension-att-value)
-
-   foundation            = 1*32ice-char
-   component-id          = 1*5DIGIT
-   transport             = "UDP" / transport-extension
-   transport-extension   = token              ; from RFC 3261
-   priority              = 1*10DIGIT
-   cand-type             = "typ" SP candidate-types
-   candidate-types       = "host" / "srflx" / "prflx" / "relay" / token
-   rel-addr              = "raddr" SP connection-address
-   rel-port              = "rport" SP port
-   extension-att-name    = token
-   extension-att-value   = *VCHAR
-   ice-char              = ALPHA / DIGIT / "+" / "/"
-*/
-var partValidation = [
-  [ /.+/, 'invalid foundation component', 'foundation' ],
-  [ /\d+/, 'invalid component id', 'component-id' ],
-  [ /(UDP|TCP)/i, 'transport must be TCP or UDP', 'transport' ],
-  [ /\d+/, 'numeric priority expected', 'priority' ],
-  [ require('reu/ip'), 'invalid connection address', 'connection-address' ],
-  [ /\d+/, 'invalid connection port', 'connection-port' ],
-  [ /typ/, 'Expected "typ" identifier', 'type classifier' ],
-  [ /.+/, 'Invalid candidate type specified', 'candidate-type' ]
-];
-
-/**
-  ### `rtc-validator/candidate`
-
-  Validate that an `RTCIceCandidate` (or plain old object with data, sdpMid,
-  etc attributes) is a valid ice candidate.
-
-  Specs reviewed as part of the validation implementation:
-
-  - <http://tools.ietf.org/html/draft-ietf-mmusic-ice-sip-sdp-03#section-8.1>
-  - <http://tools.ietf.org/html/rfc5245>
-
-**/
-module.exports = function(data) {
-  var errors = [];
-  var candidate = data && (data.candidate || data);
-  var prefixMatch = candidate && rePrefix.exec(candidate);
-  var parts = prefixMatch && candidate.slice(prefixMatch[0].length).split(/\s/);
-
-  if (! candidate) {
-    return [ new Error('empty candidate') ];
-  }
-
-  // check that the prefix matches expected
-  if (! prefixMatch) {
-    return [ new Error('candidate did not match expected sdp line format') ];
-  }
-
-  // perform the part validation
-  errors = errors.concat(parts.map(validateParts)).filter(Boolean);
-
-  return errors;
-};
-
-function validateParts(part, idx) {
-  var validator = partValidation[idx];
-
-  if (validator && (! validator[0].test(part))) {
-    debug(validator[2] + ' part failed validation: ' + part);
-    return new Error(validator[1]);
-  }
-}
-
-},{"cog/logger":175,"reu/ip":222}],222:[function(require,module,exports){
-/**
-  ### `reu/ip`
-
-  A regular expression that will match both IPv4 and IPv6 addresses.  This is a modified
-  regex (remove hostname matching) that was implemented by @Mikulas in
-  [this stackoverflow answer](http://stackoverflow.com/a/9209720/96656).
-
-**/
-module.exports = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^(?:(?:(?:(?:(?:(?:(?:[0-9a-fA-F]{1,4})):){6})(?:(?:(?:(?:(?:[0-9a-fA-F]{1,4})):(?:(?:[0-9a-fA-F]{1,4})))|(?:(?:(?:(?:(?:25[0-5]|(?:[1-9]|1[0-9]|2[0-4])?[0-9]))\.){3}(?:(?:25[0-5]|(?:[1-9]|1[0-9]|2[0-4])?[0-9])))))))|(?:(?:::(?:(?:(?:[0-9a-fA-F]{1,4})):){5})(?:(?:(?:(?:(?:[0-9a-fA-F]{1,4})):(?:(?:[0-9a-fA-F]{1,4})))|(?:(?:(?:(?:(?:25[0-5]|(?:[1-9]|1[0-9]|2[0-4])?[0-9]))\.){3}(?:(?:25[0-5]|(?:[1-9]|1[0-9]|2[0-4])?[0-9])))))))|(?:(?:(?:(?:(?:[0-9a-fA-F]{1,4})))?::(?:(?:(?:[0-9a-fA-F]{1,4})):){4})(?:(?:(?:(?:(?:[0-9a-fA-F]{1,4})):(?:(?:[0-9a-fA-F]{1,4})))|(?:(?:(?:(?:(?:25[0-5]|(?:[1-9]|1[0-9]|2[0-4])?[0-9]))\.){3}(?:(?:25[0-5]|(?:[1-9]|1[0-9]|2[0-4])?[0-9])))))))|(?:(?:(?:(?:(?:(?:[0-9a-fA-F]{1,4})):){0,1}(?:(?:[0-9a-fA-F]{1,4})))?::(?:(?:(?:[0-9a-fA-F]{1,4})):){3})(?:(?:(?:(?:(?:[0-9a-fA-F]{1,4})):(?:(?:[0-9a-fA-F]{1,4})))|(?:(?:(?:(?:(?:25[0-5]|(?:[1-9]|1[0-9]|2[0-4])?[0-9]))\.){3}(?:(?:25[0-5]|(?:[1-9]|1[0-9]|2[0-4])?[0-9])))))))|(?:(?:(?:(?:(?:(?:[0-9a-fA-F]{1,4})):){0,2}(?:(?:[0-9a-fA-F]{1,4})))?::(?:(?:(?:[0-9a-fA-F]{1,4})):){2})(?:(?:(?:(?:(?:[0-9a-fA-F]{1,4})):(?:(?:[0-9a-fA-F]{1,4})))|(?:(?:(?:(?:(?:25[0-5]|(?:[1-9]|1[0-9]|2[0-4])?[0-9]))\.){3}(?:(?:25[0-5]|(?:[1-9]|1[0-9]|2[0-4])?[0-9])))))))|(?:(?:(?:(?:(?:(?:[0-9a-fA-F]{1,4})):){0,3}(?:(?:[0-9a-fA-F]{1,4})))?::(?:(?:[0-9a-fA-F]{1,4})):)(?:(?:(?:(?:(?:[0-9a-fA-F]{1,4})):(?:(?:[0-9a-fA-F]{1,4})))|(?:(?:(?:(?:(?:25[0-5]|(?:[1-9]|1[0-9]|2[0-4])?[0-9]))\.){3}(?:(?:25[0-5]|(?:[1-9]|1[0-9]|2[0-4])?[0-9])))))))|(?:(?:(?:(?:(?:(?:[0-9a-fA-F]{1,4})):){0,4}(?:(?:[0-9a-fA-F]{1,4})))?::)(?:(?:(?:(?:(?:[0-9a-fA-F]{1,4})):(?:(?:[0-9a-fA-F]{1,4})))|(?:(?:(?:(?:(?:25[0-5]|(?:[1-9]|1[0-9]|2[0-4])?[0-9]))\.){3}(?:(?:25[0-5]|(?:[1-9]|1[0-9]|2[0-4])?[0-9])))))))|(?:(?:(?:(?:(?:(?:[0-9a-fA-F]{1,4})):){0,5}(?:(?:[0-9a-fA-F]{1,4})))?::)(?:(?:[0-9a-fA-F]{1,4})))|(?:(?:(?:(?:(?:(?:[0-9a-fA-F]{1,4})):){0,6}(?:(?:[0-9a-fA-F]{1,4})))?::))))$/;
-
-},{}],223:[function(require,module,exports){
-module.exports = function(a, b) {
-  return arguments.length > 1 ? a === b : function(b) {
-    return a === b;
-  };
-};
-
-},{}],224:[function(require,module,exports){
-/**
-  ## flatten
-
-  Flatten an array using `[].reduce`
-
-  <<< examples/flatten.js
-
-**/
-
-module.exports = function(a, b) {
-  // if a is not already an array, make it one
-  a = Array.isArray(a) ? a : [a];
-
-  // concat b with a
-  return a.concat(b);
-};
-},{}],225:[function(require,module,exports){
-module.exports = function(comparator) {
-  return function(input) {
-    var output = [];
-    for (var ii = 0, count = input.length; ii < count; ii++) {
-      var found = false;
-      for (var jj = output.length; jj--; ) {
-        found = found || comparator(input[ii], output[jj]);
-      }
-
-      if (found) {
-        continue;
-      }
-
-      output[output.length] = input[ii];
-    }
-
-    return output;
-  };
-}
-},{}],226:[function(require,module,exports){
-/**
-  ## nub
-
-  Return only the unique elements of the list.
-
-  <<< examples/nub.js
-
-**/
-
-module.exports = require('./nub-by')(require('./equality'));
-},{"./equality":223,"./nub-by":225}],227:[function(require,module,exports){
-/**
-  ## pluck
-
-  Extract targeted properties from a source object. When a single property
-  value is requested, then just that value is returned.
-
-  In the case where multiple properties are requested (in a varargs calling
-  style) a new object will be created with the requested properties copied
-  across.
-
-  __NOTE:__ In the second form extraction of nested properties is
-  not supported.
-
-  <<< examples/pluck.js
-
-**/
-module.exports = function() {
-  var fields = [];
-
-  function extractor(parts, maxIdx) {
-    return function(item) {
-      var partIdx = 0;
-      var val = item;
-
-      do {
-        val = val && val[parts[partIdx++]];
-      } while (val && partIdx <= maxIdx);
-
-      return val;
-    };
-  }
-
-  [].slice.call(arguments).forEach(function(path) {
-    var parts = typeof path == 'number' ? [ path ] : (path || '').split('.');
-
-    fields[fields.length] = {
-      name: parts[0],
-      parts: parts,
-      maxIdx: parts.length - 1
-    };
-  });
-
-  if (fields.length <= 1) {
-    return extractor(fields[0].parts, fields[0].maxIdx);
-  }
-  else {
-    return function(item) {
-      var data = {};
-
-      for (var ii = 0, len = fields.length; ii < len; ii++) {
-        data[fields[ii].name] = extractor([fields[ii].parts[0]], 0)(item);
-      }
-
-      return data;
-    };
-  }
-};
-},{}],228:[function(require,module,exports){
+},{"events":199,"promise":176,"rtcstream":187,"util":218}],187:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 var stream = require('stream');
@@ -28000,7 +22134,13 @@ RtcStream.prototype.handleRtcError = function(err) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":232,"debug":16,"stream":253,"typedarray-to-buffer":229,"util":256}],229:[function(require,module,exports){
+},{"buffer":194,"debug":188,"stream":215,"typedarray-to-buffer":191,"util":218}],188:[function(require,module,exports){
+arguments[4][141][0].apply(exports,arguments)
+},{"./debug":189,"dup":141}],189:[function(require,module,exports){
+arguments[4][142][0].apply(exports,arguments)
+},{"dup":142,"ms":190}],190:[function(require,module,exports){
+arguments[4][143][0].apply(exports,arguments)
+},{"dup":143}],191:[function(require,module,exports){
 (function (Buffer){
 /**
  * Convert a typed array to a Buffer without a copy
@@ -28035,7 +22175,7 @@ module.exports = function (arr) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":232,"is-typedarray":230}],230:[function(require,module,exports){
+},{"buffer":194,"is-typedarray":192}],192:[function(require,module,exports){
 module.exports      = isTypedArray
 isTypedArray.strict = isStrictTypedArray
 isTypedArray.loose  = isLooseTypedArray
@@ -28078,9 +22218,9 @@ function isLooseTypedArray(arr) {
   return names[toString.call(arr)]
 }
 
-},{}],231:[function(require,module,exports){
+},{}],193:[function(require,module,exports){
 
-},{}],232:[function(require,module,exports){
+},{}],194:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -29496,7 +23636,7 @@ function decodeUtf8Char (str) {
   }
 }
 
-},{"base64-js":233,"ieee754":234,"is-array":235}],233:[function(require,module,exports){
+},{"base64-js":195,"ieee754":196,"is-array":197}],195:[function(require,module,exports){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 ;(function (exports) {
@@ -29622,7 +23762,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 	exports.fromByteArray = uint8ToBase64
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
-},{}],234:[function(require,module,exports){
+},{}],196:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m,
       eLen = nBytes * 8 - mLen - 1,
@@ -29708,7 +23848,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],235:[function(require,module,exports){
+},{}],197:[function(require,module,exports){
 
 /**
  * isArray
@@ -29743,7 +23883,7 @@ module.exports = isArray || function (val) {
   return !! val && '[object Array]' == str.call(val);
 };
 
-},{}],236:[function(require,module,exports){
+},{}],198:[function(require,module,exports){
 /*global define:false require:false */
 module.exports = (function(){
 	// Import Events
@@ -29811,7 +23951,7 @@ module.exports = (function(){
 	};
 	return domain
 }).call(this)
-},{"events":237}],237:[function(require,module,exports){
+},{"events":199}],199:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -30114,11 +24254,11 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],238:[function(require,module,exports){
-arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],239:[function(require,module,exports){
+},{}],200:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"dup":2}],201:[function(require,module,exports){
 arguments[4][9][0].apply(exports,arguments)
-},{"dup":9}],240:[function(require,module,exports){
+},{"dup":9}],202:[function(require,module,exports){
 exports.endianness = function () { return 'LE' };
 
 exports.hostname = function () {
@@ -30165,7 +24305,7 @@ exports.tmpdir = exports.tmpDir = function () {
 
 exports.EOL = '\n';
 
-},{}],241:[function(require,module,exports){
+},{}],203:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -30257,32 +24397,32 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],242:[function(require,module,exports){
+},{}],204:[function(require,module,exports){
 module.exports = require("./lib/_stream_duplex.js")
 
-},{"./lib/_stream_duplex.js":243}],243:[function(require,module,exports){
-arguments[4][69][0].apply(exports,arguments)
-},{"./_stream_readable":245,"./_stream_writable":247,"_process":241,"core-util-is":248,"dup":69,"inherits":238}],244:[function(require,module,exports){
-arguments[4][70][0].apply(exports,arguments)
-},{"./_stream_transform":246,"core-util-is":248,"dup":70,"inherits":238}],245:[function(require,module,exports){
-arguments[4][71][0].apply(exports,arguments)
-},{"./_stream_duplex":243,"_process":241,"buffer":232,"core-util-is":248,"dup":71,"events":237,"inherits":238,"isarray":239,"stream":253,"string_decoder/":254,"util":231}],246:[function(require,module,exports){
-arguments[4][72][0].apply(exports,arguments)
-},{"./_stream_duplex":243,"core-util-is":248,"dup":72,"inherits":238}],247:[function(require,module,exports){
-arguments[4][73][0].apply(exports,arguments)
-},{"./_stream_duplex":243,"_process":241,"buffer":232,"core-util-is":248,"dup":73,"inherits":238,"stream":253}],248:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":205}],205:[function(require,module,exports){
+arguments[4][64][0].apply(exports,arguments)
+},{"./_stream_readable":207,"./_stream_writable":209,"_process":203,"core-util-is":210,"dup":64,"inherits":200}],206:[function(require,module,exports){
+arguments[4][65][0].apply(exports,arguments)
+},{"./_stream_transform":208,"core-util-is":210,"dup":65,"inherits":200}],207:[function(require,module,exports){
+arguments[4][66][0].apply(exports,arguments)
+},{"./_stream_duplex":205,"_process":203,"buffer":194,"core-util-is":210,"dup":66,"events":199,"inherits":200,"isarray":201,"stream":215,"string_decoder/":216,"util":193}],208:[function(require,module,exports){
+arguments[4][67][0].apply(exports,arguments)
+},{"./_stream_duplex":205,"core-util-is":210,"dup":67,"inherits":200}],209:[function(require,module,exports){
+arguments[4][68][0].apply(exports,arguments)
+},{"./_stream_duplex":205,"_process":203,"buffer":194,"core-util-is":210,"dup":68,"inherits":200,"stream":215}],210:[function(require,module,exports){
 arguments[4][8][0].apply(exports,arguments)
-},{"buffer":232,"dup":8}],249:[function(require,module,exports){
+},{"buffer":194,"dup":8}],211:[function(require,module,exports){
 module.exports = require("./lib/_stream_passthrough.js")
 
-},{"./lib/_stream_passthrough.js":244}],250:[function(require,module,exports){
-arguments[4][77][0].apply(exports,arguments)
-},{"./lib/_stream_duplex.js":243,"./lib/_stream_passthrough.js":244,"./lib/_stream_readable.js":245,"./lib/_stream_transform.js":246,"./lib/_stream_writable.js":247,"dup":77,"stream":253}],251:[function(require,module,exports){
-arguments[4][87][0].apply(exports,arguments)
-},{"./lib/_stream_transform.js":246,"dup":87}],252:[function(require,module,exports){
+},{"./lib/_stream_passthrough.js":206}],212:[function(require,module,exports){
+arguments[4][72][0].apply(exports,arguments)
+},{"./lib/_stream_duplex.js":205,"./lib/_stream_passthrough.js":206,"./lib/_stream_readable.js":207,"./lib/_stream_transform.js":208,"./lib/_stream_writable.js":209,"dup":72,"stream":215}],213:[function(require,module,exports){
+arguments[4][83][0].apply(exports,arguments)
+},{"./lib/_stream_transform.js":208,"dup":83}],214:[function(require,module,exports){
 module.exports = require("./lib/_stream_writable.js")
 
-},{"./lib/_stream_writable.js":247}],253:[function(require,module,exports){
+},{"./lib/_stream_writable.js":209}],215:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -30411,16 +24551,16 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"events":237,"inherits":238,"readable-stream/duplex.js":242,"readable-stream/passthrough.js":249,"readable-stream/readable.js":250,"readable-stream/transform.js":251,"readable-stream/writable.js":252}],254:[function(require,module,exports){
+},{"events":199,"inherits":200,"readable-stream/duplex.js":204,"readable-stream/passthrough.js":211,"readable-stream/readable.js":212,"readable-stream/transform.js":213,"readable-stream/writable.js":214}],216:[function(require,module,exports){
 arguments[4][11][0].apply(exports,arguments)
-},{"buffer":232,"dup":11}],255:[function(require,module,exports){
+},{"buffer":194,"dup":11}],217:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],256:[function(require,module,exports){
+},{}],218:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -31010,7 +25150,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":255,"_process":241,"inherits":238}],"pouch-replicate-webrtc":[function(require,module,exports){
+},{"./support/isBuffer":217,"_process":203,"inherits":200}],"pouch-replicate-webrtc":[function(require,module,exports){
 'use strict';
 
 var stream = require('stream');
@@ -31021,15 +25161,15 @@ var PouchDB = require('pouchdb');
 var util = require('util');
 var ReplicatorCommon = require('replicate-common');
 
-var PouchReplicator = function(name, signalUrl, rtcOptions, pouchDb, replicationOptions) {
-  ReplicatorCommon.call(this, name, signalUrl, rtcOptions);
-  
+var PouchReplicator = function(name, pouchDb, replicationOptions) {
+  ReplicatorCommon.call(this, name);
+
   // PouchReplicator
   this.pouchDb = pouchDb;
   this.replicationOptions = replicationOptions;
   this.marker = '__end__';
   this.replData = [];
-  
+
   PouchDB.plugin(replicationStream.plugin);
   PouchDB.adapter('writableStream', replicationStream.adapters.writableStream);
 };
@@ -31049,10 +25189,10 @@ PouchReplicator.prototype._createStream = function(data) {
 
 PouchReplicator.prototype._getAndClearData = function() {
   var self = this;
-  
+
   var data = self.replData.join('');
   self.replData = [];
-  
+
   var s = self._createStream(data);
   self.pouchDb.load(s, this.replicationOptions)
   .then(function(res) {
@@ -31089,14 +25229,12 @@ PouchReplicator.prototype.replicate = function() {
       s.write(database);
       s.write(self.marker);
     });
-    
-
   });
 
   return p;
 };
 
-},{"concat-stream":2,"pouchdb":"pouchdb","pouchdb-replication-stream":39,"promise":156,"replicate-common":166,"stream":253,"util":256}],"pouchdb":[function(require,module,exports){
+},{"concat-stream":1,"pouchdb":"pouchdb","pouchdb-replication-stream":15,"promise":176,"replicate-common":186,"stream":215,"util":218}],"pouchdb":[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -31124,4 +25262,4 @@ if (!process.browser) {
 }
 
 }).call(this,require('_process'))
-},{"./adapters/http/http":96,"./adapters/idb/idb":102,"./adapters/leveldb/leveldb":231,"./adapters/websql/websql":106,"./deps/ajax":109,"./deps/errors":118,"./replicate":136,"./setup":139,"./sync":140,"./utils":142,"./version":143,"_process":241,"pouchdb-mapreduce":149}]},{},[]);
+},{"./adapters/http/http":92,"./adapters/idb/idb":98,"./adapters/leveldb/leveldb":193,"./adapters/websql/websql":102,"./deps/ajax":105,"./deps/errors":114,"./replicate":132,"./setup":135,"./sync":136,"./utils":138,"./version":139,"_process":203,"pouchdb-mapreduce":169}]},{},[]);

@@ -19,6 +19,5 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/scottmtp/pouch-replicate-webrtc.git"
-    },
-    "version": "0.0.6"
+    }
 }
